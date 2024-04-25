@@ -9,6 +9,8 @@ export default function Home() {
   // extracting data from usesession as session
   const { data: session } = useSession();
 
+  console.log("session: ", session);
+
   // checking if sessions exists
   if (session) {
     // rendering components for logged in users
