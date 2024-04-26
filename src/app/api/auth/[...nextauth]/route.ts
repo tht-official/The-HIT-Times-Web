@@ -18,9 +18,9 @@ const handler = NextAuth({
     async signIn({ user, account, profile, email, credentials }) {
       // console.log("signIn", { user, account, profile, email, credentials });
       await dbConnect();
-      const dbUser = await User.findOne({ email: user.email });
+      const dbUser = await User.findOne({ userId: user.id });
       if (dbUser === null) {
-        await User.create({ email: user.email });
+        await User.create({ userId: user.id, email: user.email });
       }
       return true;
     },
@@ -28,7 +28,7 @@ const handler = NextAuth({
     async jwt({ token, user, account, profile }) {
       await dbConnect();
       if (user) {
-        const dbUser = await User.findOne({ email: user.email });
+        const dbUser = await User.findOne({ userId: user.id });
         if (dbUser) {
           token.role = dbUser.role;
         }
@@ -36,7 +36,6 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      console.log("token role: ", token.role);
       session.user.role = token.role as string;
       return session;
     },
