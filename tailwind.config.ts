@@ -15,6 +15,12 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      backgroundColor: {
+        "body": "#f1f2f3",
+      }, 
+      screens: {
+        "2.5xl": "1366px",
+      }
     },
   },
   plugins: [require("@tailwindcss/typography")],
