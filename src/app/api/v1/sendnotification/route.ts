@@ -2,33 +2,15 @@ import dbConnect from "@/lib/dbConnect";
 import Post from "@/models/Post";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
+import admin from '@/lib/firebase'
+
 
 export const dynamic = "force-dynamic"; // defaults to force-static
 
-export async function GET(request: NextRequest) {
-  await dbConnect();
-  try {
-    const { searchParams } = new URL(request.url);
-    const limit = Number(searchParams.get("limit"));
-    const page =
-      Number(searchParams.get("page")) - 1 <= 0
-        ? 0
-        : Number(searchParams.get("page")) - 1;
 
-    const post = await Post.find()
-      .sort({ createdAt: -1 })
-      .skip(page * limit)
-      .limit(limit);
-    return Response.json( [...post]);
-  } catch (error: any) {
-    const myBlob = {
-      success: false,
-      msg: error.message,
-    };
-    const myOptions = { status: 400 };
-    return Response.json(myBlob, myOptions);
-  }
-}
+
+const NOTIFICATION_POST = "posts_notification";
+const NOTIFICATION_LIVE = "live_notification";
 
 export async function POST(request: NextRequest) {
   const token = await getToken({
@@ -44,17 +26,42 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await dbConnect();
-    
+
     const data = await request.json();
 
-    const post = await Post.create(data);
+
+    const title = data.title;
+    const body = data.body;
+    const imageURL = data.imageURL;
+    var postId = data.postId;
+    var notificationType = "POST";
+
+    if (postId == undefined) {
+      postId = "";
+    }
+
+    const payload = {
+      notification: {
+        title: title,
+        body: body,
+        image: imageURL,
+      },
+      data: {
+        postId: postId.toString(),
+        type: notificationType,
+      },
+    };
+
+    await admin.messaging().sendToTopic(NOTIFICATION_POST, payload);
+
     const myBlob = {
       success: true,
-      postId: post._id,
+      msg: "Notification Sent",
     };
     const myOptions = { status: 200 };
+
     return Response.json(myBlob, myOptions);
+
   } catch (error: any) {
     const myBlob = {
       success: false,
