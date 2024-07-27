@@ -12,29 +12,33 @@ const links = [
     title: "Alumni",
     href: "/alumni",
   },
-  {
-    title: "Tabloids",
-    href: "/tabloids",
-  },
-  {
-    title: "Notice",
-    href: "/notice",
-  },
+  // {
+  //   title: "Tabloids",
+  //   href: "/tabloids",
+  // },
+  // {
+  //   title: "Notice",
+  //   href: "/notice",
+  // },
   {
     title: "Monday Hues",
-    href: "/monday-hues",
+    href: "/posts/category/00",
   },
   {
     title: "Campus Raid",
-    href: "/campus-raid",
+    href: "/posts/category/01",
   },
   {
     title: "Thursday Article",
-    href: "/thursday-article",
+    href: "/posts/category/02",
   },
   {
     title: "Funny Friday",
-    href: "/funny-friday",
+    href: "/posts/category/03",
+  },
+  {
+    title: "Viral Corner",
+    href: "/posts/category/04",
   },
 ];
 

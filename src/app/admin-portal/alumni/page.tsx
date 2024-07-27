@@ -1,13 +1,12 @@
 "use client";
-import { Posts } from "@/models/Post";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { Types } from "mongoose";
 import Link from "next/link";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { IBM_Plex_Serif, Nunito_Sans } from "next/font/google";
 import { CircularLoader } from "@/components/common/loader/Loaders";
+import { Alumni } from "@/models/Alumnus";
 
 const ibmPlexSerif = IBM_Plex_Serif({
   subsets: ["latin"],
@@ -19,36 +18,25 @@ const nunitoSans = Nunito_Sans({
   weight: ["200", "300", "400", "600", "700", "800"],
 });
 
-export default function PostsPage() {
+export default function AlumniPage() {
   const PAGE_LIMIT = 10;
-  const [posts, setPosts] = useState<Posts[]>([]);
+  const [alumni, setAlumni] = useState<Alumni[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadmore, setLoadmore] = useState(true);
   const [page, setPage] = useState(1);
 
   const getData = async () => {
     const response = await fetch(
-      `/api/v1/posts?limit=${PAGE_LIMIT}&page=${page}`
+      `/api/v1/alumnus?limit=${PAGE_LIMIT}&page=${page}`
     );
     const data = await response.json();
-    const testData = data.map((post: Posts) => {
-      // check if link is a valid url
-      if (post.link.startsWith("http")) {
-        return post;
-      } else {
-        return {
-          ...post,
-          link: "https://placehold.co/600x400.png",
-        };
-      }
-    });
 
-    if (data.length < PAGE_LIMIT) {
+    if (data.data.length < PAGE_LIMIT) {
       setLoadmore(false);
     }
 
-    const updatedPosts = [...posts, ...testData];
-    setPosts(updatedPosts);
+    const updatedAlumni = [...alumni, ...data.data];
+    setAlumni(updatedAlumni);
     setLoading(false);
   };
 
@@ -72,14 +60,16 @@ export default function PostsPage() {
     };
   }, [page]);
 
-  const handleDeletePost = async (_id: Types.ObjectId) => {
-    const response = await fetch(`/api/v1/post/${_id}`, {
+  const handleDeleteAlumni = async (_id: string) => {
+    const response = await fetch(`/api/v1/alumnus/${_id}`, {
       method: "DELETE",
     });
 
     if (response.ok) {
-      const updatedPosts = posts.filter((post) => post._id !== _id);
-      setPosts(updatedPosts);
+      const updatedAlumni = alumni.filter(
+        (alum) => alum._id.toString() !== _id.toString()
+      );
+      setAlumni(updatedAlumni);
     }
   };
 
@@ -91,27 +81,27 @@ export default function PostsPage() {
             ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold"
           }
         >
-          Posts Page
+          Alumni Page
         </h1>
 
-        <Link href="/admin-portal/posts/create-post">
+        <Link href="/admin-portal/alumni/create-alumni">
           <button className="bg-blue-100 rounded-full text-blue-800 py-2 px-4 flex flex-row items-center gap-2">
             <PlusIcon width={18} height={18} />
-            <span>Create Post</span>
+            <span>Create Alumni</span>
           </button>
         </Link>
       </div>
 
-      <div className="grid grid-flow-row md:grid-cols-3 gap-2">
-        {posts.map((post) => (
+      <div className="grid grid-flow-row md:grid-cols-3 gap-2 my-4">
+        {alumni.map((alum) => (
           <div
-            key={post._id.toString()}
+            key={alum._id.toString()}
             className="p-2 bg-white rounded-md gap-2 flex flex-col"
           >
             <div className="">
               <Image
-                src={post.link}
-                alt={post.title}
+                src={alum.profile_image}
+                alt={alum.name}
                 className="w-full aspect-video rounded-md object-cover"
                 width={500}
                 height={500}
@@ -119,22 +109,18 @@ export default function PostsPage() {
               <h3
                 className={ibmPlexSerif.className + " text-lg font-bold mt-4 "}
               >
-                {post.title}
+                {alum.name}
               </h3>
               <p className={nunitoSans.className + " text-gray-700"}>
-                {post.description}
+                {alum.session_start} - {alum.session_end}
               </p>
             </div>
-            <div>
-              <span className="text-sm text-gray-500">
-                {new Date(post.createdAt).toLocaleDateString()}
-              </span>
-            </div>
+
             <hr />
             <div className="flex flex-row justify-between p-2">
               <button>
                 <Link
-                  href={`/admin-portal/posts/edit/${post._id}`}
+                  href={`/admin-portal/alumni/edit/${alum._id}`}
                   className="flex flex-row items-center gap-2 text-blue-800 hover:bg-slate-100 p-1 rounded-md"
                 >
                   <PencilIcon className="h-5 w-5" />
@@ -142,7 +128,7 @@ export default function PostsPage() {
                 </Link>
               </button>
               <button
-                onClick={() => handleDeletePost(post._id)}
+                onClick={() => handleDeleteAlumni(alum._id.toString())}
                 className="hover:bg-red-50 p-1 rounded-sm"
               >
                 <TrashIcon className="h-5 w-5 text-red-500 " />
