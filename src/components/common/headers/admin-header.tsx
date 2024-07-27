@@ -12,12 +12,16 @@ const nunitoSans = Nunito_Sans({ subsets: ["latin"] });
 
 const links = [
   {
-    title: "Create a Post",
-    href: "/admin-portal/posts/create-post",
+    title: "Teams",
+    href: "/admin-portal/teams",
   },
   {
     title: "Posts",
     href: "/admin-portal/posts",
+  },
+  {
+    title: "Matches",
+    href: "/admin-portal/matches",
   },
   {
     title: "Notify",

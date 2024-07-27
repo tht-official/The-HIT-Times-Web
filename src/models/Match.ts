@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
 
+export interface Timeline {
+  firebase_timeline_id: string;
+  timeline_date: Date;
+  msgHtml: string;
+}
+
 export interface MatchPosts {
-  _id: mongoose.Schema.Types.ObjectId | string;
+  _id: mongoose.Schema.Types.ObjectId;
   firebase_match_id: string;
   team1: {
     team_code: string;
@@ -17,13 +23,7 @@ export interface MatchPosts {
   match_status: string;
   match_type: string;
   match_date: Date;
-  timeline: [
-    {
-      firebase_timeline_id: string;
-      timeline_date: Date;
-      msgHtml: string;
-    }
-  ];
+  timeline: Timeline[];
 }
 
 const MatchPostSchema = new mongoose.Schema<MatchPosts>(
@@ -99,4 +99,4 @@ const MatchPostSchema = new mongoose.Schema<MatchPosts>(
 );
 
 export default mongoose.models.MatchPosts ||
-  mongoose.model<MatchPosts>("matchposts", MatchPostSchema);
+  mongoose.model<MatchPosts>("MatchPosts", MatchPostSchema);

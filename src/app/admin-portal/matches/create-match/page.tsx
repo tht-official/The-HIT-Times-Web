@@ -1,6 +1,4 @@
-"use client";
-
-import PostForm from "@/components/admin-portal/posts/PostForm";
+import CreateLivePostForm from "@/components/admin-portal/matches/CreateLivePost";
 import { IBM_Plex_Serif } from "next/font/google";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -8,7 +6,7 @@ const ibmPlexSerif = IBM_Plex_Serif({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
-const CreatePostPage = () => {
+export default function CreateLivePost() {
   return (
     <div>
       <h1
@@ -16,11 +14,9 @@ const CreatePostPage = () => {
           ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold py-8"
         }
       >
-        Create a Post
+        Create a Live Match
       </h1>
-      <PostForm />
+      <CreateLivePostForm />
     </div>
   );
-};
-
-export default CreatePostPage;
+}
