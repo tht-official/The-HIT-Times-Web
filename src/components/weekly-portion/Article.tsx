@@ -2,6 +2,7 @@ import { Posts } from "@/models/Post";
 import Image from "next/image";
 import { IBM_Plex_Serif, Nunito_Sans } from "next/font/google";
 import Link from "next/link";
+import ArticleImage from "./ArticleImage";
 
 const ibmPlexSerif = IBM_Plex_Serif({
   subsets: ["latin"],
@@ -16,18 +17,18 @@ const nunitoSans = Nunito_Sans({
 export default function Article({ article }: { article: Posts }) {
   return (
     <Link href={"/posts/" + article._id}>
-      <div className="article-container">
-        <Image
+      <div className="h-full">
+        <ArticleImage
           src={article.link}
           alt={article.title}
-          className="w-full aspect-video rounded-md object-cover"
+          className="w-full aspect-video rounded-lg object-cover"
           width={500}
           height={500}
         />
-        <h3 className={ibmPlexSerif.className + " text-lg font-bold mt-4 "}>
+        <h3 className={ibmPlexSerif.className + " text-lg font-bold mt-2 text-ellipsis line-clamp-2"}>
           {article.title}
         </h3>
-        <p className={nunitoSans.className + " text-gray-700 mt-2"}>
+        <p className={nunitoSans.className + " text-gray-700 mt-1 text-ellipsis line-clamp-2"}>
           {article.description}
         </p>
       </div>

@@ -28,61 +28,28 @@ export default function PostsPage({
 }: {
   params: { dropdown: string };
 }) {
-  const PAGE_LIMIT = 10;
   const [posts, setPosts] = useState<Posts[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadmore, setLoadmore] = useState(true);
-  const [page, setPage] = useState(1);
 
   const getData = async () => {
-    const dropdown = params.dropdown;
-
-    const response = await fetch(
-      `/api/v1/posts?limit=${PAGE_LIMIT}&page=${page}&dropdown=${dropdown}`
+    const bookmarkedPosts = JSON.parse(
+      localStorage.getItem("bookmarkedPosts") || "[]"
+    ).reverse();
+    const newPosts = await Promise.all(
+      bookmarkedPosts.map(async (postId: string) => {
+        const res = await fetch(`/api/v1/post/${postId}`);
+        const data = await res.json();
+        return data.data;
+      })
     );
-    const data = await response.json();
-    const testData = data.map((post: Posts) => {
-      // check if link is a valid url
-      if (post.link.startsWith("http")) {
-        return post;
-      } else {
-        return {
-          ...post,
-          link: "https://placehold.co/600x400.png",
-        };
-      }
-    });
-
-    if (data.length < PAGE_LIMIT) {
-      setLoadmore(false);
-    }
-
-    const updatedPosts = [...posts, ...testData];
+    const updatedPosts = [...posts, ...newPosts];
     setPosts(updatedPosts);
     setLoading(false);
   };
 
-  const handleScroll = () => {
-    setPage(page + 1);
-  };
-
   useEffect(() => {
     getData();
-    window.addEventListener("scroll", () => {
-      if (
-        loadmore &&
-        window.innerHeight + window.scrollY >= document.body.offsetHeight
-      ) {
-        handleScroll();
-      }
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [page]);
-
-  const pageTitle = dropdownsToSections[params.dropdown];
+  }, []);
 
   return (
     <div>
@@ -92,10 +59,15 @@ export default function PostsPage({
           " text-zinc-800 sm:text-5xl text-3xl font-semibold py-8"
         }
       >
-        {pageTitle}
+        My Bookmarks
       </h1>
 
-      <div className="grid grid-flow-row md:grid-cols-3 gap-8 my-4">
+      {posts.length === 0 && (
+        <div>
+          No Bookmarks found. Get started my bookmarking your favorite posts.
+        </div>
+      )}
+      <div className="grid grid-flow-row md:grid-cols-3 gap-8 my-4 min-h-screen">
         {posts.map((post) => (
           <Article key={post._id.toString()} article={post} />
         ))}

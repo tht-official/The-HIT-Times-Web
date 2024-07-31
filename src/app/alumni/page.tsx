@@ -103,7 +103,7 @@ const AlumniPage: React.FC = () => {
     };
 
     return (
-      <div className="flex flex-1 items-center justify-end">
+      <div className="flex items-center">
         <select
           className="p-2 rounded-lg bg-gray-100 text-black font-bold focus:outline-none appearance-none"
           value={`${filter.startSession}-${filter.endSession}`}
@@ -126,7 +126,7 @@ const AlumniPage: React.FC = () => {
     <div className="">
       <div className="">
         <div className="flex flex-col gap-4">
-          <div className="mr-2 flex items-center justify-between lg:mr-0 md:mr-0">
+          <div className="flex sm:flex-row flex-col justify-between">
             <h1
               className={
                 ibmPlexSerif.className + " text-5xl font-semibold my-8"
@@ -136,30 +136,46 @@ const AlumniPage: React.FC = () => {
             </h1>
             <FilterMenu />
           </div>
-
-          <div className="my-4 grid grid-flow-row gap-4">
-            {alumniData.length === 0 && (
-              <div>
-                {"No Data. Can't find who you are looking for? "}
-                <Link className="text-blue-900 font-bold" href={"/about-us#contact-us"}>
-                  Contact us. 
-                </Link>
-              </div>
-            )}
-            {alumniData.length > 0 &&
-              alumniData.map(({ year, alumni }) => (
-                <div key={year} className="flex flex-col gap-8">
-                  <div className="mr-1 flex flex-col items-start gap-5 lg:mr-0 md:mr-0">
-                    <h3 className="text-lg font-bold">{year}</h3>
-                    <div className="grid grid-flow-col">
-                      {alumni.map((alumniMember, index) => (
-                        <AlumniCard key={index} {...alumniMember} />
-                      ))}
+          <div className="min-h-screen">
+            <div className="my-4 grid grid-flow-row gap-4">
+              {alumniData.length === 0 && (
+                <div>
+                  {"No Data."} <br />
+                  {"Can't find who you are looking for? "}
+                  <Link
+                    className="text-blue-900 font-bold"
+                    href={"/about-us#contact-us"}
+                  >
+                    Contact us.
+                  </Link>
+                </div>
+              )}
+              {alumniData.length > 0 &&
+                alumniData.map(({ year, alumni }) => (
+                  <div key={year} className="flex flex-col gap-8">
+                    <div className="mr-1 flex flex-col items-start gap-5 lg:mr-0 md:mr-0">
+                      <h3 className="text-lg font-bold">{year}</h3>
+                      <div className="grid grid-flow-col">
+                        {alumni.map((alumniMember, index) => (
+                          <AlumniCard key={index} {...alumniMember} />
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
+          {alumniData.length > 0 && (
+            <div className="my-8">
+              {"Can't find who you are looking for? "}
+              <Link
+                className="text-blue-900 font-bold"
+                href={"/about-us#contact-us"}
+              >
+                Contact us.
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
