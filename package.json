@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
+    "@headlessui/react": "^2.1.10",
     "@heroicons/react": "^2.1.5",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
@@ -20,6 +21,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "autoprefixer": "^10.4.19",
     "firebase-admin": "^12.2.0",
+    "framer-motion": "^11.11.1",
     "heroicons": "^2.1.5",
     "html-react-parser": "^5.1.12",
     "imgur": "^2.4.2",
