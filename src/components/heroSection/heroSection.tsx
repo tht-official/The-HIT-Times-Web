@@ -82,21 +82,21 @@ const HeroSection = ({ notice, noticeLink }: HeroSectionProps) => {
           </div>
         </div>
       </div>
-      {/* {notice && (
-        <div className="py-2 px-2 w-full rounded-full mb-2  bg-red-600 flex items-center justify-center animate-fade-up animate-delay-500 animate-duration-500">
-          <h1 className="bg-white text-center text-red-600 font-semibold py-3 px-5 rounded-md ">
+      {notice && (
+        <div className="py-3 px-3 w-full bg-red-600 flex items-center justify-center">
+          <h1 className="bg-white text-center text-red-600 font-semibold py-3 px-5 rounded-md">
             Latest Notice
           </h1>
           <p className="text-white font-sans ml-3 lg:ml-6">
             {notice}
             {noticeLink && (
-              <Link href={noticeLink} className="underline text-sky-200">
+              <Link href={noticeLink} className="underline text-sky-200 ml-2">
                 Learn More
               </Link>
             )}
           </p>
         </div>
-      )} */}
+      )}
     </div>
   );
 };
