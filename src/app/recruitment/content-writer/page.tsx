@@ -128,6 +128,7 @@ export default function CwForm() {
     toast.success("Kindly Fill Again");
   }
 
+
   return (
     <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
       <div className="max-w-4xl px-3 mx-auto">
@@ -703,13 +704,11 @@ export default function CwForm() {
               </button>
               {/*<div onClick={refreshPage} className={poppins.className +' text-purple-800 text-md hover:cursor-pointer'}>Clear form</div>*/}
             </div>
-          )}
-        </form>
-      </div>
+            )
+
+        }
+      </form>
     </div>
-  );
+  </div>
+)
 }
-/*<div className='flex flex-row justify-between pb-6'>
-                                <button className="bg-purple-500 py-1 px-5 rounded-md text-white">Submit</button>
-                                <div onClick={refreshPage} className={poppins.className +' text-purple-800 text-md hover:cursor-pointer'}>Clear form</div>
-                            </div> */

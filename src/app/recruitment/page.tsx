@@ -410,8 +410,8 @@ export default function RecCommonForm() {
     );
   } else {
     return (
-      <div className=" min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl px-80 ">
-        <div className="relative top-10 rounded-b-lg overflow-hidden justify-center  max-w-4xl">
+      <div className=" min-h-screen bg-[url('/tht-background.jpg')]  max-w-screen-2xl  md:rounded-2xl md:px-80 ">
+        <div className="relative top-10 rounded-b-lg overflow-hidden justify-center p-2 w-screen md:max-w-4xl">
           <Image
             src="https://res.cloudinary.com/dvw5qhccb/image/upload/v1730133636/rec-header.png_reznpj.jpg"
             alt="Recruitment Form 2K25"
@@ -422,7 +422,7 @@ export default function RecCommonForm() {
         </div>
         <div
           className={
-            "mt-12 text-2xl text-purple-400 animate-fade-righ " +
+            "mt-12 text-2xl text-purple-400 px-28 md:pl-5 animate-fade-right font-bold" +
             poppins.className
           }
         >
@@ -431,22 +431,22 @@ export default function RecCommonForm() {
         <div className="my-2">
           <h2
             className={
-              "my-4 text-xl  text-purple-100 animate-fade-left " +
+              "my-4 text-xl  text-purple-100 pl-5 animate-fade-left  font-semibold " +
               poppins.className
             }
           >
-            please sign in to continue the recruitment form
+            Please sign in to continue the recruitment form
           </h2>
         </div>
         <div>
           <p
             className={
               nunitoSans.className +
-              " text-gray-200 my-4 text-3xl font-bold mt-12"
+              " text-gray-200 my-4 text-3xl  font-bold mt-12"
             }
           ></p>
           <button
-            className="relative px-2 md:px-4 py-1 overflow-hidden font-medium text-zinc-800 bg-gray-100 border border-gray-200 rounded-lg shadow-inner group"
+            className="relative px-4 py-1  mx-32 md:ml-96  overflow-hidden font-medium text-zinc-800 bg-gray-100 border border-gray-200 rounded-lg shadow-inner group"
             onClick={() => signIn()}
           >
             <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-gray-600 group-hover:w-full"></span>
