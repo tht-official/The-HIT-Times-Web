@@ -29,6 +29,7 @@
     "heroicons": "^2.1.5",
     "html-react-parser": "^5.1.12",
     "imgur": "^2.4.2",
+    "lucide-react": "^0.475.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.9.5",
     "next": "^14.2.14",
