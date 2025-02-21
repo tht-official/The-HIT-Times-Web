@@ -322,7 +322,7 @@ export default function ScheduleComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-transparent p-6 md:p-8">
+    <div className="bg-transparent p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
         <h1 className="mb-8 text-center text-4xl font-bold text-teal-400">Course Catalog</h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

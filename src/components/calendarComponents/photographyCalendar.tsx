@@ -14,12 +14,12 @@ const highlightedGroups: Record<
     description: "Introductory Session",
   },
   group2: {
-    days: [3, 4],
+    days: [9],
     color: "bg-green-500",
     description: "Photowalk",
   },
   group3: {
-    days: [2, 3, 4],
+    days: [2, 9],
     color: "bg-blue-500",
     description: "Offline Training",
   },
@@ -90,7 +90,7 @@ const photographyCalendar: React.FC = () => {
             className="max-w-sm flex justify-between items-center text-[#0c2d58] font-bold"
           >
             <div
-              className={`w-7 h-7 rounded-[20px] ${group.color} text-white font-semibold`}
+              className={`w-7 h-7 rounded-[20px] ${group.color} text-white font-semibold border-[#00000050] border-[1px] rounded-[20px]`}
             ></div>
             <div>{group.description}</div>
           </div>
