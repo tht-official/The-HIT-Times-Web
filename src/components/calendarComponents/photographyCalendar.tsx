@@ -14,12 +14,12 @@ const highlightedGroups: Record<
     description: "Introductory Session",
   },
   group2: {
-    days: [9],
+    days: [8,9],
     color: "bg-green-500",
     description: "Photowalk",
   },
   group3: {
-    days: [2, 9],
+    days: [2],
     color: "bg-blue-500",
     description: "Offline Training",
   },
