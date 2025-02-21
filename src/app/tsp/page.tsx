@@ -5,9 +5,9 @@ export default function TspBanner() {
   return (
     <>
       <div className="relative bg-gradient-to-r from-teal-700 to-orange-600 text-white mb-10">
-        <header className="w-3/4  mx-auto mt-4 mb-[20px]">
+        <header className="sm:w-3/4 w-screen  mx-auto mt-4 mb-[20px]">
           {/* <img src="./tht_logo.png" alt="" /> */}
-          <div className="flex flex-col items-center justify-center text-center space-y-3 ">
+          <div className="flex flex-col items-center px-2 justify-center text-center space-y-3 ">
             {/* <i className="text-[25px] font-semibold text-[#0C2D58]">presents</i> */}
             <img src="./tsp-banner-2025.png" alt="" className="mx-auto mt-5" />
 
@@ -18,6 +18,41 @@ export default function TspBanner() {
             {/* <i className="flex flex-col items-center justify-center text-center text-4xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse leading-[1.2]">TRAINEE SCHOLARS PROGRAM</i> */}
         <div className="flex flex-col items-center mt-10 mb-10">
           <img className="w-auto h-20 sm:h-28 mb-[10px]" src="./tht_logo.png" alt="" />
+          <button
+              onClick={
+                ()=>{
+                  window.location.href="/forms/tsp-form"
+                }
+              }
+              className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-mono font-light uppercase text-base"
+            >
+            
+              <span
+                className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-xl transform translate-y-0.5 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px"
+              ></span>
+
+              <span
+                className="absolute top-0 left-0 w-full h-full rounded-xl bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"
+              ></span>
+
+              <div
+                className="relative flex items-center justify-between py-2 sm:py-3 px-3 sm:px-6 text-sm sm:text-lg text-white rounded-xl transform -translate-y-1 bg-gradient-to-r from-[#f27121] via-[#e94057] to-[#8a2387] gap-3 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110"
+              >
+                <span className="select-none">Fill Out the Form</span>
+
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5 ml-2 -mr-1 transition duration-250 group-hover:translate-x-1"
+                >
+                  <path
+                    // clip-rule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    // fill-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+          </button>
           <div className=" flex items-center justify-center p-5">
             <div className="max-w-3xl bg-slate-300/30 shadow-2xl p-6 rounded-lg">
               <p className="text-lg">
@@ -71,14 +106,14 @@ export default function TspBanner() {
 
                   </li>
                   <li>
-                    <strong className="text-amber-300">Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you're doing.
+                    <strong className="text-amber-300">Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you&apos;re doing.
 
                   </li>
                   <li>
-                    <strong className="text-amber-300">Digital art</strong> - To all the artists and those who wish to learn digital painting. This is 'THE OPPORTUNITY' to learn digital painting. We will teach you to hold the digital paintbrush and create freely.
+                    <strong className="text-amber-300">Digital art</strong> - To all the artists and those who wish to learn digital painting. This is &apos;THE OPPORTUNITY&apos; to learn digital painting. We will teach you to hold the digital paintbrush and create freely.
                   </li>
                   <li>
-                    <strong className="text-amber-300">Video editing</strong> - The beat drops and the frame shifts, qualities of an exquisite clips. If you wish to make mind-blowing videos, explore the world of Premiere Pro with us and let your creativity run wild.
+                    <strong className="text-amber-300">Video editing</strong> - The beat drops and the frame shifts, qualities of an exquisite clip. If you wish to make mind-blowing videos, explore the world of Premiere Pro with us and let your creativity run wild.
                   </li>
                 </ul>
               </div>
