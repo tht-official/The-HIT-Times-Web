@@ -4,7 +4,7 @@ import ScheduleComponent from "@/components/formcomponents/tspSchedule";
 export default function TspBanner() {
   return (
     <>
-      <div className="relative bg-gradient-to-r from-teal-700 to-orange-600 text-white">
+      <div className="relative bg-gradient-to-r from-teal-700 to-orange-600 text-white mb-10">
         <header className="w-3/4  mx-auto mt-4 mb-[20px]">
           {/* <img src="./tht_logo.png" alt="" /> */}
           <div className="flex flex-col items-center justify-center text-center space-y-3 ">
@@ -51,7 +51,7 @@ export default function TspBanner() {
           </div>
         </div>
         {/* <hr className="h-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg w-3/4 mx-auto mt-5" /> */}
-        <div className="min-h-screen mt-2 p-6 mb-10">
+        <div className="mt-2 p-6 mb-5">
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Domains Section */}
@@ -68,7 +68,7 @@ export default function TspBanner() {
                     <strong>Photography</strong> - Ask around and you will find photographers everywhere, but somebody certified by Nat Geo is rare. Learn and join us in the Photo walks.
                   </li>
                   <li>
-                    <strong>Technical</strong> - The curriculum assumes you are an expert in programming languages already, we won&apos;t. If you want to start from scratch, we are here for you. If you want to jump to the next level, we are still here for you.
+                    <strong>Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you're doing.
                   </li>
                   <li>
                     <strong>Digital art</strong> - To all the artists and those who wish to learn digital painting. This is &apos;THE OPPORTUNITY&apos; to learn digital painting. We will teach you to hold the digital paintbrush and create freely.
@@ -104,7 +104,7 @@ export default function TspBanner() {
 
         {/* <hr className="h-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg w-3/4 mx-auto" /> */}
 
-        <div className="min-h-screen bg-transparent flex items-center justify-center p-6 mt-5 mb-10">
+        <div className="bg-transparent flex items-center justify-center p-6 mt-0 mb-10">
           <div className="max-w-2xl bg-slate-300/30 text-white  shadow-2xl p-8 rounded-2xl">
             <h2 className="text-4xl font-extrabold text-center text-indigo-700 mb-6 border-b-4 border-yellow-500 inline-block">
               🎉 Exciting Prizes
@@ -117,35 +117,35 @@ export default function TspBanner() {
             {/* Prize List */}
             <div className="space-y-6">
               <div className="bg-yellow-500 text-white p-5 rounded-lg shadow-md">
-                <h3 className="text-2xl font-bold">🥇 1st Winner</h3>
+                <h3 className="text-2xl font-bold text-center">🥇 Winner</h3>
                 {/* <p>
                   T-Shirt by <strong>STREET SQUAD</strong> + Flat ₹100 OFF on orders
                   above ₹300 by <strong>CAFE CELESTE</strong>.
                 </p> */}
               </div>
 
-              <div className="bg-gray-400 text-white p-5 rounded-lg shadow-md">
+              {/* <div className="bg-gray-400 text-white p-5 rounded-lg shadow-md">
                 <h3 className="text-2xl font-bold">🥈 2nd Winner</h3>
-                {/* <p>
+                <p>
                   Get <strong>40% OFF</strong> on a T-Shirt by{" "}
                   <strong>STREET SQUAD</strong> + Flat ₹75 OFF on orders above ₹300
                   by <strong>CAFE CELESTE</strong>.
-                </p> */}
+                </p>
               </div>
 
               <div className="bg-orange-500 text-white p-5 rounded-lg shadow-md">
                 <h3 className="text-2xl font-bold">🥉 3rd Winner</h3>
-                {/* <p>
+                <p>
                   Get <strong>30% OFF</strong> on a T-Shirt by{" "}
                   <strong>STREET SQUAD</strong> + Flat ₹50 OFF on orders above ₹300
                   by <strong>CAFE CELESTE</strong>.
-                </p> */}
-              </div>
+                </p>
+              </div> */}
             </div>
 
             {/* Extra Reward */}
             <p className="mt-8 text-lg  font-medium text-center">
-              🎖 Above this, all participants will be awarded with{" "}
+              🎖 Apart from this, all participants will be awarded with{" "}
               <strong>MAR certificates</strong>.
             </p>
           </div>
@@ -158,7 +158,7 @@ export default function TspBanner() {
                 window.location.href="/forms/tsp-form"
               }
             } 
-           className="overflow-hidden mb-5  w-32 p-2 h-12 bg-violet-500 shadow-2xl  text-white border-none rounded-xl text-base font-bold cursor-pointer relative z-10 group"
+           className="overflow-hidden mb-5 w-32 p-2 h-12 bg-violet-500 shadow-2xl  text-white border-none rounded-xl text-base font-bold cursor-pointer relative z-10 group"
           >
             Fill The Form!
             <span
