@@ -19,7 +19,7 @@ const highlightedGroups: Record<
     description: "Online Training",
   },
   group3: {
-    days: [2, 5, 6],
+    days: [2, 8, 9],
     color: "bg-blue-500",
     description: "Offline Training",
   },

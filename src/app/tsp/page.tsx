@@ -59,22 +59,26 @@ export default function TspBanner() {
                 <h2 className="text-3xl font-bold mb-4 ">Domains</h2>
                 <ul className="space-y-4">
                   <li>
-                    <strong>Writing</strong> - Language is not a barrier to a writer, be it Hindi, English, Bengali, or any other language. If you want to write, join in. If you are already a writer, you will love this community.
+                    <strong className="text-amber-300">Writing</strong> - Language is not a barrier to a writer, be it Hindi, English, Bengali, or any other language. If you want to write, join in. If you are already a writer, you will love this community.
+
                   </li>
                   <li>
-                    <strong>Graphics designing</strong> - Playing around with shapes in Paint is fun, but only until you touch the tools in Photoshop. Explore the world of editing with live interactive sessions.
+                    <strong className="text-amber-300">Graphics designing</strong> - Playing around with shapes in Paint is fun, but only until you touch the tools in Photoshop. Explore the world of editing with live interactive sessions.
+
                   </li>
                   <li>
-                    <strong>Photography</strong> - Ask around and you will find photographers everywhere, but somebody certified by Nat Geo is rare. Learn and join us in the Photo walks.
+                    <strong className="text-amber-300">Photography</strong> - Ask around and you will find photographers everywhere, but somebody certified by National Geographic is rare. Learn and join us in the Photo walks.
+
                   </li>
                   <li>
-                    <strong>Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you're doing.
+                    <strong className="text-amber-300">Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you're doing.
+
                   </li>
                   <li>
-                    <strong>Digital art</strong> - To all the artists and those who wish to learn digital painting. This is &apos;THE OPPORTUNITY&apos; to learn digital painting. We will teach you to hold the digital paintbrush and create freely.
+                    <strong className="text-amber-300">Digital art</strong> - To all the artists and those who wish to learn digital painting. This is 'THE OPPORTUNITY' to learn digital painting. We will teach you to hold the digital paintbrush and create freely.
                   </li>
                   <li>
-                    <strong>Video editing</strong> - The beat drops and the frame shifts, qualties of an exquisite clips. If you wish to make mind-blowing videos, explore the world of Premiere Pro with us and let your creativity run wild.
+                    <strong className="text-amber-300">Video editing</strong> - The beat drops and the frame shifts, qualities of an exquisite clips. If you wish to make mind-blowing videos, explore the world of Premiere Pro with us and let your creativity run wild.
                   </li>
                 </ul>
               </div>
