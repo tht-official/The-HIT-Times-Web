@@ -28,17 +28,17 @@ const nunitoSans = Nunito_Sans({
 });
 
 function TSPsuccessPage({ params }: { params: { interestsId: string } }) {
-  const interestNo: String[] = [
-    "writing",
-    "drawing",
-    "designing",
-    "videoEditing",
-    "technology",
-    "photography",
-  ];
+  // const interestNo: String[] = [
+  //   "writing",
+  //   "drawing",
+  //   "designing",
+  //   "videoEditing",
+  //   "technology",
+  //   "photography",
+  // ];
   const allInvLinks = [
     {
-      title: "Writing",
+      title: "Content Writing",
       url: "https://chat.whatsapp.com/HTaPtnggSRhA7IdkA57eWw",
       calendar: cwCalendar,
     },
@@ -58,7 +58,7 @@ function TSPsuccessPage({ params }: { params: { interestsId: string } }) {
       calendar: videoEditingCalendar,
     },
     {
-      title: "Technology",
+      title: "Web Development",
       url: "https://chat.whatsapp.com/EbMONu9UyElH6qvseXAdH0",
       calendar: DevCalendar,
     },
