@@ -18,7 +18,7 @@ const highlightedGroups: Record<
     color: "bg-green-500",
     description: "Photowalk",
   },
-  group2: {
+  group3: {
     days: [2],
     color: "bg-blue-500",
     description: "Offline Training",
