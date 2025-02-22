@@ -13,13 +13,13 @@ const highlightedGroups: Record<
     color: "bg-red-500",
     description: "Introductory Session",
   },
-  // group2: {
-  //   days: [8,9],
-  //   color: "bg-green-500",
-  //   description: "Photowalk",
-  // },
   group2: {
-    days: [2,8,9],
+    days: [8,9],
+    color: "bg-green-500",
+    description: "Photowalk",
+  },
+  group2: {
+    days: [2],
     color: "bg-blue-500",
     description: "Offline Training",
   },
