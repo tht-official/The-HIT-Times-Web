@@ -94,7 +94,7 @@ export default function TspBanner() {
                 <h2 className="text-3xl font-bold mb-4 ">Domains</h2>
                 <ul className="space-y-4">
                   <li>
-                    <strong className="text-amber-300">Writing</strong> - Language is not a barrier to a writer, be it Hindi, English, Bengali, or any other language. If you want to write, join in. If you are already a writer, you will love this community.
+                    <strong className="text-amber-300">Content Writing</strong> - Language is not a barrier to a writer, be it Hindi, English, Bengali, or any other language. If you want to write, join in. If you are already a writer, you will love this community.
 
                   </li>
                   <li>
@@ -106,7 +106,7 @@ export default function TspBanner() {
 
                   </li>
                   <li>
-                    <strong className="text-amber-300">Technical</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you&apos;re doing.
+                    <strong className="text-amber-300">Web Development</strong> - Transform from coding newbie to digital deity in our intensive program.  Learn HTML, CSS, JavaScript, and React – and build a real-world project. No experience needed – just a healthy dose of caffeine and a willingness to embrace the chaos. Prepare for rapid learning, occasional frustration, and the ultimate reward: actually understanding what you&apos;re doing.
 
                   </li>
                   <li>
