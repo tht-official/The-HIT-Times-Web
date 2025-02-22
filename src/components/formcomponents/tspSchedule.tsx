@@ -232,13 +232,13 @@ const courses: Course[] = [
         date: "1st March 2025",
         title: "Photography Basics",
         description: "ISO triangle, composition, and various genres.",
-        isOnline: true,
+        isOnline: false,
       },
       {
         date: "2nd March 2025",
         title: "Advanced Concepts",
         description: "Colour theory and communication skills.",
-        isOnline: true,
+        isOnline: false,
       },
       {
         date: "8th March 2025",
@@ -255,7 +255,7 @@ const courses: Course[] = [
     ],
   },
   {
-    title: "Graphic Design",
+    title: "Graphic Designing",
     description: "Master graphic design tools and techniques",
     calendar: gdCalendar,
     days: [
