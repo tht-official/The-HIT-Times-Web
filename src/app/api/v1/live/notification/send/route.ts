@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import admin from '@/lib/firebase'; // Make sure to initialize Firebase admin in this file
+import admin from '@/lib/firebase'; 
 
 const NOTIFICATION_LIVE = "live_notification";
 
 export async function POST(request: NextRequest) {
+  console.log("🚀 Received request at /api/v1/sendnotification");
+
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (token === null || token?.role !== "admin") {
+  if (!token || token.role !== "admin") {
     return NextResponse.json(
       { success: false, msg: "Unauthorized" },
       { status: 401 }
@@ -19,24 +21,28 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await request.json();
-    const notificationType = "LIVE";
-    const notificationContent = {
-      ...data,
-    };
-    const payload = {
-      data: {
-        type: notificationType,
-        data: JSON.stringify(notificationContent),
-      },
+    console.log("📩 Received payload:", data);
+
+    const body = data.data || "New live event is happening now!";
+    const imageURL = data.imageURL || ""; 
+    let postId = data.postId || "";
+
+    const message = {
+      topic: NOTIFICATION_LIVE, 
+      notification: { body, image: imageURL }, 
+      data: { postId: postId.toString(), type: "LIVE" },  
     };
 
-    await admin.messaging().sendToTopic(NOTIFICATION_LIVE, payload);
+    const response = await admin.messaging().send(message);
 
+    console.log("✅ Notification sent to topic. Response:", response);
     return NextResponse.json(
-      { success: true, msg: "success" },
+      { success: true, msg: "Notification Sent" },
       { status: 200 }
     );
+
   } catch (error: any) {
+    console.error("🔥 Error while sending notification:", error.message);
     return NextResponse.json(
       { success: false, msg: error.message },
       { status: 400 }

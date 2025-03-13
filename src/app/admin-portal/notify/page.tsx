@@ -20,43 +20,48 @@ const CreatePostPage = () => {
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0]);
+      console.log("Selected file:", event.target.files[0]);
     }
   };
 
-  const onFileUpload = async () => {
-    if (!file) return;
+const onFileUpload = async () => {
+  if (!file) return;
 
-    const client = new ImgurClient({ clientId });
-    const reader = new FileReader();
+  console.log("Uploading file:", file.name);
+  
+  const formData = new FormData();
+  formData.append("image", file); 
+  formData.append("type", "file");
 
-    reader.onloadend = async () => {
-      if (typeof reader.result !== "string") return;
-      const imageData = reader.result.split(",")[1]; // Extract base64 data
+  try {
+    const response = await fetch("https://api.imgur.com/3/image", {
+      method: "POST",
+      headers: {
+        Authorization: `Client-ID ${clientId}`,
+      },
+      body: formData,
+    });
 
-      try {
-        const response = await client.upload({
-          image: imageData,
-          type: "base64",
-        });
+    const result = await response.json();
 
-        if (response.success) {
-          setImageLink(response.data.link);
-        } else {
-          console.error("❌ Image upload failed:", response.data);
-        }
-      } catch (error) {
-        console.error("❌ Error uploading image:", error);
-      }
-    };
-
-    reader.readAsDataURL(file);
-  };
+    if (result.success) {
+      setImageLink(result.data.link);
+      console.log("✅ Image uploaded successfully:", result.data.link);
+    } else {
+      console.error("❌ Image upload failed:", result);
+    }
+  } catch (error) {
+    console.error("❌ Error uploading image:", error);
+  }
+};
 
   const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("Submitting notification with title:", title, "and body:", body);
 
     if (!title || !body) {
       alert("Title and body are required!");
+      console.error("❌ Title or body is missing!");
       return;
     }
 
@@ -70,8 +75,10 @@ const CreatePostPage = () => {
       });
 
       const result = await response.json();
+      console.log("Server response:", result);
+
       if (result.success) {
-        console.log("✅ Notification sent:", result.msg);
+        console.log("✅ Notification sent successfully:", result.msg);
       } else {
         console.error("❌ Error sending notification:", result.msg);
       }
@@ -97,7 +104,10 @@ const CreatePostPage = () => {
           required
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            console.log("Title updated:", e.target.value);
+          }}
           className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
         />
 
@@ -111,7 +121,10 @@ const CreatePostPage = () => {
           required
           placeholder="Image URL"
           value={imageLink}
-          onChange={(e) => setImageLink(e.target.value)}
+          onChange={(e) => {
+            setImageLink(e.target.value);
+            console.log("Image URL updated:", e.target.value);
+          }}
           className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
         />
 
@@ -135,7 +148,10 @@ const CreatePostPage = () => {
           required
           placeholder="Message"
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onChange={(e) => {
+            setBody(e.target.value);
+            console.log("Body updated:", e.target.value);
+          }}
           rows={5}
           className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
         ></textarea>
@@ -148,6 +164,7 @@ const CreatePostPage = () => {
               setTitle("");
               setBody("");
               setImageLink("");
+              console.log("Form cleared");
             }}
           >
             Clear
