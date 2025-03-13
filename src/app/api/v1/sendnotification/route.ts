@@ -4,21 +4,25 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 import admin from '@/lib/firebase'
 
-
 export const dynamic = "force-dynamic"; // defaults to force-static
-
-
 
 const NOTIFICATION_POST = "posts_notification";
 const NOTIFICATION_LIVE = "live_notification";
 
 export async function POST(request: NextRequest) {
+  console.log("🚀 Received a request at /api/v1/sendnotification");
+
+  // Retrieve and log the token
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
+  console.log("🔑 Token received:", token);
+
+  // Check authorization
   if (token === null || token?.role !== "admin") {
+    console.error("❌ Unauthorized access attempt");
     return Response.json(
       { success: false, msg: "Unauthorized" },
       { status: 401 }
@@ -26,9 +30,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-
+    // Parse request body
     const data = await request.json();
-
+    console.log("📩 Request payload:", data);
 
     const title = data.title;
     const body = data.body;
@@ -52,22 +56,19 @@ export async function POST(request: NextRequest) {
       },
     };
 
+    console.log("📡 Sending notification with payload:", payload);
+
     await admin.messaging().sendToTopic(NOTIFICATION_POST, payload);
 
-    const myBlob = {
-      success: true,
-      msg: "Notification Sent",
-    };
-    const myOptions = { status: 200 };
+    console.log("✅ Notification sent successfully");
 
-    return Response.json(myBlob, myOptions);
+    return Response.json({ success: true, msg: "Notification Sent" }, { status: 200 });
 
   } catch (error: any) {
-    const myBlob = {
-      success: false,
-      msg: error.message,
-    };
-    const myOptions = { status: 400 };
-    return Response.json(myBlob, myOptions);
+    console.error("🔥 Error while sending notification:", error.message);
+    return Response.json(
+      { success: false, msg: error.message },
+      { status: 400 }
+    );
   }
 }
