@@ -357,7 +357,7 @@ export const UserHeader = () => {
               }
               className="ml-20 "
             >
-              <ArrowRightIcon className="size-10 rounded-full bg-gray-100 p-2 mr-2 dark:hover:bg-gray-700" />
+              <ArrowRightIcon className="size-10 rounded-full bg-gray-100 dark:bg-gray-900 p-2 mr-2 hover:bg-gray-200 dark:hover:bg-gray-700" />
             </button>
           </div>
           <ul className="grid grid-flow-row gap-4 py-4 px-2">
@@ -378,7 +378,7 @@ export const UserHeader = () => {
                 <Link
                   className={
                     nunitoSans.className +
-                    " text-zinc-800 text-xl hover:text-white font-semibold  rounded-lg ml-4 hover:py-1 hover:px-2 hover:border hover:border-black hover:bg-gradient-to-r from-slate-600 to to-violet-600"
+                    " text-zinc-800 dark:text-gray-200 text-xl hover:text-white font-semibold  rounded-lg ml-4 hover:py-1 hover:px-2 hover:border hover:border-black dark:hover:border-gray-400 hover:bg-gradient-to-r from-slate-600 to to-violet-600"
                   }
                   onClick={() => setShowDropdown(false)}
                   href={link.href}
@@ -387,7 +387,7 @@ export const UserHeader = () => {
                 </Link>
               </li>
             ))}
-            <hr />
+            <hr className="border-gray-500 dark:border-gray-700" />
           </ul>
         </div>
       )}
