@@ -7,8 +7,12 @@ import { MatchPosts } from "@/models/Match";
 import parse from "html-react-parser";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+// import ReactQuill from "react-quill";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+// const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
+// const quillRef= useRef<ReactQuill |null>(null);
 
 interface EditLivePostFormProps {
   match: MatchPosts;
