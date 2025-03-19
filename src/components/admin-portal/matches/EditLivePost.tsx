@@ -25,13 +25,26 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   });
   const [timelineContent, setTimelineContent] = useState<string>("");
 
-  // Refs for inputs
   const team1ScoreRef = useRef<HTMLInputElement>(null);
   const team2ScoreRef = useRef<HTMLInputElement>(null);
   const matchStatusRef = useRef<HTMLInputElement>(null);
   const quillRef = useRef<any>(null);
 
-  // Memoized handlers
+  // Clear status message after 5 seconds
+  useEffect(() => {
+    if (statusMessage.message) {
+      const timer = setTimeout(() => {
+        setStatusMessage({ error: false, success: false, message: "" });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+
+  // Initialize Quill content
+  useEffect(() => {
+    setTimelineContent("");
+  }, []);
+
   const handleTeamChange = useCallback(
     (setTeamCode: (code: string) => void, otherTeamCode: string) =>
       (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -79,7 +92,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-2"
         required
         placeholder="Score"
-        value={teamScore}
+        value={teamScore || ""}
         onChange={(e) => setTeamScore(e.target.value)}
       />
     </div>
@@ -143,7 +156,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
               className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               required
               placeholder="Penalty"
-              value={matchData.team1.team_penalty}
+              value={matchData.team1.team_penalty || ""}
               onChange={(e) =>
                 setMatchData(prev => ({
                   ...prev,
@@ -160,7 +173,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
               className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               required
               placeholder="Penalty"
-              value={matchData.team2.team_penalty}
+              value={matchData.team2.team_penalty || ""}
               onChange={(e) =>
                 setMatchData(prev => ({
                   ...prev,
@@ -176,17 +189,21 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
 
   const MatchTypeInputField = () => {
     const setMatchType = useCallback((matchType: string) => {
-      setMatchData(prev => ({ ...prev, match_type: matchType }));
+      setMatchData((prev) => ({ ...prev, match_type: matchType }));
     }, []);
 
     return (
       <div>
-        <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+        <label
+          htmlFor="matchType"
+          className="block text-sm font-medium leading-6 text-gray-900 mb-2"
+        >
           Match Type
         </label>
         <select
+          id="matchType"
           className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          value={matchData.match_type}
+          value={matchData.match_type || "football"}
           onChange={(e) => setMatchType(e.target.value)}
         >
           <option value="football">Football</option>
@@ -210,7 +227,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
           ref={matchStatusRef}
           className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           type="text"
-          value={matchData.match_status}
+          value={matchData.match_status || ""}
           onChange={(e) => setMatchStatus(e.target.value)}
         />
       </div>
@@ -286,9 +303,12 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   };
 
   const IsMatchLiveField = () => {
-    const handleIsLiveChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-      setMatchData(prev => ({ ...prev, is_live: e.target.value === "yes" }));
-    }, []);
+    const handleIsLiveChange = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setMatchData(prev => ({ ...prev, is_live: e.target.value === "yes" }));
+      },
+      []
+    );
 
     return (
       <div className="mb-4">
@@ -420,11 +440,11 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     const handleAddTimeline = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const formData = new FormData(e.currentTarget);
       const timeline_date = formData.get("timeline_date") as string;
-      const content = timelineContent;
+      const content = timelineContent.trim();
 
-      if (!content || content.trim() === "") {
+      if (!content || content === "<p><br></p>") {
         setStatusMessage({
           error: true,
           success: false,
@@ -438,47 +458,60 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         msgHtml: content,
       };
 
-      const res = await fetch(
-        `/api/v1/live/match/${matchData.firebase_match_id}/timeline`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(timeline),
-        }
-      );
+      try {
+        const res = await fetch(
+          `/api/v1/live/match/${matchData.firebase_match_id}/timeline`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(timeline),
+          }
+        );
 
-      if (res.ok) {
-        const newTimeline = await res.json();
-        setMatchData(prev => ({
-          ...prev,
-          timeline: [...prev.timeline, newTimeline.data],
-        }));
-        setTimelineContent("");
-        setStatusMessage({
-          error: false,
-          success: true,
-          message: "Timeline added successfully",
-        });
-        if (sendNotification) {
-          const contentText = new DOMParser()
-            .parseFromString(content, "text/html")
-            .body.textContent || "";
-          await sendLiveNotification(
-            contentText,
-            matchData,
-            matchData.firebase_match_id
-          );
+        if (res.ok) {
+          const newTimeline = await res.json();
+          setMatchData(prev => ({
+            ...prev,
+            timeline: [...prev.timeline, newTimeline.data],
+          }));
+          setTimelineContent(""); // Reset Quill content
+          setStatusMessage({
+            error: false,
+            success: true,
+            message: "Timeline added successfully",
+          });
+          if (sendNotification) {
+            const contentText = new DOMParser()
+              .parseFromString(content, "text/html")
+              .body.textContent || "";
+            await sendLiveNotification(
+              contentText,
+              matchData,
+              matchData.firebase_match_id,
+              true
+            );
+          }
+        } else {
+          setStatusMessage({
+            error: true,
+            success: false,
+            message: "Error adding timeline",
+          });
         }
-      } else {
+      } catch (error: any) {
         setStatusMessage({
           error: true,
           success: false,
-          message: "Error adding timeline",
+          message: "Error adding timeline: " + error.message,
         });
       }
     };
+
+    const handleQuillChange = useCallback((content: string) => {
+      setTimelineContent(content);
+    }, []);
 
     return (
       <form onSubmit={handleAddTimeline} className="grid grid-flow-row gap-4">
@@ -489,34 +522,36 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
             type="datetime-local"
             className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
-          <ReactQuill
-            ref={quillRef}
-            theme="snow"
-            value={timelineContent}
-            onChange={setTimelineContent}
-            preserveWhitespace={true}
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline"],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["link"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "list",
-              "bullet",
-              "link",
-            ]}
-          />
+          <div className="quill-container">
+            <ReactQuill
+              ref={quillRef}
+              theme="snow"
+              value={timelineContent}
+              onChange={handleQuillChange}
+              preserveWhitespace={true}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ["bold", "italic", "underline"],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["link"],
+                  ["clean"],
+                ],
+              }}
+              formats={[
+                "header",
+                "bold",
+                "italic",
+                "underline",
+                "list",
+                "bullet",
+                "link",
+              ]}
+            />
+          </div>
           <div className="flex flex-row justify-end gap-4">
             <button
-              className="rounded-full bg-blue-600 px-3 mt-10 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="rounded-full bg-blue-600 px-3 mt-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               type="submit"
             >
               Add Timeline
@@ -528,41 +563,59 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   };
 
   const sendLiveNotification = useCallback(
-    async (timelineMessage: string, data: MatchPosts, firebaseMatchId: string) => {
-      const notificationBody = timelineMessage
-        ? `${data.team1.team_name} ${data.team1.team_score} - ${data.team2.team_score} ${data.team2.team_name}\n${timelineMessage}`
-        : `${data.match_status}`;
+    async (
+      timelineMessage: string,
+      data: MatchPosts,
+      firebaseMatchId: string,
+      isTimeline: boolean = false
+    ) => {
+      const scoreLine = `${data.team1.team_name} ${data.team1.team_score} - ${data.team2.team_score} ${data.team2.team_name}`;
+      let notificationBody: string;
 
-      const notifyRes = await fetch("/api/v1/live/notification/send", {
-        method: "POST",
-        body: JSON.stringify({
-          team1: {
-            team_name: data.team1.team_name,
-            team_score: data.team1.team_score,
-          },
-          team2: {
-            team_name: data.team2.team_name,
-            team_score: data.team2.team_score,
-          },
-          match_status: notificationBody,
-          postId: firebaseMatchId,
-        }),
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-      });
-
-      if (notifyRes.ok) {
-        setStatusMessage({
-          error: false,
-          success: true,
-          message: "Notification sent successfully",
-        });
+      if (isTimeline) {
+        notificationBody = timelineMessage;
       } else {
+        notificationBody = `${scoreLine}\n${data.match_status}`;
+      }
+
+      try {
+        const notifyRes = await fetch("/api/v1/live/notification/send", {
+          method: "POST",
+          body: JSON.stringify({
+            team1: {
+              team_name: data.team1.team_name,
+              team_score: data.team1.team_score,
+            },
+            team2: {
+              team_name: data.team2.team_name,
+              team_score: data.team2.team_score,
+            },
+            match_status: notificationBody,
+            postId: firebaseMatchId,
+          }),
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+        });
+
+        if (notifyRes.ok) {
+          setStatusMessage({
+            error: false,
+            success: true,
+            message: "Notification sent successfully",
+          });
+        } else {
+          setStatusMessage({
+            error: true,
+            success: false,
+            message: "Error sending notification",
+          });
+        }
+      } catch (error: any) {
         setStatusMessage({
           error: true,
           success: false,
-          message: "Error sending notification",
+          message: "Error sending notification: " + error.message,
         });
       }
     },
