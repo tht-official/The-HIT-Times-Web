@@ -68,7 +68,7 @@ const HeroSection: FC<HeroSectionProps> = ({ scrollToSection }) => {
               <div className="text-gray-400">Games</div>
             </div>
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
-              <div className="text-xl font-bold text-red-500">₹50K+</div>
+              <div className="text-xl font-bold text-red-500">EPIC</div>
               <div className="text-gray-400">Prize Pool</div>
             </div>
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
