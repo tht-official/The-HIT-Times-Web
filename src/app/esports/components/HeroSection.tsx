@@ -60,11 +60,11 @@ const HeroSection: FC<HeroSectionProps> = ({ scrollToSection }) => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
-              <div className="text-xl font-bold text-red-500">15+</div>
+              <div className="text-xl font-bold text-red-500">Unlimited</div>
               <div className="text-gray-400">Teams</div>
             </div>
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
-              <div className="text-xl font-bold text-red-500">4</div>
+              <div className="text-xl font-bold text-red-500">6</div>
               <div className="text-gray-400">Games</div>
             </div>
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
@@ -72,8 +72,8 @@ const HeroSection: FC<HeroSectionProps> = ({ scrollToSection }) => {
               <div className="text-gray-400">Prize Pool</div>
             </div>
             <div className="backdrop-blur-md bg-black/20 border border-red-900/20 rounded-lg p-4 hover:bg-black/30 hover:border-red-500/30 transition-all">
-              <div className="text-xl font-bold text-red-500">1</div>
-              <div className="text-gray-400">Epic Day</div>
+              <div className="text-xl font-bold text-red-500">2</div>
+              <div className="text-gray-400">Epic Days</div>
             </div>
           </div>
         </div>
