@@ -71,7 +71,7 @@ export default function RegisterCTA() {
           
           <div className="bg-gradient-to-r from-red-900/20 via-red-600/20 to-red-900/20 p-4 text-center">
             <p className="text-gray-300 text-sm">
-              Registration closes on <span className="text-red-400 font-semibold">May 10th, 2025</span> • Event date: <span className="text-red-400 font-semibold">May 15th, 2025</span>
+              Registration closes on <span className="text-red-400 font-semibold">May 8th, 2025</span> • Event date: <span className="text-red-400 font-semibold">May 10th & 11th, 2025</span>
             </p>
           </div>
         </div>

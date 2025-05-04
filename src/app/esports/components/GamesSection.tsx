@@ -30,7 +30,21 @@ export default function GamesSection() {
       description: "The world's most popular football simulation with realistic gameplay.",
       format: "1v1 Tournament",
       teamSize: "Individual" 
-    }
+    },
+    { 
+      name: "FreeFire", 
+      image: "https://i.scdn.co/image/ab67616d00001e02c72fc87f92c0e770bcc25ce7", 
+      description: "Battle royale where strategy and survival determine the last team standing.",
+      format: "Battle Royale",
+      teamSize: "4 Player squad" 
+    },
+    { 
+      name: "eFootball", 
+      image: "https://preview.redd.it/efootball-2025-v0-k74zlrturfad1.jpeg?auto=webp&s=c54252a4b3f1b2a079433d4feefaf9e47c5c5a9c", 
+      description: "The world's most popular football simulation with realistic gameplay.",
+      format: "1v1 Tournament",
+      teamSize: "Individual" 
+    },
   ];
 
   return (

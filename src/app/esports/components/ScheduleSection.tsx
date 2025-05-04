@@ -5,36 +5,52 @@ export default function ScheduleSection() {
   const tournaments = [
     { 
       name: "Valorant Championship",
-      time: "10:00 AM - 2:00 PM",
+      time: "To be announced",
       prize: "To be announced", 
       teamSize: "5v5",
-      registrationFee: "₹500 per team",
+      registrationFee: "₹79 per person",
       image: "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?auto=format&fit=crop&w=600&q=80"
     },
     { 
       name: "BGMI Showdown",
-      time: "2:30 PM - 6:30 PM",
+      time: "To be announced",
       prize: "To be announced", 
       teamSize: "4-player squad",
-      registrationFee: "₹400 per team",
+      registrationFee: "₹59 per person",
       image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80"
     },
     { 
       name: "COD Masters",
-      time: "7:00 PM - 10:00 PM", 
+      time: "To be announced", 
       prize: "To be announced",
       teamSize: "4v4",
-      registrationFee: "₹450 per team",
+      registrationFee: "₹59 per person",
       image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=600&q=80"
     },
     { 
       name: "FIFA Tournament",
-      time: "12:00 PM - 4:00 PM", 
+      time: "To be announced", 
       prize: "To be announced",
       teamSize: "1v1",
-      registrationFee: "₹250 per person",
+      registrationFee: "₹49 per person",
       image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=600&q=80"
-    }
+    },
+    { 
+      name: "eFootball",
+      time: "To be announced", 
+      prize: "To be announced",
+      teamSize: "1v1",
+      registrationFee: "₹59 per person",
+      image: "https://preview.redd.it/efootball-2025-v0-k74zlrturfad1.jpeg?auto=webp&s=c54252a4b3f1b2a079433d4feefaf9e47c5c5a9c"
+    },
+    { 
+      name: "FreeFire",
+      time: "To be announced",
+      prize: "To be announced", 
+      teamSize: "4-player squad",
+      registrationFee: "₹59 per person",
+      image: "https://i.scdn.co/image/ab67616d00001e02c72fc87f92c0e770bcc25ce7"
+    },
   ];
 
   return (
