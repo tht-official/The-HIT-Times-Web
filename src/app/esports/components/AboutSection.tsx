@@ -17,6 +17,9 @@ export default function AboutSection() {
               <p className="text-gray-300 mb-6">
                 Join the adrenaline rush as teams battle it out across various gaming titles. Feel the intensity, build your strategies, and compete for glory and exciting prizes.
               </p>
+              <p className="text-gray-300 mb-6">
+                MAR certificates will be awarded to all participants of HIT .
+              </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                 <div className="flex items-center bg-black/30 px-3 py-2 rounded-lg border border-red-900/10">
                   <Calendar className="w-5 h-5 text-red-500 mr-2" />
