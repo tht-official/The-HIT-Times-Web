@@ -33,7 +33,7 @@ const HeroSection: FC<HeroSectionProps> = ({ scrollToSection }) => {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 animate-text">LOCK'D DOWN</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 animate-text">LOCK&apos;D DOWN</span>
             <span className="block text-3xl md:text-4xl text-gray-300 mt-2">THE ULTIMATE E-SPORTS SHOWDOWN</span>
           </h1>
           

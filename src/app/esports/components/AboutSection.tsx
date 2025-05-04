@@ -12,7 +12,7 @@ export default function AboutSection() {
                 <span className="text-red-500">#</span> About The Event
               </h2>
               <p className="text-gray-300 mb-6">
-                The HIT Times is proud to present the grandest E-sports event of the season, where speed meets strategy and legends are made. Whether you're a master tactician or a brave-hearted contender, this is your moment to showcase greatness.
+                The HIT Times is proud to present the grandest E-sports event of the season, where speed meets strategy and legends are made. Whether you&apos;a master tactician or a brave-hearted contender, this is your moment to showcase greatness.
               </p>
               <p className="text-gray-300 mb-6">
                 Join the adrenaline rush as teams battle it out across various gaming titles. Feel the intensity, build your strategies, and compete for glory and exciting prizes.
