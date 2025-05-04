@@ -3,7 +3,7 @@ import { Trophy, Users, Gamepad, Zap } from 'lucide-react';
 
 export default function RegisterCTA() {
   // Replace this URL with your actual Google Form URL
-  const registrationFormUrl = "https://forms.gle/YourGoogleFormLink";
+  const registrationFormUrl = "https://forms.gle/AD3FkxdYn2jrq77w7";
   
   const handleRegisterClick = () => {
     window.open(registrationFormUrl, '_blank');
@@ -33,7 +33,7 @@ export default function RegisterCTA() {
                   Ready to <span className="text-red-500">compete</span>?
                 </h2>
                 <p className="text-gray-300 mb-6">
-                  Join the ultimate gaming showdown on May 15th, 2025. 
+                  Join the ultimate gaming showdown on May 10th-11th, 2025. 
                   Register now to secure your spot in the tournament!
                 </p>
                 <div className="flex flex-wrap gap-4 mb-6">
@@ -71,7 +71,7 @@ export default function RegisterCTA() {
           
           <div className="bg-gradient-to-r from-red-900/20 via-red-600/20 to-red-900/20 p-4 text-center">
             <p className="text-gray-300 text-sm">
-              Registration closes on <span className="text-red-400 font-semibold">May 8th, 2025</span> • Event date: <span className="text-red-400 font-semibold">May 10th & 11th, 2025</span>
+              Registration closes on <span className="text-red-400 font-semibold">May 9th, 2025</span> • Event date: <span className="text-red-400 font-semibold">May 10th & 11th, 2025</span>
             </p>
           </div>
         </div>

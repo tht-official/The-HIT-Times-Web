@@ -29,7 +29,7 @@ export default function RulesSection() {
       ]
     },
     {
-      name: "COD Masters",
+      name: "COD M Masters",
       icon: <Shield className="w-5 h-5 text-red-500" />,
       shortDesc: "4v4 action-packed first-person shooter tournament",
       rules: [
@@ -94,7 +94,7 @@ export default function RulesSection() {
       ]
     },
     {
-      name: "FREEFIRE",
+      name: "FREEFIRE MAX",
       icon: <Gamepad className="w-5 h-5 text-red-500" />,
       shortDesc: "4-player squad battle royale on mobile",
       rules: [
@@ -114,7 +114,7 @@ export default function RulesSection() {
       ]
     },
     {
-      name: "eFootball Tournament",
+      name: "eFootball Mobile Tournament",
       icon: <Volleyball className="w-5 h-5 text-red-500" />,
       shortDesc: "1v1 football simulation game",
       rules: [
