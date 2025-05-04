@@ -28,7 +28,7 @@ const HeroSection: FC<HeroSectionProps> = ({ scrollToSection }) => {
           <div className="animate-pulse inline-block px-4 py-1 rounded-full bg-red-900/30 backdrop-blur-sm border border-red-500/30 text-red-500 mb-6">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-              <span>HIT TIMES PRESENTS</span>
+              <span>THE HIT TIMES PRESENTS</span>
             </div>
           </div>
           

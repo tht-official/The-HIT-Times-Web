@@ -23,15 +23,15 @@ export default function AboutSection() {
               <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                 <div className="flex items-center bg-black/30 px-3 py-2 rounded-lg border border-red-900/10">
                   <Calendar className="w-5 h-5 text-red-500 mr-2" />
-                  <span className="text-gray-300">May 15, 2025</span>
+                  <span className="text-gray-300">May 10th-11th, 2025</span>
                 </div>
                 <div className="flex items-center bg-black/30 px-3 py-2 rounded-lg border border-red-900/10">
                   <MapPin className="w-5 h-5 text-red-500 mr-2" />
-                  <span className="text-gray-300">HIT Auditorium</span>
+                  <span className="text-gray-300">HIT Campus</span>
                 </div>
                 <div className="flex items-center bg-black/30 px-3 py-2 rounded-lg border border-red-900/10">
                   <Clock className="w-5 h-5 text-red-500 mr-2" />
-                  <span className="text-gray-300">10 AM - 10 PM</span>
+                  <span className="text-gray-300">9:30 AM onwards</span>
                 </div>
               </div>
             </div>
