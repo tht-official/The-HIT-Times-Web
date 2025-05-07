@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { ImgurClient } from "imgur";
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from "react";
 import 'react-quill/dist/quill.snow.css'; // Quill stylesheet
 
 // Dynamically import the editor to prevent SSR issues
@@ -132,34 +131,62 @@ const PostForm = ({ postId }: PostFormProps) => {
     if (!fileN) {
       return;
     }
-    const client = new ImgurClient({ clientId });
-    const reader = new FileReader();
-
-    reader.onloadend = async () => {
-      if (typeof reader.result !== "string") {
-        console.error("Invalid file type");
-        return;
-      }
-      const imageData = reader.result.split(",")[1]; // base64 part
-      try {
-        const response = await client.upload({
-          image: imageData,
-          type: "base64",
-        });
-        if (response.success) {
-          setImageLink(response.data.link);
-        } else {
-          console.error("Image upload failed:", response.data);
+    try {
+      const formData = new FormData();
+      formData.append("file", fileN);
+      formData.append("upload_preset", "postuploads");
+      
+      const uploadResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dvw5qhccb/image/upload",
+        {
+          method: "POST",
+          body: formData,
         }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
-    };
-    reader.onerror = (error) => {
-      console.error("Error reading file:", error);
-    };
-    reader.readAsDataURL(fileN);
+      );
+      const uploadedImageData = await uploadResponse.json();
+  
+      const imageUrl = uploadedImageData.secure_url;
+  
+      setImageLink(imageUrl);
+      console.log("Uploaded Image URL: " + imageUrl);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
+
+  // const onFileUpload = async () => {
+  //   if (!fileN) {
+  //     return;
+  //   }
+  //   const client = new ImgurClient({ clientId });
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = async () => {
+  //     if (typeof reader.result !== "string") {
+  //       console.error("Invalid file type");
+  //       return;
+  //     }
+  //     const imageData = reader.result.split(",")[1]; // base64 part
+  //     try {
+  //       const response = await client.upload({
+  //         image: imageData,
+  //         type: "base64",
+  //       });
+  //       if (response.success) {
+  //         setImageLink(response.data.link);
+  //       } else {
+  //         console.error("Image upload failed:", response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error uploading image:", error);
+  //     }
+  //   };
+  //   reader.onerror = (error) => {
+  //     console.error("Error reading file:", error);
+  //   };
+  //   reader.readAsDataURL(fileN);
+  // };
+
 
   // Quill modules and formats
   // Add comments ONLY inside this editor area as requested
