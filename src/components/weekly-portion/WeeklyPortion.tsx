@@ -1,8 +1,8 @@
 "use client";
-import { Posts } from "@/models/Post";
 import React, { Suspense, useEffect, useState } from "react";
-import { AnimatedLoader } from "../common/loader/FrontLoader";
 import ArticleSection, { ArticleSectionProps } from "./ArticleSection"; // Ensure this import path is correct
+import { Posts } from "@/models/Post";
+import { CircularLoader } from "@/components/common/loader/Loaders";
 
 export const dropdownsToSections: { [key: string]: string } = {
   "00": "Monday Hues",
@@ -60,11 +60,11 @@ const WeeklyPortion: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <AnimatedLoader />;
+    return <CircularLoader />;
   }
 
   return (
-    <Suspense fallback={<AnimatedLoader />}>
+    <Suspense fallback={<CircularLoader />}>
       <div className="grid grid-flow-row gap-8 ">
         {sections.map((section) => (
           <ArticleSection
