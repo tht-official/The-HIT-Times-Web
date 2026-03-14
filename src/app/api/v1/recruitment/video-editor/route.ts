@@ -40,7 +40,9 @@ export async function POST(request: NextRequest) {
             "email",
             "Q5_ve",
             "Q6_ve",
-            "Q7_ve"
+            "Q7_ve",
+            "Q12_ve",
+            "Q13_ve"
         ];
 
         for (const field of requiredFields) {

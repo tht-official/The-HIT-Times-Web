@@ -42,6 +42,8 @@ type VeSheetData = {
   Q9_ve: string; // Who is your favourite YouTuber or YouTube channel and why?
   Q10_ve: string; // Do you hold any experience in short film making or video making? If yes, specify the software you use for final editing and production.
   Q11_ve: string; // If you want to share any of your original works, feel free to share the link here
+  Q12_ve: string; // What equipments related to video editing and production you possess?
+  Q13_ve: string; // Name the devices used for video shooting and video editing?
 };
 
 // type VeSheetDataToSend = Omit<VeSheetData, 'Q5_ve'> & {
@@ -153,7 +155,7 @@ export default function VeForm() {
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
             src="https://res.cloudinary.com/dvw5qhccb/image/upload/v1730133636/rec-header.png_reznpj.jpg"
-            alt="Recruitment Form 2K25"
+            alt="Recruitment Form 2k26"
             width={1500}
             height={100}
             className="border  border-white mt-2 rounded-lg"
@@ -170,7 +172,7 @@ export default function VeForm() {
                   " text-3xl lg:text-4xl font-medium text-white"
                 }
               >
-                Recruitment Form 2K25
+                Recruitment Form 2k26
               </div>
             </header>
             <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
@@ -356,6 +358,54 @@ export default function VeForm() {
                 {...register("Q9_ve", { required: true })}
               />
               {errors.Q9_ve && (
+                <span className="text-red-500 text-xs">
+                  This field is required.
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Q12: Equipments possessed */}
+          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+            <div className="py-5 px-6 lg:px-8 flex flex-col">
+              <label
+                htmlFor="Q12_ve"
+                className={poppins.className + " text-white text-md mb-4"}
+              >
+                What equipments related to video editing and production you possess?
+                <span className="text-md text-red-600 pl-1">*</span>
+              </label>
+              <textarea
+                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 py-1 px-2 focus:border-b-2 focus:placeholder-purple-400"
+                placeholder="List your equipments"
+                id="Q12_ve"
+                {...register("Q12_ve", { required: true })}
+              />
+              {errors.Q12_ve && (
+                <span className="text-red-500 text-xs">
+                  This field is required.
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Q13: Devices for shooting and editing */}
+          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+            <div className="py-5 px-6 lg:px-8 flex flex-col">
+              <label
+                htmlFor="Q13_ve"
+                className={poppins.className + " text-white text-md mb-4"}
+              >
+                Name the devices used for video shooting and video editing?
+                <span className="text-md text-red-600 pl-1">*</span>
+              </label>
+              <textarea
+                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 py-1 px-2 focus:border-b-2 focus:placeholder-purple-400"
+                placeholder="Name the devices"
+                id="Q13_ve"
+                {...register("Q13_ve", { required: true })}
+              />
+              {errors.Q13_ve && (
                 <span className="text-red-500 text-xs">
                   This field is required.
                 </span>
