@@ -83,7 +83,7 @@ function SuccessPage({ params }: { params: { successId: string } }) {
               poppins.className
             }
           >
-            Hello {invLink.title.toUpperCase()} Your Recruitment Form 2k25
+            Hello {invLink.title.toUpperCase()} Your Recruitment Form 2k26
             application for The HIT Times has been received. Thank you for
             taking the time to complete and successfully submit the Recruitment
             Form for our 2025 intake. 

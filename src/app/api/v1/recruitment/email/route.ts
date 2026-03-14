@@ -47,12 +47,12 @@ export async function POST(request: NextRequest) {
     const info = await transporter.sendMail({
       from: EMAIL_USER,
       to: applicantEmail,
-      subject: "Response recorded for THT Recruitment Drive 2k25",
+      subject: "Response recorded for THT Recruitment Drive 2k26",
       html: `
       <p>Greetings, Dear ${applicantName}!</p><br />
-<b>Your Recruitment Form 2k25 application for The HIT Times has been received.</b>
+<b>Your Recruitment Form 2k26 application for The HIT Times has been received.</b>
 
-<p>Thank you for taking the time to complete and successfully submit the Recruitment Form for our 2025 intake.</p><br />
+<p>Thank you for taking the time to complete and successfully submit the Recruitment Form for our 2026 intake.</p><br />
 
 <p>We are thoroughly reviewing each entry to ensure that we select candidates who align with our values and vision.</p> <br />
 
@@ -64,9 +64,9 @@ The HIT Times.</p>
       `,
       text: `Greetings, Dear ${applicantName}!
 
-Your Recruitment Form 2k25 application for The HIT Times has been received.
+Your Recruitment Form 2k26 application for The HIT Times has been received.
 
-Thank you for taking the time to complete and successfully submit the Recruitment Form for our 2025 intake.
+Thank you for taking the time to complete and successfully submit the Recruitment Form for our 2026 intake.
 
 We are thoroughly reviewing each entry to ensure that we select candidates who align with our values and vision.
 

@@ -56,6 +56,8 @@ export default function PhotographyForm() {
     Q11_photo: any; //  ppt/pdf/link
     Q12_photo: any; //  ppt/pdf/link
     Q13_photo: any; //  ppt/pdf/link
+    Q14_photo: string;
+    Q15_photo: string;
   };
 
   const router = useRouter();
@@ -142,7 +144,7 @@ export default function PhotographyForm() {
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
             src="https://res.cloudinary.com/dvw5qhccb/image/upload/v1730133636/rec-header.png_reznpj.jpg"
-            alt="Recruitment Form 2K25"
+            alt="Recruitment Form 2k26"
             width={1500}
             height={100}
             className="border  border-white mt-2 rounded-lg"
@@ -159,7 +161,7 @@ export default function PhotographyForm() {
                   " text-3xl lg:text-4xl font-medium text-white"
                 }
               >
-                Recruitment Form 2K25
+                Recruitment Form 2k26
               </div>
             </header>
             <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
@@ -399,29 +401,29 @@ export default function PhotographyForm() {
           </div>
 
           <FormInput
-            title="Tell us in brief what you like most about photography"
+            title="Can you bring your camera during the recruitment process?"
             id="Q5_photo"
             isRequired={true}
             register={register}
           />
 
           <FormInput
-            title="Tell us a bit about any photographers you follow or those who inspire you."
-            subtitle="If you have other inspirations, feel free to tell us about those as well."
+            title="Do you have any favorite photographers? If yes, mention the name."
             id="Q6_photo"
             isRequired={false}
             register={register}
           />
 
           <FormInput
-            title="How do you think, as a photographer at THT, you can influence the atmosphere of the college?"
+            title="Which photography genre do you like the most?"
             id="Q7_photo"
             isRequired={false}
             register={register}
           />
 
           <FormInput
-            title="Do you hold any experience in short film making or video making? If yes, specify the software you use for final editing and production."
+            title="6. Do you have experience in film making or video graphy? If yes then upload your samples."
+            subtitle="Share the Google Drive link"
             id="Q8_photo"
             isRequired={false}
             register={register}
@@ -434,8 +436,7 @@ export default function PhotographyForm() {
                 " text-slate-300 text-md mb-2 font-bold px-7 pt-5"
               }
             >
-              If you want to share any of your original works, feel free to
-              upload it here.(Atleast first two submission is required.)
+              Show your photo Samples (Atleast first two submission is required.)
               <span className="text-md text-red-600 pl-1">*</span>
             </p>
             <p className={poppins.className + " text-slate-300 text-sm  px-7"}>
@@ -449,6 +450,20 @@ export default function PhotographyForm() {
             <FileUploader id="Q12_photo" register={register} />
             <FileUploader id="Q13_photo" register={register} />
           </div>
+
+          <FormInput
+            title="What is Photography?"
+            id="Q14_photo"
+            isRequired={false}
+            register={register}
+          />
+
+          <FormInput
+            title="Why as a Photographer in The HIT Times?"
+            id="Q15_photo"
+            isRequired={false}
+            register={register}
+          />
 
           {isSubmitted ? (
             <div className="flex flex-row justify-start pb-6">

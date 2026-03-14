@@ -45,6 +45,8 @@ export async function GET(request: NextRequest) {
       { label: "Any photographers you follow or those who inspire you.", value: "Q6_photo" },
       { label: "How do you think, as a photographer at THT, you can influence the atmosphere of the college?", value: "Q7_photo" },
       { label: "Do you hold any experience in short film making or video making? If yes, specify the software you use for final editing and production.", value: "Q8_photo" },
+      { label: "What is Photography?", value: "Q14_photo" },
+      { label: "Why as a Photographer in The HIT Times?", value: "Q15_photo" },
       { label: "photo", value: "Q9_photo" },
       { label: "photo", value: "Q10_photo" },
       { label: "photo", value: "Q11_photo" },

@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
             { label: "What are your favourite movie scenes and why?", value: "Q7_ve" },
             { label: "What videos do you suggest we can start creating to put up on our Instagram page?", value: "Q8_ve" },
             { label: "Who is your favourite YouTuber or YouTube channel and why?", value: "Q9_ve" },
+            { label: "What equipments related to video editing and production you possess?", value: "Q12_ve" },
+            { label: "Name the devices used for video shooting and video editing?", value: "Q13_ve" },
             { label: "Do you hold any experience in short film making or video making? If yes, specify the software you use for final editing and production.", value: "Q10_ve" },
             { label: "If you want to share any of your original works, feel free to share the link here", value: "Q11_ve" },
         ];
