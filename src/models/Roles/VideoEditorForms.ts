@@ -28,6 +28,8 @@ type videoEditorData = {
     Q9_ve: string;               // Who is your favourite YouTuber or YouTube channel and why?
     Q10_ve: string;              // Do you hold any experience in short film making or video making? If yes, specify the software you use for final editing and production.
     Q11_ve: string;              // If you want to share any of your original works, feel free to share the link here
+    Q12_ve: string;              // What equipments related to video editing and production you possess?
+    Q13_ve: string;              // Name the devices used for video shooting and video editing?
 
     createdAt: Date;
     updatedAt: Date;
@@ -113,6 +115,14 @@ const videoEditorSchema = new mongoose.Schema<videoEditorData>(
             required: false
         },
         Q11_ve: {
+            type: String,
+            required: false
+        },
+        Q12_ve: {
+            type: String,
+            required: false
+        },
+        Q13_ve: {
             type: String,
             required: false
         },

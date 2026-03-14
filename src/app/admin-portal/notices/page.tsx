@@ -32,7 +32,7 @@ const tspNotice = {
 };
 
 const recruitmentNotice = {
-  noticeTitle: "Fill Recruitment Form 2K25",
+  noticeTitle: "Fill Recruitment Form 2K26",
   noticeLink: "/recruitment",
 };
 

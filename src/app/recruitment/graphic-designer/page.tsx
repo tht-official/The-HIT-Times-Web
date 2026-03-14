@@ -156,7 +156,7 @@ export default function GdForm() {
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
             src="https://res.cloudinary.com/dvw5qhccb/image/upload/v1730133636/rec-header.png_reznpj.jpg"
-            alt="Recruitment Form 2K25"
+            alt="Recruitment Form 2k26"
             width={1500}
             height={100}
             className="border  border-white mt-2 rounded-lg"
@@ -173,7 +173,7 @@ export default function GdForm() {
                   " text-3xl lg:text-4xl font-medium text-white"
                 }
               >
-                Recruitment Form 2K25
+                Recruitment Form 2k26
               </div>
             </header>
             <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>

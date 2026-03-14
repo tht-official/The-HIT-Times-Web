@@ -29,6 +29,8 @@ type photographersData = {
     Q11_photo: any           //  ppt/pdf/link
     Q12_photo: any           //  ppt/pdf/link
     Q13_photo: any          //  ppt/pdf/link
+    Q14_photo: string;
+    Q15_photo: string;
     
     createdAt: Date
     updatedAt: Date
@@ -126,6 +128,12 @@ const photographerSchema = new mongoose.Schema<photographersData>(
             type: String,
         },
         Q13_photo: {
+            type: String,
+        },
+        Q14_photo: {
+            type: String,
+        },
+        Q15_photo: {
             type: String,
         },
     },
