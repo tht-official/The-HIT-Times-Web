@@ -175,10 +175,7 @@ const EventsPage = () => {
             </span>
           </button>
         </Link>
-        <Link
-          href={"/api/v1/recruitment/cw/export"}
-          className="my-6 mr-6"
-        >
+        <Link href={"/api/v1/recruitment/cw/export"} className="my-6 mr-6">
           <button>
             <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
               <div
@@ -195,10 +192,7 @@ const EventsPage = () => {
             </span>
           </button>
         </Link>
-        <Link
-          href={"/api/v1/recruitment/pr/export"}
-          className="my-6 mr-6"
-        >
+        <Link href={"/api/v1/recruitment/pr/export"} className="my-6 mr-6">
           <button>
             <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
               <div
@@ -235,10 +229,7 @@ const EventsPage = () => {
             </span>
           </button>
         </Link>
-        <Link
-          href={"/api/v1/recruitment/gd/export"}
-          className="my-6 mr-6"
-        >
+        <Link href={"/api/v1/recruitment/gd/export"} className="my-6 mr-6">
           <button>
             <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
               <div
