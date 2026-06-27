@@ -108,12 +108,14 @@ const HeroSection = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   {liveMatch.match_status || "Live"}
                 </p>
-                {(liveMatch.team1.team_penalty || liveMatch.team2.team_penalty) && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Penalties: {liveMatch.team1.team_penalty || "0"} -{" "}
-                    {liveMatch.team2.team_penalty || "0"}
-                  </p>
-                )}
+                {liveMatch.match_type === "football" &&
+                  (liveMatch.team1.team_penalty || liveMatch.team2.team_penalty) &&
+                  (liveMatch.team1.team_penalty !== "0" || liveMatch.team2.team_penalty !== "0") && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Penalties: {liveMatch.team1.team_penalty || "0"} -{" "}
+                      {liveMatch.team2.team_penalty || "0"}
+                    </p>
+                  )}
               </div>
 
               <div className="text-center">

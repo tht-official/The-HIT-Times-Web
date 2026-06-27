@@ -14,7 +14,7 @@ const toRenderableImage = (url?: string) => {
   if (!url) return undefined;
   const driveIdMatch = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
   if (driveIdMatch && driveIdMatch[1]) {
-    return `https://drive.google.com/uc?export=view&id=${driveIdMatch[1]}`;
+    return `https://drive.google.com/thumbnail?id=${driveIdMatch[1]}&sz=w500`;
   }
   return url;
 };
@@ -360,21 +360,23 @@ const MatchDetailPage = ({
   const team1Logo = teams[match.team1.team_code]?.[sport]?.team_logo;
   const team2Logo = teams[match.team2.team_code]?.[sport]?.team_logo;
 
+
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-8">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col gap-5 sm:gap-8">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
             {match.match_type}
           </p>
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100 leading-tight flex items-center gap-2 flex-wrap">
+          <h1 className="text-lg sm:text-3xl font-semibold text-gray-900 dark:text-gray-100 leading-tight flex items-center gap-2 flex-wrap mt-1">
             {team1Logo && (
               <Image
                 src={toRenderableImage(team1Logo) ?? ""}
                 alt="Team 1 logo"
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover flex-shrink-0"
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-full object-cover flex-shrink-0"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
@@ -387,9 +389,9 @@ const MatchDetailPage = ({
               <Image
                 src={toRenderableImage(team2Logo) ?? ""}
                 alt="Team 2 logo"
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover flex-shrink-0"
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-full object-cover flex-shrink-0"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
@@ -398,14 +400,14 @@ const MatchDetailPage = ({
             )}
             <span>{getTeamLabel(match.team2.team_code, match.team2.team_name)}</span>
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
             {formatDateTime(match.match_date)}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={() => fetchMatch({ includeTeams: true })}
-            className="inline-flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="inline-flex items-center gap-1 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
             disabled={isRefreshing}
           >
             <ArrowPathIcon
@@ -415,15 +417,15 @@ const MatchDetailPage = ({
           </button>
           <Link
             href="/matches"
-            className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
-            Back to matches
+            ← Back
           </Link>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div className="grid grid-cols-3 gap-4 items-center text-center">
+      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 items-center text-center">
           <div className="text-center flex flex-col items-center">
             {team1Logo && (
               <Image
@@ -431,31 +433,31 @@ const MatchDetailPage = ({
                 alt="Team 1 logo"
                 width={48}
                 height={48}
-                className="h-12 w-12 rounded-full object-cover mb-2 border border-gray-100 dark:border-gray-800"
+                className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover mb-2 border border-gray-100 dark:border-gray-800"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                 }}
               />
             )}
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide leading-tight">
               {getTeamLabel(match.team1.team_code, match.team1.team_name)}
             </p>
-            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 mt-1">
+            <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mt-1">
               {match.team1.team_score || "0"}
             </p>
-            {match.team1.team_penalty && (
+            {match.match_type === "football" && match.team1.team_penalty && match.team1.team_penalty !== "0" && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Penalties: {match.team1.team_penalty}
+                P: {match.team1.team_penalty}
               </p>
             )}
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               {match.match_status || (match.is_live ? "Live" : "Completed")}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {match.is_live ? "Live" : "Final"}
+              {match.is_live ? "Live" : "Match Ended"}
             </p>
           </div>
           <div className="text-center flex flex-col items-center">
@@ -465,22 +467,22 @@ const MatchDetailPage = ({
                 alt="Team 2 logo"
                 width={48}
                 height={48}
-                className="h-12 w-12 rounded-full object-cover mb-2 border border-gray-100 dark:border-gray-800"
+                className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover mb-2 border border-gray-100 dark:border-gray-800"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                 }}
               />
             )}
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide leading-tight">
               {getTeamLabel(match.team2.team_code, match.team2.team_name)}
             </p>
-            <p className="text-4xl font-bold text-gray-900 dark:text-gray-100 mt-1">
+            <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mt-1">
               {match.team2.team_score || "0"}
             </p>
-            {match.team2.team_penalty && (
+            {match.match_type === "football" && match.team2.team_penalty && match.team2.team_penalty !== "0" && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Penalties: {match.team2.team_penalty}
+                P: {match.team2.team_penalty}
               </p>
             )}
           </div>
@@ -513,10 +515,10 @@ const MatchDetailPage = ({
 
       {/* Tab Contents */}
       {activeTab === "timeline" && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {match.timeline && match.timeline.length > 0 ? (
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 Timeline Updates
               </h2>
               <div className="grid gap-3">
@@ -530,13 +532,13 @@ const MatchDetailPage = ({
                   .map((t) => (
                     <div
                       key={t.firebase_timeline_id}
-                      className="rounded-md border border-gray-200 dark:border-gray-800 p-3 bg-gray-50 dark:bg-gray-800 overflow-hidden break-words"
+                      className="rounded-xl border border-gray-200 dark:border-gray-800 p-3 sm:p-4 bg-gray-50 dark:bg-gray-850 shadow-sm overflow-hidden break-words"
                     >
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
                         {formatDateTime(t.timeline_date)}
                       </p>
                       <div
-                        className="text-sm text-gray-800 dark:text-gray-200 prose prose-sm dark:prose-invert break-words"
+                        className="text-sm sm:text-base text-gray-800 dark:text-gray-200 prose dark:prose-invert max-w-none break-words"
                         dangerouslySetInnerHTML={{ __html: t.msgHtml }}
                       />
                     </div>

@@ -32,7 +32,7 @@ const ScoreBlock = ({ match }: { match: MatchPosts }) => (
       <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
         {match.team1.team_score || "0"}
       </p>
-      {match.team1.team_penalty && (
+      {match.match_type === "football" && match.team1.team_penalty && match.team1.team_penalty !== "0" && (
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Penalties: {match.team1.team_penalty}
         </p>
@@ -56,7 +56,7 @@ const ScoreBlock = ({ match }: { match: MatchPosts }) => (
       <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
         {match.team2.team_score || "0"}
       </p>
-      {match.team2.team_penalty && (
+      {match.match_type === "football" && match.team2.team_penalty && match.team2.team_penalty !== "0" && (
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Penalties: {match.team2.team_penalty}
         </p>
@@ -122,10 +122,10 @@ const MatchesPage = () => {
   }, [liveMatches, pastMatches, typeFilter, yearFilter]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col gap-10">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col gap-6 sm:gap-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="text-left">
-          <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">
             Matches
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -134,7 +134,7 @@ const MatchesPage = () => {
         </div>
         <Link
           href="#past-matches"
-          className="w-full sm:w-auto text-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className="w-full sm:w-auto text-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
         >
           View past matches
         </Link>
@@ -146,28 +146,26 @@ const MatchesPage = () => {
         </div>
       ) : (
         <>
-          <section className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+          <section className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full bg-red-100 text-red-700 text-xs sm:text-sm font-semibold">
                   Live now
                 </span>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {matchesByType.live.length > 0
                     ? "Ongoing matches"
-                    : "No live matches at the moment"}
+                    : "No live matches"}
                 </p>
               </div>
-              <div className="flex items-center gap-2 sm:ml-auto">
-                <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Type
-                </label>
+              <div className="flex items-center gap-1.5">
+                <label className="text-xs text-gray-600 dark:text-gray-300">Type</label>
                 <select
                   value={typeFilter}
                   onChange={(e) =>
                     setTypeFilter(e.target.value as "all" | "football" | "cricket")
                   }
-                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm px-2 py-1"
+                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs sm:text-sm px-2 py-1"
                 >
                   <option value="all">All</option>
                   <option value="football">Football</option>
@@ -175,10 +173,10 @@ const MatchesPage = () => {
                 </select>
               </div>
             </div>
-            <div className="grid gap-4">
+            <div className="grid gap-3 sm:gap-4">
               {matchesByType.live.length === 0 && (
-                <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900">
-                  <p className="text-gray-600 dark:text-gray-300">
+                <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
                     We will display live scores here when a match is in progress.
                   </p>
                 </div>
@@ -189,20 +187,20 @@ const MatchesPage = () => {
                 );
                 if (list.length === 0) return null;
                 return (
-                  <div key={type} className="flex flex-col gap-3">
-                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  <div key={type} className="flex flex-col gap-2 sm:gap-3">
+                    <p className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">
                       {type === "football" ? "Football" : "Cricket"}
                     </p>
                     {list.map((match) => (
                       <div
                         key={match.firebase_match_id}
-                        className="rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900 shadow-sm"
+                        className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900 shadow-sm"
                       >
                         <ScoreBlock match={match} />
-                        <div className="mt-4 flex gap-3 justify-center">
+                        <div className="mt-3 flex gap-3 justify-center">
                           <Link
                             href={`/matches/${match.firebase_match_id}`}
-                            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
                           >
                             View match
                           </Link>
@@ -215,24 +213,22 @@ const MatchesPage = () => {
             </div>
           </section>
 
-          <section id="past-matches" className="flex flex-col gap-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold">
+          <section id="past-matches" className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs sm:text-sm font-semibold">
                   Past matches
                 </span>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
                   Results archived by type and year
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Year
-                </label>
+              <div className="flex items-center gap-1.5">
+                <label className="text-xs text-gray-600 dark:text-gray-300">Year</label>
                 <select
                   value={yearFilter}
                   onChange={(e) => setYearFilter(e.target.value)}
-                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm px-2 py-1"
+                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs sm:text-sm px-2 py-1"
                 >
                   <option value="all">All</option>
                   {years.map((y) => (
@@ -249,33 +245,33 @@ const MatchesPage = () => {
                 (m) => m.match_type === type
               );
               return (
-                <div key={type} className="flex flex-col gap-3">
-                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <div key={type} className="flex flex-col gap-2 sm:gap-3">
+                  <p className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">
                     {type === "football" ? "Football" : "Cricket"}
                   </p>
                   {list.length === 0 ? (
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900">
-                      <p className="text-gray-600 dark:text-gray-300">
+                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900">
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
                         No matches found for this selection.
                       </p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                       {list.map((match) => (
                         <div
                           key={match.firebase_match_id}
-                          className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900"
+                          className="rounded-xl border border-gray-200 dark:border-gray-800 p-3 sm:p-5 bg-white dark:bg-gray-900"
                         >
                           <ScoreBlock match={match} />
                           <div className="mt-3 flex justify-between items-center">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                               {formatDate(match.match_date)}
                             </p>
                             <Link
                               href={`/matches/${match.firebase_match_id}`}
-                              className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                              className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                             >
-                              View match
+                              View match →
                             </Link>
                           </div>
                         </div>
