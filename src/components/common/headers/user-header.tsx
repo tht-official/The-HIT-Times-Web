@@ -1,396 +1,224 @@
 "use client";
-import {
-  Bars3Icon,
-  ArrowLeftIcon,
-  ArrowUpCircleIcon,
-  ArrowDownCircleIcon,
-  ChevronUpIcon,
-  ArrowRightIcon,
-  MoonIcon,
-  SunIcon,
-} from "@heroicons/react/24/solid";
-import { useSession } from "next-auth/react";
-import { Nunito_Sans } from "next/font/google";
 
-const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-nunito-sans" });
+import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { cn } from "@/lib/utils";
+import { Menu, ChevronRight, LogOut } from "lucide-react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { signIn, signOut } from "next-auth/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-//import { Session } from "next-auth";
-//import Home from "@/components/sign-in";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
-const links = [
-  {
-    title: "Alumni",
-    href: "/alumni",
-  },
-  //{
-  //  title: "Tabloids",
-  //  href: "/tabloids",
-  //},
-  //{
-  //  title: "Notice",
-  //  href: "/notice",
-  // },
-  {
-    title: "Reportopolis",
-    href: "/posts/category/10",
-  },
-  {
-    title: "Gazette",
-    href: "/posts/category/09",
-  },
-  {
-    title: "Tabloids",
-    href: "/tabloids",
-  },
-  {
-    title: "My Bookmarks",
-    href: "/my-bookmarks",
-  },
+const primaryNav = [
+  { title: "Alumni", href: "/alumni" },
+  { title: "Gazette", href: "/posts/category/09" },
+  { title: "Reportopolis", href: "/posts/category/10" },
+  { title: "Tabloids", href: "/tabloids" },
+  { title: "Matches", href: "/matches" },
 ];
-const links_2 = [
-  {
-    title: "Alumni",
-    href: "/alumni",
-  },
-  //{
-  //  title: "Tabloids",
-  //  href: "/tabloids",
-  //},
-  //{
-  //  title: "Notice",
-  //  href: "/notice",
-  // },
-  {
-    title: "My Bookmarks",
-    href: "/my-bookmarks",
-  },
-  {
-    title: "Tabloids",
-    href: "/tabloids",
-  },
-  {
-    title: "Reportopolis",
-    href: "/posts/category/10",
-  },
-  {
-    title: "Funny Friday",
-    href: "/posts/category/03",
-  },
-  {
-    title: "Gazette",
-    href: "/posts/category/09",
-  },
-  {
-    title: "Monday Hues",
-    href: "/posts/category/00",
-  },
-  {
-    title: "Campus Raid",
-    href: "/posts/category/01",
-  },
-  {
-    title: "Thursday Article",
-    href: "/posts/category/02",
-  },
-  {
-    title: "Viral Corner",
-    href: "/posts/category/04",
-  },
-  {
-    title: "Word Worth Millions",
-    href: "/posts/category/05",
-  },
-  {
-    title: "College Heracles",
-    href: "/posts/category/06",
-  },
-  {
-    title: "Nanotips",
-    href: "/posts/category/07",
-  },
-  {
-    title: "Vernacular",
-    href: "/posts/category/08",
-  },
-];
-/*export const UserProfile = (session: Session) => {
+
+const sectionsNav = Object.entries(dropdownsToSections).map(([code, name]) => ({
+  title: name,
+  href: `/posts/category/${code}`,
+}));
+
+function NavLink({
+  href,
+  children,
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const pathname = usePathname();
+  const isActive = pathname === href || pathname.startsWith(href + "/");
+
   return (
-    <li
-      className={
-        nunitoSans.className + " text-zinc-800 text-base font-semibold "
-      }
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn(
+        "text-sm font-medium transition-colors duration-200",
+        isActive
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground"
+      )}
     >
-      Welcome, <span className="font-bold">{session.user.name}</span>
-    </li>
-  );
-};
-
-export const SignOut = (session: Session) => {
-  if (session) {
-    return (
-      <li
-        className={
-          nunitoSans.className +
-          " text-zinc-800 text-base font-semibold hover:underline cursor-pointer"
-        }
-        onClick={() => signOut()}
-      >
-        Sign Out
-      </li>
-    );
-  }
-}; */
-/*
-  <><div className="flex flex-col">
-            
-            <p className=" text-sm mb-1">
-              Welcome <span className="font-bold">{session.user?.name}</span>
-            </p>
-            <p className="text-sm ">
-              Signed In As <span className="font-bold">{session.user?.email}</span>
-            </p>
-          </div>
-          <button
-            className="bg-red-600  ml-2 py-1 px-2 rounded-md"
-            onClick={() => signOut()}
-          >
-              Sign out
-            </button></>*/
-
-export default function SignUpButton() {
-  const { data: session } = useSession();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // checking if sessions exists
-  if (session) {
-    // rendering components for logged in users
-    return (
-      <div className=" relative flex flex-row items-center justify-center ">
-        <div>
-          <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="inline-flex flex-row w-auto md:w-36 items-center justify-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm md:text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            <div className="sm:flex  w-9 h-8 relative hidden   ">
-              <Image
-                src={session.user?.image as string}
-                fill
-                alt=""
-                className="object-cover rounded-full "
-              />
-            </div>
-            Account
-            {!isOpen ? (
-              <ChevronDownIcon
-                aria-hidden="true"
-                className="-mr-1 h-5 w-5 text-gray-400"
-              />
-            ) : (
-              <ChevronUpIcon
-                aria-hidden="true"
-                className="-mr-1 h-5 w-5 text-gray-400"
-              />
-            )}
-          </button>
-        </div>
-        {isOpen && (
-          <div className=" absolute flex flex-col top-16 h-auto w-auto right-1 p-2 z-50 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5  ">
-            <div className="  w-20 h-20 relative mb-1">
-              <Image
-                src={session.user?.image as string}
-                fill
-                alt=""
-                className="object-cover rounded-full "
-              />
-            </div>
-            <p className=" text-sm  hover:bg-slate-300 rounded-md p-2  ">
-              Welcome <span className="font-bold">{session.user?.name}</span>
-            </p>
-            <p className="text-sm hover:bg-slate-300 rounded-md p-2 mb-2 ">
-              Signed In As{" "}
-              <span className="font-bold">{session.user?.email}</span>
-            </p>
-            <button
-              className="relative ml-2 px-2 py-1 overflow-hidden font-medium text-zinc-800 bg-gray-100 border border-gray-200 rounded-lg shadow-inner group"
-              onClick={() => signOut()}
-            >
-              <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-red-400 group-hover:w-full"></span>
-              <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-red-400 group-hover:w-full"></span>
-              <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-red-400 group-hover:h-full"></span>
-              <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-red-400 group-hover:h-full"></span>
-              <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-red-600 opacity-0 group-hover:opacity-100"></span>
-              <span className="relative transition-colors duration-300 delay-200 group-hover:text-white font-semibold text-base ">
-                Sign Out
-              </span>
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
-  // rendering components for not logged in users
-  return (
-    /* 
-    <div className='flex flex-row items-end justify-end w-auto h-9  '>
-	    <button className=' w-16 md:w-20 h-7 md:h-8 m-1 bg-blue-500 rounded-lg cursor-pointer select-none
-      active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
-      active:border-b-[0px]
-      transition-all duration-150 [box-shadow:0_4px_0_0_#1b6ff8,0_8px_0_0_#1b70f841]
-      border-b-[1px] border-blue-400'
-      onClick={()=>signIn()}
-    >
-		  <span className='flex flex-col justify-center items-center h-full text-white font-medium text-base'>Sign In</span>
-	  </button>
-  </div>*/
-    <div className="flex justify-center">
-      <button
-        className="relative px-2 md:px-4 py-1 overflow-hidden font-medium text-zinc-800 bg-gray-100 border border-gray-200 rounded-lg shadow-inner group"
-        onClick={() => signIn()}
-      >
-        <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-gray-600 group-hover:w-full"></span>
-        <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-gray-600 group-hover:w-full"></span>
-        <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-gray-600 group-hover:h-full"></span>
-        <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-gray-600 group-hover:h-full"></span>
-        <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-gray-900 opacity-0 group-hover:opacity-100"></span>
-        <span className="relative transition-colors duration-300 delay-200 group-hover:text-white font-semibold text-base ">
-          Sign In
-        </span>
-      </button>
-    </div>
+      {children}
+    </Link>
   );
 }
 
+function AccountMenu() {
+  const { data: session } = useSession();
+  const pathname = usePathname();
 
-
-// User Header
-// -------------------
-//
-// This component is used to display the header for all the default users.
-export const UserHeader = () => {
-  //const { data: session } = useSession();
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  useEffect(() => {
-    const isDark = localStorage.getItem("theme") === "dark";
-    setDarkMode(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
-  },[]);
-
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    document.documentElement.classList.toggle("dark", newMode);
-    localStorage.setItem("theme", newMode ? "dark" : "light");
+  if (!session) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => signIn(undefined, { callbackUrl: pathname })}
+        className="hidden sm:inline-flex"
+      >
+        Sign in
+      </Button>
+    );
   }
 
-  return (
-    <header>
-      <nav className="flex flex-row items-center justify-between py-2 min-h-16">
-        <Link href={"/"}>
-          <Image
-            src="/header/hit_logo_black.webp"
-            alt="The HIT Times"
-            className="w-32 sm:mx-4 dark:invert"
-            width={100}
-            height={50}
-          />
-        </Link>
-        <ul className="md:flex flex-row gap-8 justify-end hidden ">
-          {links.map((link) => (
-            <li key={link.href}>
-              <Link
-                className={
-                  nunitoSans.className +
-                  " text-zinc-800 text-base font-semibold hover:text-violet-700 dark:text-white dark:hover:text-violet-400"
-                }
-                href={link.href}
-              >
-                {link.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+  const initials = session.user?.name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
-        <div className=" flex justify-end" /*md:hidden */>
-          <SignUpButton />
-          <button
-            onClick={toggleDarkMode}
-            className="ml-3 p-2 rounded-full bg-gray-200 dark:bg-gray-800"
-          >
-            {darkMode ? (
-              <SunIcon className="w-6 h-6 text-yellow-500" />
-            ) : (
-              <MoonIcon className="w-6 h-6 text-gray-900 dark:text-white" />
-            )}
-          </button>
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="text-zinc-800 text-2xl ml-2"
-          >
-            <Bars3Icon className="size-10 hover:rounded-full hover:bg-gray-100 p-1" />
-          </button>
-        </div>
-      </nav>
-      {showDropdown && (
-        <div
-          className=" fixed top-0 right-0 animate-fade-left bg-gradient-to-b from-slate-400 via-slate-200 to-slate-400 w-1/5 h-screen z-50 min-w-72 scroll-smooth dark:from-gray-800 dark:via-gray-700 dark:to-gray-800" /*md:hidden */
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="hidden gap-2 sm:inline-flex"
         >
-          <div className="flex relative w-auto mt-4 flex-row ">
-            <Link href={"/"}>
-              <Image
-                src="/header/hit_logo_black.webp"
-                alt="The HIT Times"
-                className="sm:w-fit w-40 p-2 ml-4 border border-black "
-                width={100}
-                height={50}
-              />
-            </Link>
-            <button
-              onClick={() =>
-                setShowDropdown(
-                  !showDropdown && <div className="animate-fade-right"></div>
-                )
-              }
-              className="ml-20 "
-            >
-              <ArrowRightIcon className="size-10 rounded-full bg-gray-100 dark:bg-gray-900 p-2 mr-2 hover:bg-gray-200 dark:hover:bg-gray-700" />
-            </button>
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={session.user?.image ?? undefined} alt="" />
+            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+          </Avatar>
+          <span className="max-w-[100px] truncate text-sm">
+            {session.user?.name?.split(" ")[0]}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium">{session.user?.name}</p>
+            <p className="text-xs text-muted-foreground">{session.user?.email}</p>
           </div>
-          <ul className="grid grid-flow-row gap-4 py-4 px-2">
-            <li>
-              <Link
-                className={
-                  nunitoSans.className +
-                  " text-zinc-800 dark:text-gray-200 text-xl hover:text-white font-semibold hover:py-1 hover:px-2 hover:border hover:border-black dark:hover:border-gray-400 rounded-lg ml-4 hover:bg-gradient-to-r from-slate-600 to to-violet-600"
-                }
-                href={"/"}
-                onClick={() => setShowDropdown(false)}
-              >
-                Home
-              </Link>
-            </li>
-            {links_2.map((link) => (
-              <li key={link.href}>
-                <Link
-                  className={
-                    nunitoSans.className +
-                    " text-zinc-800 dark:text-gray-200 text-xl hover:text-white font-semibold  rounded-lg ml-4 hover:py-1 hover:px-2 hover:border hover:border-black dark:hover:border-gray-400 hover:bg-gradient-to-r from-slate-600 to to-violet-600"
-                  }
-                  onClick={() => setShowDropdown(false)}
-                  href={link.href}
-                >
-                  {link.title}
-                </Link>
-              </li>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/my-bookmarks">My Bookmarks</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => signOut()}
+          className="text-destructive focus:text-destructive"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export const UserHeader = () => {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  return (
+    <nav className="flex h-16 items-center justify-between gap-4">
+      <Link href="/" className="flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-80">
+        <Image
+          src="/header/hit_logo_black.webp"
+          alt="The HIT Times"
+          width={120}
+          height={40}
+          className="h-8 w-auto dark:invert"
+          priority
+        />
+      </Link>
+
+      <div className="hidden items-center gap-6 lg:flex">
+        {primaryNav.map((link) => (
+          <NavLink key={link.href} href={link.href}>
+            {link.title}
+          </NavLink>
+        ))}
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground focus:outline-none">
+            Sections
+            <ChevronRight className="h-3.5 w-3.5 rotate-90" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            {sectionsNav.map((item) => (
+              <DropdownMenuItem key={item.href} asChild>
+                <Link href={item.href}>{item.title}</Link>
+              </DropdownMenuItem>
             ))}
-            <hr className="border-gray-500 dark:border-gray-700" />
-          </ul>
-        </div>
-      )}
-    </header>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="flex items-center gap-1">
+        <ThemeToggle />
+        <AccountMenu />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => signIn(undefined, { callbackUrl: pathname })}
+          className="sm:hidden"
+        >
+          Sign in
+        </Button>
+
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-full sm:max-w-sm">
+            <SheetHeader>
+              <SheetTitle className="font-serif text-left">Menu</SheetTitle>
+            </SheetHeader>
+            <div className="mt-8 flex flex-col gap-1">
+              <NavLink href="/" onClick={() => setOpen(false)}>
+                <span className="block py-2.5 text-base">Home</span>
+              </NavLink>
+              {primaryNav.map((link) => (
+                <NavLink key={link.href} href={link.href} onClick={() => setOpen(false)}>
+                  <span className="block py-2.5 text-base">{link.title}</span>
+                </NavLink>
+              ))}
+              <NavLink href="/my-bookmarks" onClick={() => setOpen(false)}>
+                <span className="block py-2.5 text-base">My Bookmarks</span>
+              </NavLink>
+              <div className="my-3 h-px bg-border" />
+              <p className="px-0 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Sections
+              </p>
+              {sectionsNav.map((item) => (
+                <NavLink key={item.href} href={item.href} onClick={() => setOpen(false)}>
+                  <span className="block py-2 text-sm">{item.title}</span>
+                </NavLink>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </nav>
   );
 };

@@ -1,31 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { Posts } from "@/models/Post";
-import { useEffect, useState } from "react";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
+import { useEffect, useState, useCallback } from "react";
 import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
 import Article from "@/components/weekly-portion/Article";
-import { CircularLoader } from "@/components/common/loader/Loaders";
-import { motion } from "framer-motion";
-import { fadeIn } from "@/variants";
+import { BrandLoader } from "@/components/common/loader/Loaders";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800"],
-});
-
-export default function PostsPage({
+export default function CategoryPage({
   params,
 }: {
   params: { dropdown: string };
@@ -36,74 +17,57 @@ export default function PostsPage({
   const [loadmore, setLoadmore] = useState(true);
   const [page, setPage] = useState(1);
 
-  const getData = async () => {
-    const dropdown = params.dropdown;
-
+  const getData = useCallback(async () => {
+    setLoading(true);
     const response = await fetch(
-      `/api/v1/posts?limit=${PAGE_LIMIT}&page=${page}&dropdown=${dropdown}`
+      `/api/v1/posts?limit=${PAGE_LIMIT}&page=${page}&dropdown=${params.dropdown}`
     );
     const data = await response.json();
-    const testData = data.map((post: Posts) => {
-      // check if link is a valid url
-      if (post.link.startsWith("http")) {
-        return post;
-      } else {
-        return {
-          ...post,
-          link: "https://placehold.co/600x400.png",
-        };
-      }
-    });
+    const testData = data.map((post: Posts) => ({
+      ...post,
+      link: post.link?.startsWith("http")
+        ? post.link
+        : "https://placehold.co/600x400.png",
+    }));
 
-    if (data.length < PAGE_LIMIT) {
-      setLoadmore(false);
-    }
-
-    const updatedPosts = [...posts, ...testData];
-    setPosts(updatedPosts);
+    if (data.length < PAGE_LIMIT) setLoadmore(false);
+    setPosts((prev) => (page === 1 ? testData : [...prev, ...testData]));
     setLoading(false);
-  };
-
-  const handleScroll = () => {
-    setPage(page + 1);
-  };
+  }, [page, params.dropdown]);
 
   useEffect(() => {
     getData();
-    window.addEventListener("scroll", () => {
-      if (
-        loadmore &&
-        window.innerHeight + window.scrollY >= document.body.offsetHeight
-      ) {
-        handleScroll();
-      }
-    });
+  }, [getData]);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [page]);
-
-  const pageTitle = dropdownsToSections[params.dropdown];
+  const pageTitle = dropdownsToSections[params.dropdown] ?? "Articles";
 
   return (
-    <div>
-      <h1
-        className={
-          ibmPlexSerif.className +
-          " text-zinc-800 dark:text-gray-200 sm:text-5xl text-3xl font-semibold py-8 animate-fade-right animate-once animate-duration-500 animate-delay-500"
-        }
-      >
-        {pageTitle}
-      </h1>
+    <div className="space-y-10">
+      <header className="space-y-4">
+        <h1 className="editorial-heading text-3xl font-normal sm:text-4xl lg:text-5xl">
+          {pageTitle}
+        </h1>
+        <div className="section-divider" />
+      </header>
 
-      <div className="grid grid-flow-row md:grid-cols-3 gap-8 my-4 scroll-smooth">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 lg:gap-8">
         {posts.map((post) => (
           <Article key={post._id.toString()} article={post} />
         ))}
       </div>
 
-      {loading && <CircularLoader />}
+      {loading && page === 1 && <BrandLoader variant="inline" />}
+
+      {loadmore && !loading && (
+        <div className="flex justify-center pt-6">
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            className="btn-pill-ghost min-w-[10rem] sm:min-w-0"
+          >
+            Load more
+          </button>
+        </div>
+      )}
     </div>
   );
 }

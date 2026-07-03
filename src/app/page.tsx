@@ -1,10 +1,11 @@
 import HeroSection from "@/components/heroSection/heroSection";
 import WeeklyPortion from "@/components/weekly-portion/WeeklyPortion";
 
-export default function MDXPage() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col gap-4 my-8 mx-4">
+    <div className="space-y-12 sm:space-y-16">
       <HeroSection />
+      <div className="section-divider" />
       <WeeklyPortion />
     </div>
   );

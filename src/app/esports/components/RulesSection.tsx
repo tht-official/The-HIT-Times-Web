@@ -10,7 +10,7 @@ export default function RulesSection() {
   const games = [
     {
       name: "Valorant Championship",
-      icon: <Target className="w-5 h-5 text-red-500" />,
+      icon: <Target className="w-5 h-5 text-foreground" />,
       shortDesc: "5v5 tactical shooter with unique agent abilities",
       rules: [
         "ELIGIBILITY: EACH TEAM MUST HAVE AT LEAST ONE OFFLINE PLAYER FROM HIT; THE REMAINING FOUR CAN BE FROM OUTSIDE HIT.",
@@ -30,7 +30,7 @@ export default function RulesSection() {
     },
     {
       name: "COD M Masters",
-      icon: <Shield className="w-5 h-5 text-red-500" />,
+      icon: <Shield className="w-5 h-5 text-foreground" />,
       shortDesc: "4v4 action-packed first-person shooter tournament",
       rules: [
         "ELIGIBILITY: ONE PLAYER MUST BE FROM HIT. THE IGL MUST BE PRESENT PHYSICALLY.",
@@ -50,7 +50,7 @@ export default function RulesSection() {
     },
     {
       name: "BGMI Showdown",
-      icon: <Gamepad className="w-5 h-5 text-red-500" />,
+      icon: <Gamepad className="w-5 h-5 text-foreground" />,
       shortDesc: "4-player squad battle royale on mobile",
       rules: [
         "TEAM COMPOSITION: EACH TEAM MUST CONSIST OF 4 PLAYERS; NO SUBSTITUTES ARE ALLOWED DURING THE TOURNAMENT.",
@@ -75,7 +75,7 @@ export default function RulesSection() {
     },
     {
       name: "FIFA Tournament",
-      icon: <Volleyball className="w-5 h-5 text-red-500" />,
+      icon: <Volleyball className="w-5 h-5 text-foreground" />,
       shortDesc: "1v1 football simulation game",
       rules: [
         "ELIGIBILITY: ONLY CURRENT HITIANS ARE ELIGIBLE.",
@@ -95,7 +95,7 @@ export default function RulesSection() {
     },
     {
       name: "FREEFIRE MAX",
-      icon: <Gamepad className="w-5 h-5 text-red-500" />,
+      icon: <Gamepad className="w-5 h-5 text-foreground" />,
       shortDesc: "4-player squad battle royale on mobile",
       rules: [
         "ELIGIBILITY: OUTSIDE PLAYERS ALLOWED, BUT AT LEAST 1 HIT MEMBER MUST BE PRESENT PHYSICALLY.",
@@ -115,7 +115,7 @@ export default function RulesSection() {
     },
     {
       name: "eFootball Mobile Tournament",
-      icon: <Volleyball className="w-5 h-5 text-red-500" />,
+      icon: <Volleyball className="w-5 h-5 text-foreground" />,
       shortDesc: "1v1 football simulation game",
       rules: [
         "ELIGIBILITY: ONLY HIT STUDENTS ARE ELIGIBLE. MUST BE PRESENT PHYSICALLY.",
@@ -168,16 +168,16 @@ export default function RulesSection() {
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-red-900/20 to-transparent"></div>
       <div className="absolute bottom-0 right-0 w-full h-32 bg-gradient-to-t from-red-900/20 to-transparent"></div>
-      <div className="absolute top-10 right-10 w-24 h-24 rounded-full bg-red-500/5 blur-xl"></div>
-      <div className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-red-500/5 blur-xl"></div>
+      <div className="absolute top-10 right-10 w-24 h-24 rounded-full bg-muted blur-xl"></div>
+      <div className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-muted blur-xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 flex items-center justify-center">
-            <Shield className="text-red-500 mr-2" />
-            <span className="text-white">Tournament <span className="text-red-500">Rules</span></span>
+            <Shield className="text-foreground mr-2" />
+            <span className="text-foreground">Tournament <span className="text-foreground">Rules</span></span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Familiarize yourself with the rules before competing. Fair play and sportsmanship are essential for an epic gaming experience.
           </p>
         </div>
@@ -190,8 +190,8 @@ export default function RulesSection() {
               onClick={() => setActiveGame(index)}
               className={`px-4 py-2 rounded-lg transition-all ${
                 activeGame === index 
-                  ? 'bg-red-500 text-white scale-105' 
-                  : 'bg-black/50 border border-red-500/30 text-gray-300 hover:border-red-500/50'
+                  ? 'bg-foreground text-background scale-105' 
+                  : 'bg-card border border-border text-muted-foreground hover:border-border'
               }`}
             >
               <span className="mr-2 inline-flex">{game.icon}</span>
@@ -202,23 +202,23 @@ export default function RulesSection() {
         
         {/* Slider */}
         <div className="relative">
-          <div className="backdrop-blur-lg bg-black/60 border border-red-900/20 rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-red-900/20">
-              <h3 className="text-2xl font-bold text-red-500 flex items-center">
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h3 className="text-2xl font-bold text-foreground flex items-center">
                 <span className="text-3xl mr-3">{games[activeGame].icon}</span>
                 {games[activeGame].name}
               </h3>
               <div className="md:hidden flex items-center">
-                <span className="text-gray-400 text-sm mr-2">{activeGame + 1}/{games.length}</span>
+                <span className="text-muted-foreground text-sm mr-2">{activeGame + 1}/{games.length}</span>
               </div>
             </div>
             
             <div className="p-6">
-              <p className="text-gray-300 mb-6">{games[activeGame].shortDesc}</p>
+              <p className="text-muted-foreground mb-6">{games[activeGame].shortDesc}</p>
               
-              <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <span className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mr-2">
-                  <Shield className="w-4 h-4 text-red-500" />
+              <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-2">
+                  <Shield className="w-4 h-4 text-foreground" />
                 </span>
                 Key Rules
               </h4>
@@ -227,10 +227,10 @@ export default function RulesSection() {
                 {games[activeGame].rules.slice(0, 5).map((rule, index) => (
                   <div 
                     key={index}
-                    className="backdrop-blur-sm bg-black/30 border border-red-900/10 rounded-lg p-3 hover:border-red-500/30 transition-all flex"
+                    className="bg-card border border-border rounded-lg p-3 hover:border-border transition-all flex"
                   >
-                    <div className="text-red-500 font-bold mr-3 self-start">{index + 1}.</div>
-                    <div className="text-gray-300">{rule}</div>
+                    <div className="text-foreground font-bold mr-3 self-start">{index + 1}.</div>
+                    <div className="text-muted-foreground">{rule}</div>
                   </div>
                 ))}
               </div>
@@ -238,10 +238,10 @@ export default function RulesSection() {
               <div className="mt-6 text-center">
                 <button 
                   onClick={() => openFullRules(activeGame)}
-                  className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-500 py-2 px-6 rounded-lg text-sm transition-colors inline-flex items-center"
+                  className="bg-muted hover:bg-muted border border-border text-foreground py-2 px-6 rounded-lg text-sm transition-colors inline-flex items-center"
                 >
                   View All Rules 
-                  <span className="ml-2 text-xs bg-red-500/30 rounded-full px-2 py-1">
+                  <span className="ml-2 text-xs bg-muted rounded-full px-2 py-1">
                     {games[activeGame].rules.length}
                   </span>
                 </button>
@@ -252,14 +252,14 @@ export default function RulesSection() {
           {/* Navigation buttons */}
           <button 
             onClick={prevGame}
-            className="absolute top-1/2 -left-4 transform -translate-y-1/2 w-10 h-10 rounded-full bg-black border border-red-500/50 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-colors"
+            className="absolute top-1/2 -left-4 transform -translate-y-1/2 w-10 h-10 rounded-full bg-black border border-border flex items-center justify-center text-foreground hover:bg-muted transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           
           <button 
             onClick={nextGame}
-            className="absolute top-1/2 -right-4 transform -translate-y-1/2 w-10 h-10 rounded-full bg-black border border-red-500/50 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-colors"
+            className="absolute top-1/2 -right-4 transform -translate-y-1/2 w-10 h-10 rounded-full bg-black border border-border flex items-center justify-center text-foreground hover:bg-muted transition-colors"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -274,7 +274,7 @@ export default function RulesSection() {
               className={`w-2 h-2 rounded-full transition-all ${
                 activeGame === index 
                   ? 'w-8 bg-red-500' 
-                  : 'bg-red-500/30 hover:bg-red-500/50'
+                  : 'bg-muted hover:bg-muted'
               }`}
               aria-label={`Go to game ${index + 1}`}
             />
@@ -284,16 +284,16 @@ export default function RulesSection() {
       
       {/* Full Rules Modal */}
       {showFullRules && selectedRules !== null && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-black/90 border border-red-900/30 rounded-xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-red-900/30 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-red-500 flex items-center">
+        <div className="fixed inset-0 bg-card z-50 flex items-center justify-center p-4">
+          <div className="bg-card border border-border rounded-xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-border flex justify-between items-center">
+              <h3 className="text-xl font-bold text-foreground flex items-center">
                 <span className="text-2xl mr-2">{games[selectedRules].icon}</span>
                 {games[selectedRules].name} - Complete Rulebook
               </h3>
               <button 
                 onClick={closeFullRules}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -304,19 +304,19 @@ export default function RulesSection() {
                 {games[selectedRules].rules.map((rule, index) => (
                   <div 
                     key={index}
-                    className="backdrop-blur-sm bg-black/30 border border-red-900/10 rounded-lg p-4 hover:border-red-500/30 transition-all flex"
+                    className="bg-card border border-border rounded-lg p-4 hover:border-border transition-all flex"
                   >
-                    <div className="text-red-500 font-bold mr-3 self-start">{index + 1}.</div>
-                    <div className="text-gray-300">{rule}</div>
+                    <div className="text-foreground font-bold mr-3 self-start">{index + 1}.</div>
+                    <div className="text-muted-foreground">{rule}</div>
                   </div>
                 ))}
               </div>
             </div>
             
-            <div className="p-4 border-t border-red-900/30 flex justify-end">
+            <div className="p-4 border-t border-border flex justify-end">
               <button 
                 onClick={closeFullRules}
-                className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-lg text-sm transition-colors"
+                className="bg-red-500 hover:bg-red-600 text-foreground py-2 px-6 rounded-lg text-sm transition-colors"
               >
                 Close Rulebook
               </button>

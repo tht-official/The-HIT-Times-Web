@@ -1,49 +1,78 @@
 import { Posts } from "@/models/Post";
-import Image from "next/image";
-import { IBM_Plex_Serif, Nunito_Sans } from "next/font/google";
 import Link from "next/link";
 import ArticleImage from "./ArticleImage";
-/*import {motion} from "framer-motion";
-import {fadeIn} from "@/variants";*/
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
+import { dropdownsToSections } from "./WeeklyPortion";
+import { cn } from "@/lib/utils";
 
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800"],
-});
+function readTime(html: string) {
+  const words = html.split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.ceil(words / 200))} min read`;
+}
 
-export default function Article({ article }: { article: Posts }) {
+export default function Article({
+  article,
+  variant = "card",
+  className,
+}: {
+  article: Posts;
+  variant?: "card" | "compact";
+  className?: string;
+}) {
+  const tag = dropdownsToSections[article.dropdown] ?? "Story";
+  const mins = readTime(article.htmlBody ?? article.body ?? "");
+
+  if (variant === "compact") {
+    return (
+      <Link
+        href={`/posts/${article._id}`}
+        className={cn(
+          "group flex h-full flex-col p-1 transition-opacity duration-200 hover:opacity-80",
+          className
+        )}
+      >
+        <span className="tag-editorial mb-3">{tag}</span>
+        <h3 className="editorial-heading line-clamp-3 text-xl font-normal leading-snug">
+          {article.title}
+        </h3>
+        <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+          {article.description}
+        </p>
+        <span className="mt-auto pt-4 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+          {mins}
+        </span>
+      </Link>
+    );
+  }
+
   return (
     <Link
-      href={"/posts/" + article._id}
-      className="group/item sm:hover:scale-105 hover:scale-102 hover:delay-100 scroll-smooth h-full p-2 hover:bg-gray-200 dark:hover:bg-gray-600 hover:duration-300 hover:shadow-xl rounded-xl animate-flip-up animate-duration-200 animate-delay-100"
+      href={`/posts/${article._id}`}
+      className={cn(
+        "group flex h-full flex-col transition-opacity duration-200 hover:opacity-90",
+        className
+      )}
     >
-      <ArticleImage
-        src={article.link}
-        alt={article.title}
-        className="w-full aspect-video rounded-lg object-cover"
-        width={500}
-        height={500}
-      />
-      <h3
-        className={
-          ibmPlexSerif.className +
-          " text-lg font-bold mt-2 text-ellipsis line-clamp-2 animate-fade-down animate delay-200 animate-duration-200 text-gray-900 dark:text-white"
-        }
-      >
-        {article.title}
-      </h3>
-      <p
-        className={
-          nunitoSans.className +
-          " text-gray-700 dark:text-gray-300 font-mono mt-1 text-ellipsis line-clamp-2 animate-fade-up animate delay-500 animate-duration-700"
-        }
-      >
-        {article.description}
-      </p>
+      <div className="overflow-hidden">
+        <ArticleImage
+          src={article.link}
+          alt={article.title}
+          className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+          width={500}
+          height={500}
+        />
+      </div>
+      <div className="flex flex-1 flex-col pt-4">
+        <span className="tag-editorial mb-2">{tag}</span>
+        <h3 className="editorial-heading line-clamp-2 text-lg font-normal leading-snug">
+          {article.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 flex-1 text-sm text-muted-foreground">
+          {article.description}
+        </p>
+        <span className="mt-3 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+          {mins}
+        </span>
+      </div>
     </Link>
   );
 }

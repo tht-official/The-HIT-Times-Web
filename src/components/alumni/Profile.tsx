@@ -1,22 +1,14 @@
 import { Alumni } from "@/models/Alumnus";
 import Image from "next/image";
 import Link from "next/link";
-function formatImageSrc(src: string): string {
-  // Check if the src is empty or not a string
-  if (!src || typeof src !== "string") {
-    return "/no-image.png"; // Return a default image or an empty string
-  }
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-  // Check if the src starts with a leading slash or is an absolute URL
-  if (
-    src.startsWith("/") ||
-    src.startsWith("http://") ||
-    src.startsWith("https://")
-  ) {
+function formatImageSrc(src: string): string {
+  if (!src || typeof src !== "string") return "/no-image.png";
+  if (src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://")) {
     return src;
   }
-
-  // Prepend a leading slash to relative URLs
   return `/${src}`;
 }
 
@@ -24,32 +16,46 @@ const extractImageUrl = (url: string): string => {
   const googleDriveMatch = url.match(
     /https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)([^\/&]+)/
   );
-
   const extractedUrl = googleDriveMatch
     ? `https://drive.google.com/thumbnail?id=${googleDriveMatch[1]}&sz=w500`
     : url;
-
   return formatImageSrc(extractedUrl);
 };
 
 const AlumniCard: React.FC<Alumni> = ({ name, profile_image, position, linkedin }) => {
-  return (
-    <Link href={linkedin ?? ""}>
-      <div className="flex flex-col items-center w-32 animate-fade-up animate-duration-500 animate-delay-200">
+  const content = (
+    <Card
+      className={cn(
+        "micro-lift flex w-36 flex-col items-center border-border/80 bg-card p-4 text-center transition-[border-color,box-shadow] duration-200 hover:border-border hover:shadow-md",
+        linkedin && "cursor-pointer"
+      )}
+    >
+      <div className="relative mb-3 h-16 w-16 overflow-hidden rounded-full ring-2 ring-border transition-[ring-color] duration-200 group-hover:ring-primary/40">
         <Image
           src={extractImageUrl(profile_image)}
-          alt={`${name} Profile Image`}
-          width={80}
-          height={80}
-          className="rounded-full object-cover w-20 h-20  transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-700 hover:scale-125 "  
+          alt={`${name}`}
+          fill
+          className="object-cover"
         />
-        <h4 className="w-full text-base mt-2  leading-6 text-black font-bold text-center text-ellipsis line-clamp-2  animate-fade-left animate-duration-500 animate-delay-500">
-          {name}
-        </h4>
-        <p className="text-sm font-normal text-gray-600 animate-fade-right animate-duration-500 animate-delay-500">{position}</p>
       </div>
-    </Link>
+      <h4 className="line-clamp-2 text-sm font-medium leading-snug text-foreground">
+        {name}
+      </h4>
+      {position && (
+        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{position}</p>
+      )}
+    </Card>
   );
+
+  if (linkedin) {
+    return (
+      <Link href={linkedin} target="_blank" rel="noopener noreferrer" className="group">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 };
 
 export default AlumniCard;

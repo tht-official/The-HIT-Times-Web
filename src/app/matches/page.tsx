@@ -5,82 +5,94 @@ import Link from "next/link";
 import { MatchPosts } from "@/models/Match";
 import { codeToTeamName } from "@/lib/codeToTeamName";
 import { CircularLoader } from "@/components/common/loader/Loaders";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ArrowRight, Radio } from "lucide-react";
 
 const formatDate = (dateValue: Date | string) => {
   const d = new Date(dateValue);
-  const date = d.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-  const time = d.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-  return `${date} · ${time}`;
+  return (
+    d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+    " · " +
+    d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })
+  );
 };
 
 const getTeamLabel = (code: string, name?: string) =>
   codeToTeamName[code] || name || code;
 
 const ScoreBlock = ({ match }: { match: MatchPosts }) => (
-  <div className="grid grid-cols-3 gap-3 items-center text-center">
-    <div className="text-center">
-      <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+  <div className="grid grid-cols-3 items-center gap-2 text-center sm:gap-3">
+    <div className="min-w-0">
+      <p className="truncate text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
         {getTeamLabel(match.team1.team_code, match.team1.team_name)}
       </p>
-      <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+      <p className="font-serif text-2xl font-semibold tabular-nums sm:text-3xl">
         {match.team1.team_score || "0"}
       </p>
-      {match.match_type === "football" && match.team1.team_penalty && match.team1.team_penalty !== "0" && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Penalties: {match.team1.team_penalty}
+      {match.match_type === "football" &&
+        match.team1.team_penalty &&
+        match.team1.team_penalty !== "0" && (
+        <p className="text-[10px] text-muted-foreground sm:text-xs">
+          Pens: {match.team1.team_penalty}
         </p>
       )}
     </div>
-    <div className="text-center">
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        {match.match_status || (match.is_live ? "Live" : "Completed")}
+    <div className="min-w-0 px-1">
+      <p className="text-xs text-muted-foreground sm:text-sm">
+        {match.match_status || (match.is_live ? "Live" : "Final")}
       </p>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        {formatDate(match.match_date)}
-      </p>
-      <p className="mt-1 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-[10px] text-muted-foreground sm:text-xs">{formatDate(match.match_date)}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
         {match.match_type}
       </p>
     </div>
-    <div className="text-center">
-      <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+    <div className="min-w-0">
+      <p className="truncate text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
         {getTeamLabel(match.team2.team_code, match.team2.team_name)}
       </p>
-      <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+      <p className="font-serif text-2xl font-semibold tabular-nums sm:text-3xl">
         {match.team2.team_score || "0"}
       </p>
-      {match.match_type === "football" && match.team2.team_penalty && match.team2.team_penalty !== "0" && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Penalties: {match.team2.team_penalty}
-        </p>
+      {match.match_type === "football" &&
+        match.team2.team_penalty &&
+        match.team2.team_penalty !== "0" && (
+        <p className="text-xs text-muted-foreground">Pens: {match.team2.team_penalty}</p>
       )}
     </div>
   </div>
+);
+
+const MatchCard = ({ match }: { match: MatchPosts }) => (
+  <Card className="micro-lift border-border/80">
+    <CardContent className="p-4 sm:p-6">
+      <ScoreBlock match={match} />
+      <div className="mt-5">
+        <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
+          <Link href={`/matches/${match.firebase_match_id}`}>
+            View match
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
 );
 
 const MatchesPage = () => {
   const [matches, setMatches] = useState<MatchPosts[]>([]);
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<"all" | "football" | "cricket">(
-    "all"
-  );
+  const [typeFilter, setTypeFilter] = useState<"all" | "football" | "cricket">("all");
 
   useEffect(() => {
     const load = async () => {
       try {
         const res = await fetch("/api/v1/live/match?limit=200&page=1");
         const data = await res.json();
-        if (res.ok && Array.isArray(data?.data)) {
-          setMatches(data.data);
-        }
+        if (res.ok && Array.isArray(data?.data)) setMatches(data.data);
       } catch (error) {
         console.error("Failed to load matches", error);
       } finally {
@@ -95,18 +107,13 @@ const MatchesPage = () => {
 
   const years = useMemo(() => {
     const set = new Set<string>();
-    pastMatches.forEach((m) => {
-      const y = new Date(m.match_date).getFullYear().toString();
-      set.add(y);
-    });
+    pastMatches.forEach((m) => set.add(new Date(m.match_date).getFullYear().toString()));
     return Array.from(set).sort((a, b) => Number(b) - Number(a));
   }, [pastMatches]);
 
   const matchesByType = useMemo(() => {
     const slice = (list: MatchPosts[]) =>
-      typeFilter === "all"
-        ? list
-        : list.filter((m) => m.match_type === typeFilter);
+      typeFilter === "all" ? list : list.filter((m) => m.match_type === typeFilter);
     return {
       live: slice(liveMatches),
       past:
@@ -114,173 +121,117 @@ const MatchesPage = () => {
           ? slice(pastMatches)
           : slice(
               pastMatches.filter(
-                (m) =>
-                  new Date(m.match_date).getFullYear().toString() === yearFilter
+                (m) => new Date(m.match_date).getFullYear().toString() === yearFilter
               )
             ),
     };
   }, [liveMatches, pastMatches, typeFilter, yearFilter]);
 
+  const selectClass =
+    "h-9 rounded-md border border-border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
+
   return (
-    <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col gap-6 sm:gap-10">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="text-left">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">
-            Matches
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Live and recent scores for HIT Times matches.
+    <div className="animate-in-subtle space-y-12">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">Matches</h1>
+          <p className="mt-2 text-muted-foreground">
+            Live scores and match archives.
           </p>
         </div>
-        <Link
-          href="#past-matches"
-          className="w-full sm:w-auto text-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
-        >
-          View past matches
-        </Link>
-      </div>
+        <Button variant="outline" size="sm" asChild>
+          <a href="#past-matches">Past matches</a>
+        </Button>
+      </header>
 
       {loading ? (
-        <div className="flex justify-center">
-          <CircularLoader />
-        </div>
+        <CircularLoader />
       ) : (
         <>
-          <section className="flex flex-col gap-3 sm:gap-4">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full bg-red-100 text-red-700 text-xs sm:text-sm font-semibold">
-                  Live now
-                </span>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+          <section className="space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <Badge variant="live" className="gap-1.5">
+                  <Radio className="h-3 w-3 live-pulse" />
+                  Live
+                </Badge>
+                <span className="text-sm text-muted-foreground">
                   {matchesByType.live.length > 0
                     ? "Ongoing matches"
-                    : "No live matches"}
-                </p>
+                    : "No live matches right now"}
+                </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <label className="text-xs text-gray-600 dark:text-gray-300">Type</label>
-                <select
-                  value={typeFilter}
-                  onChange={(e) =>
-                    setTypeFilter(e.target.value as "all" | "football" | "cricket")
-                  }
-                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs sm:text-sm px-2 py-1"
-                >
-                  <option value="all">All</option>
-                  <option value="football">Football</option>
-                  <option value="cricket">Cricket</option>
-                </select>
+              <select
+                value={typeFilter}
+                onChange={(e) =>
+                  setTypeFilter(e.target.value as "all" | "football" | "cricket")
+                }
+                className={selectClass}
+              >
+                <option value="all">All sports</option>
+                <option value="football">Football</option>
+                <option value="cricket">Cricket</option>
+              </select>
+            </div>
+
+            {matchesByType.live.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-10 text-center text-sm text-muted-foreground">
+                  Live scores will appear here when a match is in progress.
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {matchesByType.live.map((match) => (
+                  <MatchCard key={match.firebase_match_id} match={match} />
+                ))}
               </div>
-            </div>
-            <div className="grid gap-3 sm:gap-4">
-              {matchesByType.live.length === 0 && (
-                <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900">
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    We will display live scores here when a match is in progress.
-                  </p>
-                </div>
-              )}
-              {["football", "cricket"].map((type) => {
-                const list = matchesByType.live.filter(
-                  (m) => m.match_type === type
-                );
-                if (list.length === 0) return null;
-                return (
-                  <div key={type} className="flex flex-col gap-2 sm:gap-3">
-                    <p className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">
-                      {type === "football" ? "Football" : "Cricket"}
-                    </p>
-                    {list.map((match) => (
-                      <div
-                        key={match.firebase_match_id}
-                        className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900 shadow-sm"
-                      >
-                        <ScoreBlock match={match} />
-                        <div className="mt-3 flex gap-3 justify-center">
-                          <Link
-                            href={`/matches/${match.firebase_match_id}`}
-                            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
-                          >
-                            View match
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
+            )}
           </section>
 
-          <section id="past-matches" className="flex flex-col gap-3 sm:gap-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs sm:text-sm font-semibold">
-                  Past matches
-                </span>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                  Results archived by type and year
-                </p>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <label className="text-xs text-gray-600 dark:text-gray-300">Year</label>
-                <select
-                  value={yearFilter}
-                  onChange={(e) => setYearFilter(e.target.value)}
-                  className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs sm:text-sm px-2 py-1"
-                >
-                  <option value="all">All</option>
-                  {years.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <Separator />
+
+          <section id="past-matches" className="scroll-mt-24 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+                Past matches
+              </h2>
+              <select
+                value={yearFilter}
+                onChange={(e) => setYearFilter(e.target.value)}
+                className={selectClass}
+              >
+                <option value="all">All years</option>
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {["football", "cricket"].map((type) => {
-              const list = matchesByType.past.filter(
-                (m) => m.match_type === type
-              );
+              const list = matchesByType.past.filter((m) => m.match_type === type);
+              if (list.length === 0) return null;
               return (
-                <div key={type} className="flex flex-col gap-2 sm:gap-3">
-                  <p className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">
-                    {type === "football" ? "Football" : "Cricket"}
-                  </p>
-                  {list.length === 0 ? (
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 sm:p-6 bg-white dark:bg-gray-900">
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        No matches found for this selection.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
-                      {list.map((match) => (
-                        <div
-                          key={match.firebase_match_id}
-                          className="rounded-xl border border-gray-200 dark:border-gray-800 p-3 sm:p-5 bg-white dark:bg-gray-900"
-                        >
-                          <ScoreBlock match={match} />
-                          <div className="mt-3 flex justify-between items-center">
-                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                              {formatDate(match.match_date)}
-                            </p>
-                            <Link
-                              href={`/matches/${match.firebase_match_id}`}
-                              className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                            >
-                              View match →
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div key={type} className="space-y-4">
+                  <h3 className="font-serif text-lg capitalize">{type}</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {list.map((match) => (
+                      <MatchCard key={match.firebase_match_id} match={match} />
+                    ))}
+                  </div>
                 </div>
               );
             })}
+
+            {matchesByType.past.length === 0 && (
+              <Card className="border-dashed">
+                <CardContent className="py-10 text-center text-sm text-muted-foreground">
+                  No archived matches for this selection.
+                </CardContent>
+              </Card>
+            )}
           </section>
         </>
       )}

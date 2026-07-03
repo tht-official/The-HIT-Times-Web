@@ -2,32 +2,14 @@
 
 import MainPostIcons from "@/components/post-components/mainPostIcons";
 import RealtedPostIcons from "@/components/post-components/realtedPostIcons";
-import Image from "next/image";
-import Link from "next/link";
-import { Posts } from "@/models/Post";
-import { useEffect, useState } from "react";
-import parse from "html-react-parser";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
-import { notFound } from "next/navigation";
-import { CircularLoader } from "@/components/common/loader/Loaders";
-import ArticleImage from "@/components/weekly-portion/ArticleImage";
 import Article from "@/components/weekly-portion/Article";
-import { motion } from "framer-motion";
-import { fadeIn } from "@/variants";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800"],
-});
+import ArticleImage from "@/components/weekly-portion/ArticleImage";
+import { BrandLoader } from "@/components/common/loader/Loaders";
+import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
+import { Posts } from "@/models/Post";
+import parse from "html-react-parser";
+import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const PostInfoPage = ({ params }: { params: { postId: string } }) => {
   const [postinfo, setPostinfo] = useState<Posts>();
@@ -39,9 +21,7 @@ const PostInfoPage = ({ params }: { params: { postId: string } }) => {
     const data = await res.json();
     setPostinfo(data[0]);
     setLoading(false);
-    if (data.length !== 1) {
-      return;
-    }
+    if (data.length !== 1) return;
     loadRelatedPosts(data[0]);
   };
 
@@ -49,124 +29,94 @@ const PostInfoPage = ({ params }: { params: { postId: string } }) => {
     const now = new Date();
     const postDate = new Date(date);
     const diff = now.getTime() - postDate.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(months / 12);
-    if (years > 0) {
-      return years + " years ago";
-    } else if (months > 0) {
-      return months + " months ago";
-    } else if (days > 0) {
-      return days + " days ago";
-    } else if (hours > 0) {
-      return hours + " hours ago";
-    } else if (minutes > 0) {
-      return minutes + " minutes ago";
-    } else {
-      return seconds + " seconds ago";
-    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days > 30) return postDate.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+    if (days > 0) return `${days}d ago`;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours > 0) return `${hours}h ago`;
+    const minutes = Math.floor(diff / (1000 * 60));
+    return minutes > 0 ? `${minutes}m ago` : "Just now";
   };
 
   const calculateReadTime = (htmlBody: string): string => {
-    const words = htmlBody.split(" ");
-    return Math.ceil(words.length / 200) + " min read";
+    const words = htmlBody.split(/\s+/).filter(Boolean).length;
+    return `${Math.max(1, Math.ceil(words / 200))} min read`;
   };
 
   const loadRelatedPosts = async (post: Posts) => {
     const res = await fetch(`/api/v1/posts?dropdown=${post.dropdown}&limit=6`);
     const data = await res.json();
-
-    // Remove the current post from the related posts
-    const filteredData = data.filter((x: Posts) => x._id !== post._id);
-    setRelatedPosts(filteredData);
+    setRelatedPosts(data.filter((x: Posts) => x._id !== post._id));
   };
+
   useEffect(() => {
     loadPost();
   }, []);
 
   if (loading) {
-    return <CircularLoader />;
+    return <BrandLoader variant="page" />;
   }
 
-  if (!postinfo) {
-    notFound();
-  }
+  if (!postinfo) notFound();
+
+  const sectionName = dropdownsToSections[postinfo.dropdown] ?? "Article";
 
   return (
-    <div>
-      <main>
-        <div className="before:absolute before:bg-indigo-950 dark:before:bg-gray-900 before:w-full before:h-1/3 before:-z-10 before:left-0 animate-fade-down animate-delay-200">
-          {/* <div className="absolute top-0 left-0 right-0 -z-10 w-full h-2/3  lg:h-1/2 bg-indigo-950"></div> */}
-          <h1
-            className={
-              ibmPlexSerif.className +
-              " text-xl text-center text-white sm:text-4xl font-semibold py-8 w-fit mx-auto animate-flip-down animate-duration-200 animate-delay-200 dark:text-gray-200 "
-            }
-          >
-            {postinfo.title}
-          </h1>
-          <ArticleImage
-            src={postinfo.link}
-            alt="image"
-            width={500}
-            height={423}
-            className="object-contain mx-auto w-full  aspect-video animate-fade-up animate-duration-500 animate-delay-500 "
-          />
-        </div>
-
-        <div className="flex flex-row gap-8 mt-8 w-full">
-          <div className="hidden sm:flex">
-            <MainPostIcons post={postinfo} />
-          </div>
-          <div className="flex flex-col gap-4 flex-1">
-            <div className=" flex flex-row justify-between items-center">
-              <div
-                className={poppins.className + " flex flex-row gap-8 text-sm "}
-              >
-                <p className="text-gray-800 dark:text-gray-200 font-medium animate-fade-right animate-delay-200 ">
-                  {getRelativeTime(postinfo.createdAt)}
-                </p>
-                <p className="text-gray-500 dark:text-gray-400 animate-fade-left animate-delay-200 ">
-                  {calculateReadTime(postinfo.htmlBody ?? postinfo.body)}
-                </p>
+    <article>
+      <div className="mx-auto max-w-3xl">
+        <header className="mb-8 space-y-4 sm:mb-10 sm:space-y-5">
+          <div className="flex items-center justify-between gap-4">
+            <span className="tag-editorial">{sectionName}</span>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:block">
+                <MainPostIcons post={postinfo} />
               </div>
               <div className="sm:hidden">
                 <RealtedPostIcons post={postinfo} />
               </div>
             </div>
-            <div
-              className={
-                nunitoSans.className +
-                " text-gray-700 dark:text-gray-300 text-lg prose-a:text-blue-800 text-justify animate-fade-up animate-delay-200 "
-              }
-            >
-              {parse(postinfo.htmlBody ?? postinfo.body)}
-            </div>
           </div>
-        </div>
 
-        <div className="my-8">
-          <h3 className={poppins.className + " font-bold font-serif mx-2 text-gray-800 dark:text-white"}>
-            Related Topics
-          </h3>
-          <motion.div
-            variants={fadeIn("right", 0.2)}
-            initial="hidden"
-            whileInView={"show"}
-            viewport={{ once: false, amount: 0.1 }}
-          >
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 my-4">
-              {relatedPosts?.map((post) => (
-                <Article key={post._id.toString()} article={post} />
-              ))}
-            </div>
-          </motion.div>
+          <h1 className="editorial-heading text-balance text-3xl font-normal leading-tight sm:text-4xl lg:text-5xl">
+            {postinfo.title}
+          </h1>
+
+          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+            <time>{getRelativeTime(postinfo.createdAt)}</time>
+            <span>·</span>
+            <span>{calculateReadTime(postinfo.htmlBody ?? postinfo.body)}</span>
+          </div>
+        </header>
+
+        <ArticleImage
+          src={postinfo.link}
+          alt={postinfo.title}
+          width={1200}
+          height={675}
+          className="mb-10 aspect-video w-full rounded-sm object-cover"
+        />
+
+        <div className="prose-editorial text-base leading-relaxed">
+          {parse(postinfo.htmlBody ?? postinfo.body)}
         </div>
-      </main>
-    </div>
+      </div>
+
+      {relatedPosts && relatedPosts.length > 0 && (
+        <section className="mx-auto mt-16 max-w-3xl space-y-8">
+          <div>
+            <h2 className="editorial-heading text-xl font-normal">
+              More in {sectionName}
+            </h2>
+            <div className="section-divider mt-4" />
+          </div>
+          <div className="grid gap-10 sm:grid-cols-2">
+            {relatedPosts.slice(0, 2).map((post) => (
+              <Article key={post._id.toString()} article={post} variant="compact" />
+            ))}
+          </div>
+        </section>
+      )}
+    </article>
   );
 };
 

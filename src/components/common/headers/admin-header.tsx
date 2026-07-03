@@ -1,142 +1,100 @@
 "use client";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { Nunito_Sans } from "next/font/google";
-import Link from "next/link";
-import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
-import { useState } from "react";
-import { ArrowLeftIcon, Bars3Icon } from "@heroicons/react/24/solid";
 
-const nunitoSans = Nunito_Sans({ subsets: ["latin"] });
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 const links = [
-  {
-    title: "Teams",
-    href: "/admin-portal/teams",
-  },
-  {
-    title: "Posts",
-    href: "/admin-portal/posts",
-  },
-  {
-    title: "Matches",
-    href: "/admin-portal/matches",
-  },
-  {
-    title: "Alumni",
-    href: "/admin-portal/alumni",
-  },
-  {
-    title: "Notify",
-    href: "/admin-portal/notify",
-  },
+  { title: "Dashboard", href: "/admin-portal" },
+  { title: "Posts", href: "/admin-portal/posts" },
+  { title: "Matches", href: "/admin-portal/matches" },
+  { title: "Alumni", href: "/admin-portal/alumni" },
+  { title: "Teams", href: "/admin-portal/teams" },
+  { title: "Notify", href: "/admin-portal/notify" },
 ];
 
-export const UserProfile = (session: Session) => {
-  return (
-    <li
-      className={
-        nunitoSans.className + " text-zinc-800 text-base font-semibold "
-      }
-    >
-      Welcome, <span className="font-bold">{session.user.name}</span>
-    </li>
-  );
-};
-
-export const SignOut = (session: Session) => {
-  if (session) {
-    return (
-      <li
-        className={
-          nunitoSans.className +
-          " text-zinc-800 text-base font-semibold hover:underline cursor-pointer"
-        }
-        onClick={() => signOut()}
-      >
-        Sign Out
-      </li>
-    );
-  }
-};
-
-// Admin Portal Header
-// -------------------
-//
-// This component is used to display the header for the admin portal
-// It will contain links to all the admin portal pages
-// Don't modify this component
 export const AdminHeader = () => {
   const { data: session } = useSession();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const pathname = usePathname();
+
+  const initials = session?.user?.name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
-    <header>
-      <nav className="grid grid-flow-col items-center py-5">
-        <Link href={"/admin-portal"}>
-          <Image
-            src="/header/hit_logo_black.webp"
-            alt="The HIT Times"
-            className="w-32 sm:mx-4"
-            width={100}
-            height={50}
-          />
-        </Link>
-        <ul className="md:flex flex-row gap-8 justify-end hidden">
-          {links.map((link) => (
-            <li key={link.href}>
-              <Link
-                className={
-                  nunitoSans.className +
-                  " text-zinc-800 text-base font-semibold hover:underline"
-                }
-                href={link.href}
-              >
-                {link.title}
-              </Link>
-            </li>
-          ))}
-          {session && UserProfile(session)}
-          {session && SignOut(session)}
-        </ul>
-        <div className="md:hidden flex justify-end">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="text-zinc-800 text-2xl"
+    <nav className="flex h-16 items-center justify-between gap-4">
+      <Link href="/admin-portal" className="flex items-center gap-3">
+        <Image
+          src="/header/hit_logo_black.webp"
+          alt="The HIT Times"
+          width={100}
+          height={32}
+          className="h-7 w-auto dark:invert"
+        />
+        <span className="hidden text-xs font-medium uppercase tracking-widest text-muted-foreground sm:inline">
+          Admin
+        </span>
+      </Link>
+
+      <div className="hidden items-center gap-1 md:flex">
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors duration-200",
+              pathname === link.href
+                ? "bg-accent text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
           >
-            <Bars3Icon className="size-8 hover:rounded-full hover:bg-gray-100 p-1" />
-          </button>
-        </div>
-      </nav>
-      {showDropdown && (
-        <div className="md:hidden fixed insert-0 top-0 left-0 bg-white w-screen h-screen z-50">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="m-1"
-          >
-            <ArrowLeftIcon className="size-8 hover:rounded-full hover:bg-gray-100 p-1" />
-          </button>
-          <ul className="flex flex-col gap-4 py-4 px-2">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  className={
-                    nunitoSans.className +
-                    " text-zinc-800 text-base font-semibold hover:underline"
-                  }
-                  onClick={() => setShowDropdown(false)}
-                  href={link.href}
-                >
-                  {link.title}
-                </Link>
-              </li>
-            ))}
-            <hr />
-            {session && UserProfile(session)}
-            {session && SignOut(session)}
-          </ul>
-        </div>
-      )}
-    </header>
+            {link.title}
+          </Link>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-1">
+        <ThemeToggle />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Avatar className="h-7 w-7">
+                <AvatarImage src={session?.user?.image ?? undefined} />
+                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/">View site</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </nav>
   );
 };

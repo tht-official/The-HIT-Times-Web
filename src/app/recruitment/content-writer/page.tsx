@@ -130,7 +130,7 @@ export default function CwForm() {
 
 
   return (
-    <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
       <div className="max-w-4xl px-3 mx-auto">
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
@@ -138,10 +138,10 @@ export default function CwForm() {
             alt="Recruitment Form 2k26"
             width={1500}
             height={100}
-            className="border  border-white mt-2 rounded-lg"
+            className="h-auto w-full border border-border object-cover"
           />
         </div>
-        <div className="h-2 lg:h-3 w-full bg-purple-700 rounded-xl"></div>
+        <div className=""></div>
         <div className="flex flex-row bg-transparent shadow-md rounded-b-sm">
           {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
           <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -155,7 +155,7 @@ export default function CwForm() {
                 Recruitment Form 2k26
               </div>
             </header>
-            <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
+            <div className=""></div>
             <div>
               <p className="py-4 text-xs sm:text-sm text-white">
                 Carefully read each and every description under the sections and
@@ -176,9 +176,9 @@ export default function CwForm() {
           </div>
         </div>
         <div className="bg-white bg-opacity-15 shadow-md rounded-lg mt-4">
-          <div className="bg-purple-800 rounded-t-lg py-3 px-8">
+          <div className="border-b border-border px-6 py-4">
             <p
-              className={poppins.className + " text-lg font-normal text-white"}
+              className={poppins.className + " editorial-heading text-lg font-normal"}
             >
               Content Writer Section
             </p>
@@ -201,7 +201,7 @@ export default function CwForm() {
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q1_cw"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 On a scale of 10, how would you rate your english language
                 ability.
@@ -210,7 +210,7 @@ export default function CwForm() {
               <p className={poppins.className + " text-slate-300 text-md mb-1"}>
                 Rudimentary
               </p>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="1"
@@ -220,7 +220,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>1
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="2"
@@ -230,7 +230,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>2
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="3"
@@ -240,7 +240,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>3
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="4"
@@ -250,7 +250,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>4
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="5"
@@ -260,7 +260,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>5
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="6"
@@ -270,7 +270,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>6
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="7"
@@ -280,7 +280,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>7
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="8"
@@ -290,7 +290,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>8
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="9"
@@ -300,7 +300,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>9
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="10"
@@ -320,7 +320,7 @@ export default function CwForm() {
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q2_cw"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 On a scale of 10, how would you rate your creativity?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -328,7 +328,7 @@ export default function CwForm() {
               <p className={poppins.className + " text-slate-300 text-md mb-1"}>
                 Basic
               </p>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="1"
@@ -338,7 +338,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>1
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="2"
@@ -348,7 +348,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>2
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="3"
@@ -358,7 +358,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>3
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="4"
@@ -368,7 +368,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>4
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="5"
@@ -378,7 +378,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>5
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="6"
@@ -388,7 +388,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>6
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="7"
@@ -398,7 +398,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>7
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="8"
@@ -408,7 +408,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>8
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="9"
@@ -418,7 +418,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>9
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="10"
@@ -439,18 +439,18 @@ export default function CwForm() {
             <div className="px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="name"
-                className={poppins.className + " text-white text-md mb-2"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-2"}
               >
                 Write any one essay from each of the following sections
                 <span className="text-md text-red-600 pl-1">*</span>
               </label>
 
-              <div className={poppins.className + " text-white text-sm mb-4"}>
+              <div className={poppins.className + " text-sm text-muted-foreground mb-4"}>
                 One from the informal(creative and out of the box) and the other
                 from the formal(facts and formally structured) section. Two
                 essays in total should be attempted.
               </div>
-              <div className={poppins.className + " text-white text-sm mb-4"}>
+              <div className={poppins.className + " text-sm text-muted-foreground mb-4"}>
                 <p className="font-semibold">1. Informal:</p>
                 <p>
                   {
@@ -470,7 +470,7 @@ export default function CwForm() {
                   }
                 </p>
               </div>
-              <div className={poppins.className + " text-white text-sm mb-4"}>
+              <div className={poppins.className + " text-sm text-muted-foreground mb-4"}>
                 <p className="font-semibold"> 2. Formal:</p>
                 <p>
                   {
@@ -496,7 +496,7 @@ export default function CwForm() {
                   }
                 </p>
               </div>
-              <div className={poppins.className + " text-white text-sm mb-4"}>
+              <div className={poppins.className + " text-sm text-muted-foreground mb-4"}>
                 <p className="font-medium">Your essays should:</p>
                 <p>{"• Not exceed 250 words."} </p>
                 <p>
@@ -539,7 +539,7 @@ export default function CwForm() {
                     type="file"
                   />
                   <p
-                    className="mt-1 text-sm text-slate-300 "
+                    className="mt-1 text-sm text-muted-foreground "
                     id="file_input_help"
                   >
                     Upload 1 supported file. Max 5 MB.
@@ -586,7 +586,7 @@ export default function CwForm() {
             register={register}
           />
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-0.5 lg:w-1 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
@@ -597,7 +597,7 @@ export default function CwForm() {
                 you do not know very well?
                 <span className="text-md text-red-600 pl-1">*</span>
               </label>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="yes"
@@ -607,7 +607,7 @@ export default function CwForm() {
                 />
                 <span className="w-2"></span>Yes
               </div>
-              <div className="flex flex-row text-sm text-slate-300">
+              <div className="flex flex-row text-sm text-muted-foreground">
                 <input
                   className=""
                   value="no"

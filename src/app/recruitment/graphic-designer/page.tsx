@@ -151,7 +151,7 @@ export default function GdForm() {
     setValue("Q5_gd", updatedValues, { shouldValidate: true });
   };
   return (
-    <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
       <div className="max-w-4xl px-3 mx-auto">
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
@@ -159,10 +159,10 @@ export default function GdForm() {
             alt="Recruitment Form 2k26"
             width={1500}
             height={100}
-            className="border  border-white mt-2 rounded-lg"
+            className="h-auto w-full border border-border object-cover"
           />
         </div>
-        <div className="h-2 lg:h-3 w-full bg-purple-700 rounded-xl"></div>
+        <div className=""></div>
         <div className="flex flex-row bg-transparent shadow-md rounded-b-sm">
           {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
           <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -176,7 +176,7 @@ export default function GdForm() {
                 Recruitment Form 2k26
               </div>
             </header>
-            <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
+            <div className=""></div>
             <div>
               <p className="py-4 text-xs sm:text-sm text-white">
                 Carefully read each and every description under the sections and
@@ -198,9 +198,9 @@ export default function GdForm() {
         </div>
 
         <div className="bg-white bg-opacity-15 shadow-md rounded-lg mt-4">
-          <div className="bg-purple-800 rounded-t-lg py-3 px-8">
+          <div className="border-b border-border px-6 py-4">
             <p
-              className={poppins.className + " text-lg font-normal text-white"}
+              className={poppins.className + " editorial-heading text-lg font-normal"}
             >
               Graphic Designer Section
             </p>
@@ -218,9 +218,9 @@ export default function GdForm() {
           <CommonFields register={register} />
 
           {/* Q5: Editing Software */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
-              <span className={poppins.className + " text-white text-md mb-4"}>
+              <span className={poppins.className + " text-sm font-medium text-foreground mb-4"}>
                 What editing software are you familiar with?
                 <span className="text-md text-red-600 pl-1">*</span>
               </span>
@@ -235,7 +235,7 @@ export default function GdForm() {
                 <label
                   key={index}
                   htmlFor={`Q5_gd_${index}`}
-                  className="flex items-center mb-3 text-sm text-slate-300"
+                  className="flex items-center mb-3 text-sm text-muted-foreground"
                 >
                   <input
                     className="form-checkbox h-4 w-4 text-purple-600 bg-transparent"
@@ -252,7 +252,7 @@ export default function GdForm() {
                 Other: (Please specify)
               </label>
               <input
-                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 focus:border-b-2 py-1 focus:placeholder-purple-400"
+                className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground focus:outline-none"
                 placeholder="Your Answer"
                 type="text"
                 id="Q6_gd"
@@ -267,13 +267,13 @@ export default function GdForm() {
           </div>
 
           {/* Q7: Rating Graphics Designing Skills */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <span className={poppins.className + " text-white text-md mb-1"}>
                 How do you rate your graphics designing skills?
                 <span className="text-md text-red-600 pl-1">*</span>
               </span>
-              <div className="flex flex-col gap-2 my-3 text-sm text-slate-300">
+              <div className="flex flex-col gap-2 my-3 text-sm text-muted-foreground">
                 {Array.from({ length: 10 }, (_, i) => (
                   <label
                     key={i}
@@ -301,14 +301,14 @@ export default function GdForm() {
           </div>
 
           {/* Q8: Comfort with Learning New Design Software */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <span className={poppins.className + " text-white text-md mb-1"}>
                 On a scale of 1-10, how comfortable are you with learning to use
                 a new design software?
                 <span className="text-md text-red-600 pl-1">*</span>
               </span>
-              <div className="flex flex-col gap-2 my-3 text-sm text-slate-300">
+              <div className="flex flex-col gap-2 my-3 text-sm text-muted-foreground">
                 {Array.from({ length: 10 }, (_, i) => (
                   <label
                     key={i}
@@ -336,11 +336,11 @@ export default function GdForm() {
           </div>
 
           {/* Q9: Create Designs from Scratch or Use Online Resources */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q9_gd"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Do you create designs from scratch or do you use online
                 resources, and if so, from which website?
@@ -362,11 +362,11 @@ export default function GdForm() {
           </div>
 
           {/* Q10: Best Designed Brand Logos, Websites, Apps etc */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q10_gd"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 In your opinion, what are some of the best designed brand logos,
                 websites, apps etc and why?
@@ -392,11 +392,11 @@ export default function GdForm() {
           </div>
 
           {/* Q11: Feedback on The HIT Times Design and Formatting */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q11_gd"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What do you have to say about the design and formatting of The
                 HIT Times and the media posted on the page?
@@ -418,11 +418,11 @@ export default function GdForm() {
           </div>
 
           {/* Q12: Motivation to be a Graphic Designer */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q12_gd"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Tell us what motivated you to be a graphic designer
                 <span className="text-md text-red-600 pl-1">*</span>

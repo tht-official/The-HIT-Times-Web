@@ -20,10 +20,6 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-  experiments: {
-    asyncWebAssembly: true, // Enable async WebAssembly support
-    layers: true, // Improve WebAssembly performance
-  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.wasm$/,

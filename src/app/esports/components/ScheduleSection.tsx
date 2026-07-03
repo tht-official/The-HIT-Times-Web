@@ -1,152 +1,128 @@
-"use client"
-import { Trophy, Users, Clock } from 'lucide-react';
+"use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock, Trophy, Users } from "lucide-react";
+import Image from "next/image";
 
+const tournaments = [
+  {
+    name: "Valorant Championship",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "5v5",
+    registrationFee: "₹79 per person",
+    image: "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "BGMI Showdown",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "4-player squad",
+    registrationFee: "₹59 per person",
+    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "COD M Masters",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "4v4",
+    registrationFee: "₹59 per person",
+    image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "FIFA Tournament",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "1v1",
+    registrationFee: "₹49 per person",
+    image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "eFootball Mobile",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "1v1",
+    registrationFee: "₹59 per person",
+    image: "https://preview.redd.it/efootball-2025-v0-k74zlrturfad1.jpeg?auto=webp&s=c54252a4b3f1b2a079433d4feefaf9e47c5c5a9c",
+  },
+  {
+    name: "FreeFire MAX",
+    time: "To be announced",
+    prize: "To be announced",
+    teamSize: "4-player squad",
+    registrationFee: "₹59 per person",
+    image: "https://i.scdn.co/image/ab67616d00001e02c72fc87f92c0e770bcc25ce7",
+  },
+];
 
 export default function ScheduleSection() {
-  const tournaments = [
-    { 
-      name: "Valorant Championship",
-      time: "To be announced",
-      prize: "To be announced", 
-      teamSize: "5v5",
-      registrationFee: "₹79 per person",
-      image: "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?auto=format&fit=crop&w=600&q=80"
-    },
-    { 
-      name: "BGMI Showdown",
-      time: "To be announced",
-      prize: "To be announced", 
-      teamSize: "4-player squad",
-      registrationFee: "₹59 per person",
-      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80"
-    },
-    { 
-      name: "COD M Masters",
-      time: "To be announced", 
-      prize: "To be announced",
-      teamSize: "4v4",
-      registrationFee: "₹59 per person",
-      image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=600&q=80"
-    },
-    { 
-      name: "FIFA Tournament",
-      time: "To be announced", 
-      prize: "To be announced",
-      teamSize: "1v1",
-      registrationFee: "₹49 per person",
-      image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=600&q=80"
-    },
-    { 
-      name: "eFootball Mobile",
-      time: "To be announced", 
-      prize: "To be announced",
-      teamSize: "1v1",
-      registrationFee: "₹59 per person",
-      image: "https://preview.redd.it/efootball-2025-v0-k74zlrturfad1.jpeg?auto=webp&s=c54252a4b3f1b2a079433d4feefaf9e47c5c5a9c"
-    },
-    { 
-      name: "FreeFire MAX",
-      time: "To be announced",
-      prize: "To be announced", 
-      teamSize: "4-player squad",
-      registrationFee: "₹59 per person",
-      image: "https://i.scdn.co/image/ab67616d00001e02c72fc87f92c0e770bcc25ce7"
-    },
-  ];
-
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section id="schedule" className="py-20 relative">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
-            <span className="text-red-500">#</span> Tournament Schedule
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Mark your calendar for May 10th-11th, 2025. All tournaments will take place at HIT Auditorium.
-            Come prepared to showcase your skills and compete for glory!
-          </p>
-        </div>
-        
-        <div className="backdrop-blur-md bg-black/30 border border-red-900/20 rounded-xl overflow-hidden">
-          {tournaments.map((tournament, index) => (
-            <div 
-              key={index} 
-              className={`flex flex-col p-6 ${index !== tournaments.length - 1 ? 'border-b border-red-900/20' : ''} hover:bg-black/40 transition-colors`}
-            >
-              <div className="flex flex-col lg:flex-row gap-6">
-                <div className="lg:w-1/4 flex items-center">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 mr-4 flex-shrink-0 shadow-lg shadow-red-900/20">
-                    <img 
-                      src={tournament.image} 
-                      alt={tournament.name} 
-                      className="w-full h-full object-cover"
-                    />
+    <section id="schedule" className="scroll-mt-24 space-y-8">
+      <div className="space-y-3 text-center">
+        <p className="tag-editorial">Schedule</p>
+        <h2 className="editorial-heading text-3xl font-normal sm:text-4xl">Tournament lineup</h2>
+        <p className="mx-auto max-w-2xl text-sm text-muted-foreground">
+          May 10th–11th, 2025 at HIT Auditorium. Come prepared to compete.
+        </p>
+      </div>
+      <div className="section-divider" />
+      <div className="space-y-4">
+        {tournaments.map((tournament) => (
+          <Card key={tournament.name} className="border-border">
+            <CardContent className="space-y-4 p-5 sm:p-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border">
+                    <Image src={tournament.image} alt={tournament.name} fill className="object-cover" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-red-500">{tournament.name}</h3>
-                    <div className="text-gray-400 flex items-center mt-2">
-                      <Clock className="w-4 h-4 mr-2" />
+                    <h3 className="font-medium">{tournament.name}</h3>
+                    <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5" />
                       {tournament.time}
-                    </div>
+                    </p>
                   </div>
                 </div>
-                
-                <div className="lg:w-3/4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="backdrop-blur-sm bg-black/20 border border-red-900/10 rounded-lg p-4 hover:border-red-500/30 transition-all">
-                    <div className="text-gray-400 text-sm mb-1">Prize Pool</div>
-                    <div className="flex items-center">
-                      <Trophy className="w-5 h-5 text-red-500 mr-2" />
-                      <span className="text-white font-medium">{tournament.prize}</span>
-                    </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="border border-border px-3 py-2 text-sm">
+                    <p className="text-xs text-muted-foreground">Prize</p>
+                    <p className="flex items-center gap-1.5 font-medium">
+                      <Trophy className="h-3.5 w-3.5" />
+                      {tournament.prize}
+                    </p>
                   </div>
-                  
-                  <div className="backdrop-blur-sm bg-black/20 border border-red-900/10 rounded-lg p-4 hover:border-red-500/30 transition-all">
-                    <div className="text-gray-400 text-sm mb-1">Team Size</div>
-                    <div className="flex items-center">
-                      <Users className="w-5 h-5 text-red-500 mr-2" />
-                      <span className="text-white font-medium">{tournament.teamSize}</span>
-                    </div>
+                  <div className="border border-border px-3 py-2 text-sm">
+                    <p className="text-xs text-muted-foreground">Team size</p>
+                    <p className="flex items-center gap-1.5 font-medium">
+                      <Users className="h-3.5 w-3.5" />
+                      {tournament.teamSize}
+                    </p>
                   </div>
-                  
-                  <div className="backdrop-blur-sm bg-black/20 border border-red-900/10 rounded-lg p-4 hover:border-red-500/30 transition-all">
-                    <div className="text-gray-400 text-sm mb-1">Registration Fee</div>
-                    <div className="flex items-center">
-                      <span className="text-red-500 text-lg font-bold mr-2">₹</span>
-                      <span className="text-white font-medium">{tournament.registrationFee}</span>
-                    </div>
+                  <div className="border border-border px-3 py-2 text-sm">
+                    <p className="text-xs text-muted-foreground">Fee</p>
+                    <p className="font-medium">{tournament.registrationFee}</p>
                   </div>
                 </div>
               </div>
-              
-              <div className="mt-4 lg:ml-20">
-                <button 
-                  onClick={() => scrollToSection("register")}
-                  className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-500 py-2 px-4 rounded-lg text-sm transition-colors">
-                  Register Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-gray-400 text-sm">
-            Registration closes on May 9th, 2025. For more information, contact the event organizers.
-          </p>
-          <button 
-            onClick={() => scrollToSection("rules")}
-            className="mt-6 bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-lg font-medium transition-colors">
-            View Full Details
-          </button>
-        </div>
+              <Button variant="outline" size="sm" onClick={() => scrollToSection("register")}>
+                Register
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">
+          Registration closes May 9th, 2025.
+        </p>
+        <Button className="mt-4" variant="outline" onClick={() => scrollToSection("rules")}>
+          View full rules
+        </Button>
       </div>
     </section>
   );

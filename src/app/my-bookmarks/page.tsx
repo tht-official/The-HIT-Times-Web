@@ -1,79 +1,69 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import Article from "@/components/weekly-portion/Article";
 import { Posts } from "@/models/Post";
 import { useEffect, useState } from "react";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
-import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
-import Article from "@/components/weekly-portion/Article";
-import { CircularLoader } from "@/components/common/loader/Loaders";
+import { BrandLoader } from "@/components/common/loader/Loaders";
+import { Bookmark } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800"],
-});
-
-export default function PostsPage({
-  params,
-}: {
-  params: { dropdown: string };
-}) {
+export default function BookmarksPage() {
   const [posts, setPosts] = useState<Posts[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getData = async () => {
-    const bookmarkedPosts = JSON.parse(
-      localStorage.getItem("bookmarkedPosts") || "[]"
-    ).reverse();
-    const newPosts = await Promise.all(
-      bookmarkedPosts.map(async (postId: string) => {
-        const res = await fetch(`/api/v1/post/${postId}`);
-        const data = await res.json();
-        return data.data;
-      })
-    );
-    const updatedPosts = [...posts, ...newPosts];
-    setPosts(updatedPosts);
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const getData = async () => {
+      const bookmarkedPosts = JSON.parse(
+        localStorage.getItem("bookmarkedPosts") || "[]"
+      ).reverse();
+
+      if (bookmarkedPosts.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      const newPosts = await Promise.all(
+        bookmarkedPosts.map(async (postId: string) => {
+          const res = await fetch(`/api/v1/post/${postId}`);
+          const data = await res.json();
+          return data.data;
+        })
+      );
+      setPosts(newPosts.filter(Boolean));
+      setLoading(false);
+    };
     getData();
   }, []);
 
   return (
-    <div>
-      <h1
-        className={
-          ibmPlexSerif.className +
-          " text-zinc-80 dark:text-white sm:text-5xl text-3xl font-semibold py-8"
-        }
-      >
-        My Bookmarks
-      </h1>
+    <div className="animate-in-subtle space-y-8">
+      <header>
+        <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">
+          My Bookmarks
+        </h1>
+        <p className="mt-2 text-muted-foreground">
+          Stories you&apos;ve saved for later.
+        </p>
+      </header>
 
-      {posts.length === 0 && (
-        <div>
-          No Bookmarks found. Get started my bookmarking your favorite posts.
+      {loading ? (
+        <BrandLoader variant="inline" />
+      ) : posts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
+          <Bookmark className="mb-4 h-10 w-10 text-muted-foreground/50" />
+          <p className="text-muted-foreground">No bookmarks yet.</p>
+          <Button variant="link" asChild className="mt-2">
+            <Link href="/">Browse stories</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Article key={post._id.toString()} article={post} />
+          ))}
         </div>
       )}
-      <div className="grid grid-flow-row md:grid-cols-3 gap-8 my-4 min-h-screen">
-        {posts.map((post) => (
-          <Article key={post._id.toString()} article={post} />
-        ))}
-      </div>
-
-      {loading && <CircularLoader />}
     </div>
   );
 }
