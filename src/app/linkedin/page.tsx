@@ -1,19 +1,17 @@
 "use client";
+
+import { BrandLoader } from "@/components/common/loader/Loaders";
 import { useEffect } from "react";
-// import { useRouter } from "next/router";
 
-const LinkedIn = () => {
-//   const router = useRouter();
-
+export default function LinkedIn() {
   useEffect(() => {
     window.location.href = "https://www.linkedin.com/company/the-hit-times/";
   }, []);
 
   return (
-    <div className="h-screen flex items-center justify-center text-xl font-bold animate-pulse">
-      Redirecting to LinkedIn...
+    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center">
+      <BrandLoader variant="compact" />
+      <p className="text-sm text-muted-foreground">Redirecting to LinkedIn…</p>
     </div>
   );
-};
-
-export default LinkedIn;
+}

@@ -139,7 +139,7 @@ export default function PhotographyForm() {
   }
 
   return (
-    <div className="min-h-screen  bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
       <div className="max-w-4xl px-3 mx-auto">
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
@@ -147,10 +147,10 @@ export default function PhotographyForm() {
             alt="Recruitment Form 2k26"
             width={1500}
             height={100}
-            className="border  border-white mt-2 rounded-lg"
+            className="h-auto w-full border border-border object-cover"
           />
         </div>
-        <div className="h-2 lg:h-3 w-full bg-purple-700 rounded-xl"></div>
+        <div className=""></div>
         <div className="flex flex-row bg-transparent shadow-md rounded-b-sm">
           {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
           <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -164,7 +164,7 @@ export default function PhotographyForm() {
                 Recruitment Form 2k26
               </div>
             </header>
-            <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
+            <div className=""></div>
             <div>
               <p className="py-4 text-xs sm:text-sm text-white">
                 Carefully read each and every description under the sections and
@@ -186,9 +186,9 @@ export default function PhotographyForm() {
         </div>
 
         <div className="bg-white bg-opacity-15 shadow-md rounded-lg mt-4">
-          <div className="bg-purple-800 rounded-t-lg py-3 px-8">
+          <div className="border-b border-border px-6 py-4">
             <p
-              className={poppins.className + " text-lg font-normal text-white"}
+              className={poppins.className + " editorial-heading text-lg font-normal"}
             >
               Photographer Section
             </p>
@@ -211,7 +211,7 @@ export default function PhotographyForm() {
             register={register}
           />
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-1 lg:w-1.5 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
@@ -221,7 +221,7 @@ export default function PhotographyForm() {
                 Which software do you use for editing your clicks?
                 {/*<span className='text-md text-red-600 pl-1'>*</span>*/}
               </label>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Adobe Photoshop"
@@ -231,7 +231,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>Adobe Photoshop
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="GIMP"
@@ -241,7 +241,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>GIMP
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Adobe Lightroom"
@@ -251,7 +251,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>Adobe Lightroom
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Snapseed"
@@ -261,7 +261,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>Snapseed
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Picsart"
@@ -271,7 +271,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>Picsart
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Adobe Photoshop Express"
@@ -281,7 +281,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>Adobe Photoshop Express
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Other"
@@ -301,7 +301,7 @@ export default function PhotographyForm() {
             </div>
           </div>
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-4 lg:w-5 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
@@ -330,7 +330,7 @@ export default function PhotographyForm() {
                 Less than a year
               </p>
 
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="1"
@@ -340,7 +340,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>1
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="2"
@@ -350,7 +350,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>2
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="3"
@@ -360,7 +360,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>3
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="4"
@@ -370,7 +370,7 @@ export default function PhotographyForm() {
                 />
                 <span className="w-2"></span>4
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="5"

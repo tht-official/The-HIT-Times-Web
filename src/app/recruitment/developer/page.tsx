@@ -142,7 +142,7 @@ export default function DevForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
       <div className="max-w-4xl px-3 mx-auto">
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
@@ -150,10 +150,10 @@ export default function DevForm() {
             alt="Recruitment Form 2k26"
             width={1500}
             height={100}
-            className="border  border-white mt-2 rounded-lg"
+            className="h-auto w-full border border-border object-cover"
           />
         </div>
-        <div className="h-2 lg:h-3 w-full bg-purple-700 rounded-xl"></div>
+        <div className=""></div>
         <div className="flex flex-row bg-transparent shadow-md rounded-b-sm">
           {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
           <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -167,7 +167,7 @@ export default function DevForm() {
                 Recruitment Form 2k26
               </div>
             </header>
-            <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
+            <div className=""></div>
             <div>
               <p className="py-4 text-xs sm:text-sm text-white">
                 Carefully read each and every description under the sections and
@@ -189,9 +189,9 @@ export default function DevForm() {
         </div>
 
         <div className="bg-white bg-opacity-15 rounded-lg mt-4">
-          <div className="bg-purple-800 rounded-t-lg py-3 px-8">
+          <div className="border-b border-border px-6 py-4">
             <p
-              className={poppins.className + " text-lg font-normal text-white"}
+              className={poppins.className + " editorial-heading text-lg font-normal"}
             >
               Developer Section
             </p>
@@ -211,17 +211,17 @@ export default function DevForm() {
         <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
           <CommonFields register={register} />
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-1 lg:w-1.5 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q1_Q2_tech"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What programming languages do you know/ use extensively?
                 <span className="text-md text-red-600 pl-1">*</span>
               </label>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="JS/TS"
@@ -231,7 +231,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>JavaScript/TypeScript
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Dart"
@@ -241,7 +241,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Dart
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Java/Kotlin"
@@ -251,7 +251,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Java/Kotlin
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Python"
@@ -261,7 +261,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Python
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="HTML+CSS"
@@ -271,7 +271,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>HTML + CSS
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Other"
@@ -282,7 +282,7 @@ export default function DevForm() {
                 <span className="w-2"></span>Other: (Fill Below)
               </div>
               <input
-                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 focus:border-b-2 py-1 focus:placeholder-purple-400"
+                className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground focus:outline-none"
                 placeholder="Your Answer"
                 type="text"
                 id="Q2_tech"
@@ -291,17 +291,17 @@ export default function DevForm() {
             </div>
           </div>
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-1 lg:w-1.5 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q3_Q4_tech"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Which technology are you familiar with?
                 <span className="text-md text-red-600 pl-1">*</span>
               </label>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="MongoDB"
@@ -311,7 +311,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>MongoDB
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Flutter"
@@ -321,7 +321,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Flutter
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Firebase"
@@ -331,7 +331,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Firebase
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Node"
@@ -341,7 +341,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Node
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Express"
@@ -351,7 +351,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Express
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="NextJS"
@@ -361,7 +361,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Next JS
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="ReactJS"
@@ -371,7 +371,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>React JS
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="AI/ML"
@@ -381,7 +381,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>AI/ML
               </div>
-              <div className="flex flex-row mb-3 text-sm  text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="Other"
@@ -392,7 +392,7 @@ export default function DevForm() {
                 <span className="w-2"></span>Other: (Fill Below)
               </div>
               <input
-                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 focus:border-b-2 py-1 focus:placeholder-purple-400"
+                className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground focus:outline-none"
                 placeholder="Your Answer"
                 type="text"
                 id="Q4_tech"
@@ -401,7 +401,7 @@ export default function DevForm() {
             </div>
           </div>
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-0.5 lg:w-1 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
@@ -411,7 +411,7 @@ export default function DevForm() {
                 Are you familiar with Git and GitHub?
                 <span className="text-md text-red-600 pl-1">*</span>
               </label>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="yes"
@@ -421,7 +421,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>Yes
               </div>
-              <div className="flex flex-row text-sm text-slate-300">
+              <div className="flex flex-row text-sm text-muted-foreground">
                 <input
                   className=""
                   value="no"
@@ -449,12 +449,12 @@ export default function DevForm() {
             register={register}
           />
 
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             {/* <div className='bg-blue-400 w-4 lg:w-5 rounded-l-3xl'></div> */}
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q8_tech"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Grade your competency at coding from a scale of 1 to 5.
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -462,7 +462,7 @@ export default function DevForm() {
               <p className={poppins.className + " text-slate-300 text-md mb-1"}>
                 Basic
               </p>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="1"
@@ -472,7 +472,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>1
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="2"
@@ -482,7 +482,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>2
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="3"
@@ -492,7 +492,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>3
               </div>
-              <div className="flex flex-row mb-3 text-sm text-slate-300">
+              <div className="flex flex-row mb-3 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="4"
@@ -502,7 +502,7 @@ export default function DevForm() {
                 />
                 <span className="w-2"></span>4
               </div>
-              <div className="flex flex-row mb-1 text-sm text-slate-300">
+              <div className="flex flex-row mb-1 text-sm text-muted-foreground">
                 <input
                   className=""
                   value="5"

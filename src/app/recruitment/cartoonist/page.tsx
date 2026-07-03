@@ -119,7 +119,7 @@ export default function CartoonistForm() {
   }
 
     return (
-        <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+        <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
             <div className="max-w-4xl px-3 mx-auto">
             <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
                     <Image
@@ -130,7 +130,7 @@ export default function CartoonistForm() {
                         className='border  border-white mt-2 rounded-lg'
                     />
                 </div>
-                <div className='h-2 lg:h-3 w-full bg-purple-700 rounded-xl'></div>
+                <div className=''></div>
                 <div className='flex flex-row bg-transparent shadow-md rounded-b-sm'>
                     {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
                     <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -139,7 +139,6 @@ export default function CartoonistForm() {
                                 Recruitment Form 2k26
                             </div>
                         </header>
-                        <div className='h-0.5 lg:h-1 mt-2 bg-purple-800 '></div>
                         <div>
                             <p className="py-4 text-xs sm:text-sm text-white">
                                 Carefully read each and every description under the sections and take your time to tell us about yourself, it will help us know you better. Some sections have a lot of questions and not all of them are marked as required but we will be giving preference to the people who show the tenacity to answer all questions. Use of proper grammar and form is expected (Spelling mistakes will be pardoned but not SMS lingo). If your replies are abusive or do not meet minimum standards of acceptability, your entry is liable to be disqualified.
@@ -151,8 +150,8 @@ export default function CartoonistForm() {
                 </div>
 
                 <div className='bg-white bg-opacity-15 shadow-md rounded-lg mt-4'>
-                    <div className='bg-purple-800 rounded-t-lg py-3 px-8'>
-                        <p className={poppins.className + ' text-lg font-normal text-white'}>
+                    <div className='border-b border-border px-6 py-4'>
+                        <p className={poppins.className + ' editorial-heading text-lg font-normal'}>
                         Cartoonist/Digital Artist Section
                         </p>
                     </div>
@@ -179,7 +178,7 @@ export default function CartoonistForm() {
                     <FormInput title='Do you like Cartooning or Doodling? ' id='Q5_cartoon' isRequired={false} register={register}/>
 
                     <div  className='bg-white bg-opacity-15 shadow-md rounded-lg mb-5 p-3'>
-                        <p className={poppins.className + " text-white text-md mb-2 font-bold px-7 pt-5"}>If you want to share any of your original works, feel free to upload it here.(Submitting your artwork is optional but advantageous)</p>
+                        <p className={poppins.className + " text-sm font-medium text-foreground mb-2 font-bold px-7 pt-5"}>If you want to share any of your original works, feel free to upload it here.(Submitting your artwork is optional but advantageous)</p>
                         <p  className={poppins.className + " text-slate-300 text-sm  px-7"}>Please make sure that the works you upload are your original. Also make sure that the files you upload are less than 5 MB in size.</p>
                         <FileUploader  id='Q6_cartoon' register={register} />
                         <FileUploader id='Q7_cartoon' register={register} />

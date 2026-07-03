@@ -15,13 +15,14 @@ export async function GET(request: NextRequest) {
         ? 0
         : Number(searchParams.get("page")) - 1;
 
-    const query: { [key: string]: string } = {};
-    const keys = Object.keys(Post.schema.paths);
-
-    if ("_id" in keys) {
-      const post = await Post.findById(searchParams.get("_id"));
-      return Response.json(post);
+    const id = searchParams.get("_id");
+    if (id) {
+      const post = await Post.findById(id);
+      return Response.json(post ? [post] : []);
     }
+
+    const keys = Object.keys(Post.schema.paths);
+    const query: { [key: string]: string } = {};
 
     keys.forEach((key) => {
       const value = searchParams.get(key);

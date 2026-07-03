@@ -322,50 +322,51 @@ export default function ScheduleComponent() {
   }
 
   return (
-    <div className="bg-transparent p-6 md:p-8">
+    <div className="space-y-8">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-8 text-center text-4xl font-bold text-teal-400">Course Catalog</h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {courses.map((course) => (
-            <div key={course.title} className="overflow-hidden  rounded-xl">
-              <div className="bg-gradient-to-r flex flex-col items-center justify-center text-center rounded-xl h-28  from-teal-600 to-teal-500">
-                <h1 className="text-amber-200 pt-2 items-center justify-center font-sans text-2xl font-bold">{course.title}</h1>
-                <p className="text-teal-50 px-4 pt-2">{course.description}</p>
+            <div key={course.title} className="border border-border bg-card">
+              <div className="border-b border-border px-5 py-5">
+                <p className="tag-editorial mb-2">{course.title}</p>
+                <p className="text-sm text-muted-foreground">{course.description}</p>
               </div>
-              <div className="p-4   ">
+              <div className="p-4">
                 <button
-                //   variant="ghost"
-                  className=" w-full flex flex-row justify-between hover:bg-teal-500 hover:rounded-lg  px-2 "
+                  className="flex w-full items-center justify-between px-2 py-2 text-sm text-foreground transition-colors hover:text-muted-foreground"
                   onClick={() => toggleCourse(course.title)}
+                  type="button"
                 >
-                  <span className="font-mono">View Schedule</span>
+                  <span className="uppercase tracking-widest">View schedule</span>
                   {expandedCourses[course.title] ? (
-                    <ChevronUp className="h-6 w-6" />
+                    <ChevronUp className="h-5 w-5" />
                   ) : (
-                    <ChevronDown className="h-6 w-6" />
+                    <ChevronDown className="h-5 w-5" />
                   )}
                 </button>
                 {expandedCourses[course.title] && (
-                  <div className="space-y-4">
+                  <div className="mt-4 space-y-3">
                     {course.days.map((day, index) => (
                       <div
                         key={index}
-                        className="rounded-lg border mt-4 border-orange-200 bg-orange-50 p-4 transition-all hover:border-orange-300"
+                        className="border border-border px-4 py-3"
                       >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between gap-3">
                           <div>
-                            <h3 className="font-medium text-orange-900">{day.title}</h3>
-                            <p className="text-sm text-orange-700">{day.date}</p>
-                            {day.description && <p className="mt-1 text-sm text-orange-600">{day.description}</p>}
+                            <h3 className="text-sm font-medium text-foreground">{day.title}</h3>
+                            <p className="text-xs text-muted-foreground">{day.date}</p>
+                            {day.description && (
+                              <p className="mt-2 text-sm text-muted-foreground">{day.description}</p>
+                            )}
                           </div>
                           {day.isOnline ? (
-                            <div title="Online" >
-                                <Globe className="h-5 w-5 flex-shrink-0 text-teal-600" />
-                            </div>
+                            <span title="Online">
+                              <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            </span>
                           ) : (
-                            <div title="Offline" >
-                                <MapPin className="h-5 w-5 flex-shrink-0 text-orange-600" />
-                            </div>
+                            <span title="On campus">
+                              <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            </span>
                           )}
                         </div>
                       </div>

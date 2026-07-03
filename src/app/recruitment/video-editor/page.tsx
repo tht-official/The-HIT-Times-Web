@@ -150,7 +150,7 @@ export default function VeForm() {
   // };
 
   return (
-    <div className="min-h-screen bg-[url('/tht-background.jpg')]  md:rounded-2xl">
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-6 pb-12">
       <div className="max-w-4xl px-3 mx-auto">
         <div className="relative mb-2 lg:mb-3 rounded-b-lg overflow-hidden">
           <Image
@@ -158,10 +158,10 @@ export default function VeForm() {
             alt="Recruitment Form 2k26"
             width={1500}
             height={100}
-            className="border  border-white mt-2 rounded-lg"
+            className="h-auto w-full border border-border object-cover"
           />
         </div>
-        <div className="h-2 lg:h-3 w-full bg-purple-700 rounded-xl"></div>
+        <div className=""></div>
         <div className="flex flex-row bg-transparent shadow-md rounded-b-sm">
           {/* <div className='bg-blue-400 w-5 rounded-bl-3xl'></div> */}
           <div className="pt-3 px-4 sm:px-6 lg:px-8">
@@ -175,7 +175,7 @@ export default function VeForm() {
                 Recruitment Form 2k26
               </div>
             </header>
-            <div className="h-0.5 lg:h-1 mt-2 bg-purple-800 "></div>
+            <div className=""></div>
             <div>
               <p className="py-4 text-xs sm:text-sm text-white">
                 Carefully read each and every description under the sections and
@@ -196,9 +196,9 @@ export default function VeForm() {
           </div>
         </div>
         <div className="bg-white bg-opacity-15 shadow-md rounded-lg mt-4">
-          <div className="bg-purple-800 rounded-t-lg py-3 px-8">
+          <div className="border-b border-border px-6 py-4">
             <p
-              className={poppins.className + " text-lg font-normal text-white"}
+              className={poppins.className + " editorial-heading text-lg font-normal"}
             >
               Video Editor Section
             </p>
@@ -216,9 +216,9 @@ export default function VeForm() {
           <CommonFields register={register} />
 
           {/* Q5: What software do you use? */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
-              <span className={poppins.className + " text-white text-md mb-4"}>
+              <span className={poppins.className + " text-sm font-medium text-foreground mb-4"}>
                 What software do you use?
                 <span className="text-md text-red-600 pl-1">*</span>
               </span>
@@ -232,7 +232,7 @@ export default function VeForm() {
                 <label
                   key={index}
                   htmlFor={`Q5_ve`}
-                  className="flex items-center mb-3 text-sm text-slate-300"
+                  className="flex items-center mb-3 text-sm text-muted-foreground"
                 >
                   <input
                     className="form-checkbox h-4 w-4 text-purple-600"
@@ -251,7 +251,7 @@ export default function VeForm() {
                 Other: (Please specify)
               </label>
               <input
-                className="border-b border-gray-300 bg-transparent text-white focus:outline-none focus:border-purple-600 focus:border-b-2 py-1 focus:placeholder-purple-400"
+                className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground focus:outline-none"
                 placeholder="Your Answer"
                 type="text"
                 id="Q5_ve_other"
@@ -266,11 +266,11 @@ export default function VeForm() {
           </div>
 
           {/* Q6: Favourite editing style/effect */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q6_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What is your favourite editing style/effect in video editing?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -291,11 +291,11 @@ export default function VeForm() {
           </div>
 
           {/* Q7: Favourite movie scenes */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q7_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What are your favourite movie scenes and why?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -316,11 +316,11 @@ export default function VeForm() {
           </div>
 
           {/* Q8: Suggested videos for Instagram */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q8_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What videos do you suggest we can start creating to put up on
                 our Instagram page?
@@ -341,11 +341,11 @@ export default function VeForm() {
           </div>
 
           {/* Q9: Favourite YouTuber or channel */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q9_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Who is your favourite YouTuber or YouTube channel and why?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -366,11 +366,11 @@ export default function VeForm() {
           </div>
 
           {/* Q12: Equipments possessed */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q12_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 What equipments related to video editing and production you possess?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -390,11 +390,11 @@ export default function VeForm() {
           </div>
 
           {/* Q13: Devices for shooting and editing */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q13_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Name the devices used for video shooting and video editing?
                 <span className="text-md text-red-600 pl-1">*</span>
@@ -414,11 +414,11 @@ export default function VeForm() {
           </div>
 
           {/* Q10: Experience in short film/video making */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q10_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 Do you hold any experience in short film making or video making?
                 If yes, specify the software you use for final editing and
@@ -440,11 +440,11 @@ export default function VeForm() {
           </div>
 
           {/* Q11: Upload Original Works */}
-          <div className="flex flex-row bg-white bg-opacity-15 shadow-md rounded-lg mb-4">
+          <div className="border border-border bg-card mb-6">
             <div className="py-5 px-6 lg:px-8 flex flex-col">
               <label
                 htmlFor="Q11_ve"
-                className={poppins.className + " text-white text-md mb-4"}
+                className={poppins.className + " text-sm font-medium text-foreground mb-4"}
               >
                 If you want to share any of your original works, feel free to
                 share the link here.

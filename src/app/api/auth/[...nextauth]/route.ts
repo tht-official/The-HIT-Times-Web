@@ -8,6 +8,9 @@ const handler = NextAuth({
     strategy: "jwt",
     maxAge: 10 * 24 * 60 * 60, // 10 days
   },
+  pages: {
+    signIn: "/sign-in",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,

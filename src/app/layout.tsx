@@ -1,17 +1,45 @@
-import Footer from "@/components/common/footer";
-import Header from "@/components/common/header";
+import { AppShell } from "@/components/layout/AppShell";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import SessionWrapper from "@/components/session-wrapper";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "The HIT Times",
-  description: "The official website of the The HIT Times.",
+  description: "The official website of The HIT Times — student media at HIT.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "The HIT Times",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
@@ -20,29 +48,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionWrapper>
-      <html lang="en">
-      <body className={inter.className + " bg-slate-200 dark:bg-gray-800 text-gray-900 dark:text-white"}>
-          <div className="bg-slate-200 dark:bg-gray-700">
-            <div className="max-w-screen-2.5xl 2.5xl:mx-auto mx-4">
-              <Header />
-            </div>
-          </div>
-
-          <div className="max-w-screen-2.5xl 2.5xl:mx-auto  sm:mx-4 overflow-x-hidden sm:overflow-x-visible overflow-y-visible scroll-smooth">
-              {children}
-          </div>
-
-          <div className="bg-black dark:bg-gray-950">
-            <div className="max-w-screen-2.5xl 2.5xl:mx-auto mx-4 py-10">
-              <Footer />
-            </div>
-          </div>
-
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    </SessionWrapper>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} ${playfair.variable} min-h-[100dvh] bg-background font-sans text-foreground antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <SessionWrapper>
+            <AppShell>{children}</AppShell>
+            <Analytics />
+            <SpeedInsights />
+          </SessionWrapper>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

@@ -1,11 +1,10 @@
 "use client";
-import {
-  BookmarkIcon as BookmarkIconOutlined,
-  ShareIcon,
-} from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
+
+import { Bookmark, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Posts } from "@/models/Post";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface RelatedPostIconsProps {
   post: Posts;
@@ -22,19 +21,16 @@ const RelatedPostIcons = ({ post, direction }: RelatedPostIconsProps) => {
     setIsBookmarked(bookmarkedPosts.includes(post._id.toString()));
   }, [post._id]);
 
-  const handleShare = () => {
+  const handleShare = async () => {
+    const url = `https://thehittimes.com/posts/${post._id.toString()}`;
     if (navigator.share) {
-      navigator
-        .share({
-          title: "Check out this post!",
-          url: "https://thehittimes.com/posts/" + post._id.toString(),
-        })
-        .then(() => {
-          console.log("Thanks for sharing!");
-        })
-        .catch((error) => {
-          console.error("Error sharing:", error);
-        });
+      try {
+        await navigator.share({ title: post.title, url });
+      } catch {
+        /* user cancelled */
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
     }
   };
 
@@ -44,42 +40,43 @@ const RelatedPostIcons = ({ post, direction }: RelatedPostIconsProps) => {
     );
 
     if (bookmarkedPosts.includes(post._id.toString())) {
-      const updatedBookmarkedPosts = bookmarkedPosts.filter(
+      const updated = bookmarkedPosts.filter(
         (id: string) => id !== post._id.toString()
       );
-      localStorage.setItem(
-        "bookmarkedPosts",
-        JSON.stringify(updatedBookmarkedPosts)
-      );
+      localStorage.setItem("bookmarkedPosts", JSON.stringify(updated));
       setIsBookmarked(false);
     } else {
-      const updatedBookmarkedPosts = [...bookmarkedPosts, post._id.toString()];
       localStorage.setItem(
         "bookmarkedPosts",
-        JSON.stringify(updatedBookmarkedPosts)
+        JSON.stringify([...bookmarkedPosts, post._id.toString()])
       );
       setIsBookmarked(true);
     }
   };
 
   return (
-    <div className={`flex gap-4 ${direction ?? "flex-row"}`}>
-      <button
-        className="p-2 rounded-full hover:bg-gray-200"
+    <div className={cn("flex gap-1", direction ?? "flex-row")}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8 text-muted-foreground hover:text-foreground"
         onClick={handleShare}
+        aria-label="Share"
       >
-        <ShareIcon width={24} />
-      </button>
-      <button
-        className="p-2 rounded-full hover:bg-gray-200"
-        onClick={handleBookmark}
-      >
-        {isBookmarked ? (
-          <BookmarkIconSolid width={24} />
-        ) : (
-          <BookmarkIconOutlined width={24} />
+        <Share2 className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={cn(
+          "h-8 w-8 transition-colors duration-200",
+          isBookmarked ? "text-primary" : "text-muted-foreground hover:text-foreground"
         )}
-      </button>
+        onClick={handleBookmark}
+        aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+      >
+        <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current")} />
+      </Button>
     </div>
   );
 };

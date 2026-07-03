@@ -1,66 +1,46 @@
 import React from "react";
-import Image from "next/image";
-import { Poppins } from "next/font/google";
 import { Posts } from "@/models/Post";
 import Link from "next/link";
 import Article from "./Article";
-import { motion } from "framer-motion";
-import { fadeIn } from "@/variants";
-// Define the props for the ArticleSection component
+import { ArrowRight } from "lucide-react";
+
 export interface ArticleSectionProps {
   heading: string;
   showAllLink: string;
   articles: Posts[];
 }
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
 const ArticleSection: React.FC<ArticleSectionProps> = ({
   heading,
   articles,
   showAllLink,
 }) => {
+  if (articles.length === 0) return null;
+
   return (
-    <div className="article-section  scroll-smooth flex flex-col gap-4">
-      <motion.div
-        variants={fadeIn("right", 0.05)}
-        initial="hidden"
-        whileInView={"show"}
-        viewport={{ once: true, amount: 0.1 }}
-        className="flex justify-between items-center section-header  rounded-xl scroll-smooth mx-2"
-      >
-        <h2
-          className={
-            poppins.className +
-            " text-xl text-black font-bold animate-fade-right animate-once animate-duration-500 animate-delay-500 dark:text-white"
-          }
-        >
+    <section className="space-y-8">
+      <div className="flex items-end justify-between gap-4">
+        <h2 className="editorial-heading text-2xl font-normal sm:text-3xl">
           {heading}
         </h2>
         <Link
           href={showAllLink ?? ""}
-          className={
-            poppins.className + " text-red-700 font-bold hover:underline"
-          }
+          className="flex shrink-0 items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors duration-200 hover:text-foreground"
         >
-          Show All
+          View all <ArrowRight className="h-3 w-3" />
         </Link>
-      </motion.div>
-      <motion.div
-        variants={fadeIn("left", 0.05)}
-        initial="hidden"
-        whileInView={"show"}
-        viewport={{ once: true, amount: 0.1 }}
-        className={`grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-4 section-content scroll-smooth`}
-      >
-        {articles.map((article, idx) => (
-          <Article key={idx} article={article} />
+      </div>
+      <div className="section-divider" />
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 lg:gap-0 lg:divide-x lg:divide-border">
+        {articles.map((article) => (
+          <Article
+            key={article._id.toString()}
+            article={article}
+            className="lg:px-6 first:lg:pl-0 last:lg:pr-0"
+          />
         ))}
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 };
 
