@@ -11,6 +11,8 @@ import {
 } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import { Nunito_Sans } from "next/font/google";
+
+const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-nunito-sans" });
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -160,10 +162,8 @@ export const SignOut = (session: Session) => {
             </button></>*/
 
 export default function SignUpButton() {
-  // extracting data from usesession as session
-  const { data: session } = useSession(); 
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-  console.log("session: ", session);
 
   // checking if sessions exists
   if (session) {
@@ -264,7 +264,7 @@ export default function SignUpButton() {
   );
 }
 
-const nunitoSans = Nunito_Sans({ subsets: ["latin"] });
+
 
 // User Header
 // -------------------

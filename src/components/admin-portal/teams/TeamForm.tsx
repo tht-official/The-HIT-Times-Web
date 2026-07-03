@@ -52,7 +52,7 @@ const extractImageUrl = (url: string): string => {
   );
 
   const extractedUrl = googleDriveMatch
-    ? `https://drive.google.com/uc?export=view&id=${googleDriveMatch[1]}`
+    ? `https://drive.google.com/thumbnail?id=${googleDriveMatch[1]}&sz=w500`
     : url;
 
   return formatImageSrc(extractedUrl);
