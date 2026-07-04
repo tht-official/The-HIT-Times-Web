@@ -4,8 +4,12 @@
 
 @layer base {
   :root {
-    --mobile-nav-height: 3.25rem;
+    --mobile-nav-height: 3.5rem;
     --mobile-nav-safe: env(safe-area-inset-bottom, 0px);
+    --mobile-nav-buffer: 0.75rem;
+    --mobile-nav-offset: calc(
+      var(--mobile-nav-height) + var(--mobile-nav-safe) + var(--mobile-nav-buffer)
+    );
     --background: 0 0% 100%;
     --foreground: 0 0% 4%;
     --card: 0 0% 98%;
@@ -170,17 +174,32 @@
     padding-bottom: var(--mobile-nav-safe);
   }
 
+  .mobile-bottom-nav-spacer {
+    height: var(--mobile-nav-offset);
+    flex-shrink: 0;
+  }
+
   .mobile-header {
     padding-top: env(safe-area-inset-top, 0px);
   }
 
   .pb-mobile-nav {
-    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-nav-safe) + 2.5rem);
+    padding-bottom: var(--mobile-nav-offset);
   }
 
   @media (min-width: 1024px) {
+    .mobile-bottom-nav-spacer {
+      display: none;
+    }
+
     .pb-mobile-nav {
       padding-bottom: 0;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    html {
+      scroll-padding-bottom: var(--mobile-nav-offset);
     }
   }
 
