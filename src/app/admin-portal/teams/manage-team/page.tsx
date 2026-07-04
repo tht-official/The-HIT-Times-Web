@@ -22,7 +22,7 @@ function ManageTeamPage() {
   const teamName = getTeamName(code) ?? "Team Not Found";
 
   return (
-    <div>
+    <div className="max-w-full overflow-x-hidden">
       <h1
         className={
           ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold py-8"

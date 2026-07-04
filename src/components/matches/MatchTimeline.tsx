@@ -9,16 +9,6 @@ export function MatchTimeline({ events }: { events: Timeline[] }) {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
-        <h2 className="editorial-heading text-2xl font-normal sm:text-3xl">
-          Match feed
-        </h2>
-        <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-          {sorted.length} update{sorted.length === 1 ? "" : "s"}
-        </span>
-      </div>
-      <div className="section-divider" />
-
       <ol className="relative space-y-0 border-l border-border">
         {sorted.map((event, index) => (
           <li key={event.firebase_timeline_id} className="relative pl-8 pb-8 last:pb-0">

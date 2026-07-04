@@ -127,8 +127,8 @@ const HeroSection = () => {
   return (
     <section className="space-y-5 sm:space-y-6">
       <div className="mobile-bleed overflow-hidden sm:relative sm:left-auto sm:w-full sm:max-w-none sm:translate-x-0 sm:rounded-sm">
-        <Link href={`/posts/${post._id}`} className="group block">
-          <div className="relative aspect-[4/5] min-h-[300px] w-full sm:aspect-[21/9] sm:min-h-[360px]">
+        <div className="relative aspect-[4/5] min-h-[300px] w-full sm:aspect-[21/9] sm:min-h-[360px]">
+          <Link href={`/posts/${post._id}`} className="group block h-full">
             <ArticleImage
               height={900}
               width={1600}
@@ -141,12 +141,11 @@ const HeroSection = () => {
             <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 lg:p-10">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <span className="tag-editorial">{sectionName}</span>
-                <RealtedPostIcons post={post} />
               </div>
               <h1 className="editorial-heading max-w-4xl text-balance text-2xl font-normal leading-[1.1] sm:text-4xl lg:text-5xl xl:text-6xl">
                 {post.title}
               </h1>
-              <p className="mt-4 max-w-2xl line-clamp-2 text-sm leading-relaxed text-foreground/70">
+              <p className="mt-4 max-w-2xl line-clamp-2 text-sm leading-relaxed text-foreground/80">
                 {post.description}
               </p>
               <div className="btn-row mt-6">
@@ -158,12 +157,15 @@ const HeroSection = () => {
                 </span>
               </div>
             </div>
+          </Link>
+          <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6 lg:right-10 lg:top-10">
+            <RealtedPostIcons post={post} />
           </div>
-        </Link>
+        </div>
       </div>
 
       {!isNoticeEmpty && (
-        <div className="flex flex-col gap-3 rounded-sm border border-border bg-white/[0.03] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-muted/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 dark:bg-white/[0.03]">
           <div className="flex items-start gap-3 sm:items-center">
             <span className="tag-editorial shrink-0">Notice</span>
             <p className="text-sm leading-snug">{notice.noticeTitle}</p>

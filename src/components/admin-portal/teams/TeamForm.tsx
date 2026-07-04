@@ -63,47 +63,38 @@ const PlayerForm = ({
   handleChange,
   handleDelete,
 }: PlayerFormProps) => (
-  <div className="flex flex-row gap-2 my-1">
-    <div>
+  <div className="my-2 grid grid-cols-1 gap-2 rounded-md border border-border p-3 sm:grid-cols-[auto_1fr_1fr_1fr_auto] sm:items-center">
+    <div className="flex justify-center sm:justify-start">
       <Image
         src={extractImageUrl(player.player_image)}
         alt={player.player_name}
         width={50}
         height={50}
-        className="rounded-full aspect-square object-cover"
+        className="aspect-square rounded-full object-cover"
       />
     </div>
     <input
       type="text"
       placeholder="Player Name"
-      className="
-        outline outline-transparent
-        px-3
-        block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
       value={player.player_name}
       onChange={(e) => handleChange("player_name", e.target.value)}
     />
     <input
       type="text"
-      className="
-        outline outline-transparent
-        px-3
-        block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
       placeholder="Player Position"
       value={player.player_description}
       onChange={(e) => handleChange("player_description", e.target.value)}
     />
     <input
       type="url"
-      className="
-        outline outline-transparent
-        px-3
-        block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
       placeholder="Player Image"
       value={player.player_image}
       onChange={(e) => handleChange("player_image", e.target.value)}
     />
-    <button type="button" onClick={handleDelete}>
+    <button type="button" onClick={handleDelete} className="justify-self-end">
       <TrashIcon width={24} className="text-red-700" />
     </button>
   </div>
@@ -164,20 +155,17 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
       <h2 className={"text-2xl font-bold my-2"}>
         {teamType.charAt(0).toUpperCase() + teamType.slice(1)}
       </h2>
-      <div className="flex flex-row gap-2">
+      <div className="my-2 grid grid-cols-1 gap-2 sm:grid-cols-[auto_1fr_1fr] sm:items-center">
         <Image
           src={extractImageUrl(teamData.team_logo ?? "")}
           alt={teamData.team_name}
           width={50}
           height={50}
-          className="rounded-full aspect-square object-cover"
+          className="aspect-square rounded-full object-cover"
         />
         <input
           type="text"
-          className="
-        outline outline-transparent
-        px-3
-        block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           placeholder="Team Name"
           value={teamData.team_name}
           required
@@ -187,10 +175,7 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
           type="url"
           placeholder="Team Logo"
           required
-          className="
-        outline outline-transparent
-        px-3
-        block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           value={teamData.team_logo}
           onChange={(e) => setTeamData("team_logo", e.target.value)}
         />
@@ -288,7 +273,7 @@ export default function TeamForm({ teamCode, deptName }: TeamProps) {
   }
 
   return (
-    <div>
+    <div className="max-w-full overflow-x-hidden">
       {error && <div className="text-red-500 mb-4">{error}</div>}
       <form onSubmit={handleSave} className="grid grid-flow-row gap-4">
         <TeamFormSection team={team} setTeam={setTeam} teamType="football" />

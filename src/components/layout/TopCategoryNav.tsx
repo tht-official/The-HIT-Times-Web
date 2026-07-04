@@ -26,6 +26,13 @@ const mainLinks = [
   { label: "Bookmarks", href: "/my-bookmarks" },
 ];
 
+const moreLinks = [
+  { label: "TSP", href: "/tsp" },
+  { label: "Recruitment", href: "/recruitment" },
+  { label: "About", href: "/about-us" },
+  { label: "Subscribe", href: "/tht-links" },
+];
+
 const sectionLinks = Object.entries(dropdownsToSections).map(([code, name]) => ({
   label: name,
   href: `/posts/category/${code}`,
@@ -39,10 +46,13 @@ function NavItem({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className={cn("nav-editorial shrink-0 whitespace-nowrap", isActive && "nav-editorial-active")}
+      className={cn(
+        "nav-editorial relative shrink-0 whitespace-nowrap pb-1",
+        isActive && "nav-editorial-active"
+      )}
     >
       {label}
-      {isActive && "."}
+      {isActive && <span className="nav-editorial-active-indicator" aria-hidden />}
     </Link>
   );
 }
@@ -104,7 +114,7 @@ function AccountControl({ compact }: { compact?: boolean }) {
 
 export function TopCategoryNav() {
   return (
-    <header className="mobile-header sticky top-0 z-30 border-b border-border bg-background/98 backdrop-blur-xl supports-[backdrop-filter]:bg-background/90">
+    <header className="mobile-header sticky top-0 z-40 border-b border-border bg-background/98 backdrop-blur-xl supports-[backdrop-filter]:bg-background/90">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-5 sm:px-6 lg:h-16 lg:px-8">
         <Link
           href="/"
@@ -119,7 +129,23 @@ export function TopCategoryNav() {
             <NavItem key={link.href} {...link} />
           ))}
           <DropdownMenu>
-            <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 focus:outline-none">
+            <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 pb-1 focus:outline-none">
+              More
+              <ChevronDown className="h-3 w-3" strokeWidth={1.5} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              className="rounded-none border-border bg-background"
+            >
+              {moreLinks.map((item) => (
+                <DropdownMenuItem key={item.href} asChild className="rounded-none">
+                  <Link href={item.href}>{item.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 pb-1 focus:outline-none">
               Sections
               <ChevronDown className="h-3 w-3" strokeWidth={1.5} />
             </DropdownMenuTrigger>

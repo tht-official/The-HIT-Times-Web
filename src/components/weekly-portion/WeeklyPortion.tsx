@@ -3,7 +3,6 @@
 import { Posts } from "@/models/Post";
 import React, { useEffect, useState } from "react";
 import ArticleSection, { ArticleSectionProps } from "./ArticleSection";
-import Article from "./Article";
 import { BrandLoader } from "@/components/common/loader/Loaders";
 
 export const dropdownsToSections: { [key: string]: string } = {
@@ -20,10 +19,24 @@ export const dropdownsToSections: { [key: string]: string } = {
   "10": "Reportopolis",
 };
 
+/** Home page section order: Monday Hues → Gazette → Reportopolis → rest */
+const HOME_SECTION_ORDER = [
+  "00",
+  "09",
+  "10",
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+];
+
 const fetchArticles = async (): Promise<ArticleSectionProps[]> => {
-  const dropdowns = Object.keys(dropdownsToSections);
   const sections = await Promise.all(
-    dropdowns.map(async (dropdown) => {
+    HOME_SECTION_ORDER.map(async (dropdown) => {
       try {
         const response = await fetch(
           `/api/v1/posts?dropdown=${dropdown}&limit=3`
@@ -86,29 +99,15 @@ const WeeklyPortion: React.FC = () => {
     );
   }
 
-  const [first, ...rest] = sections;
-
   return (
     <div className="space-y-12 sm:space-y-16">
-      {first && first.articles.length > 0 && (
-        <div className="grid grid-cols-1 gap-8 border-b border-border pb-10 sm:gap-10 sm:pb-12 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-border">
-          <Article article={first.articles[0]} className="lg:pr-12" />
-          <div className="flex flex-col justify-center gap-10 pl-0 lg:pl-12">
-            {first.articles.slice(1, 3).map((article) => (
-              <Article key={article._id.toString()} article={article} variant="compact" />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {rest.map((section) => (
-        <div key={section.heading} className="border-t border-border pt-10 sm:pt-16">
-          <ArticleSection
-            heading={section.heading}
-            articles={section.articles}
-            showAllLink={section.showAllLink}
-          />
-        </div>
+      {sections.map((section) => (
+        <ArticleSection
+          key={section.heading}
+          heading={section.heading}
+          articles={section.articles}
+          showAllLink={section.showAllLink}
+        />
       ))}
     </div>
   );

@@ -4,9 +4,18 @@ export const toRenderableImage = (url?: string) => {
   if (!url) return undefined;
   const driveIdMatch = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
   if (driveIdMatch?.[1]) {
-    return `https://drive.google.com/uc?export=view&id=${driveIdMatch[1]}`;
+    return `https://drive.google.com/thumbnail?id=${driveIdMatch[1]}&sz=w500`;
   }
   return url;
+};
+
+export const getMatchPhaseLabel = (match: {
+  is_live?: boolean;
+  match_type?: string;
+}) => {
+  if (match.is_live) return "In progress";
+  if (match.match_type === "cricket") return "Match ended";
+  return "Full time";
 };
 
 export const formatMatchDateTime = (d: Date | string) => {
