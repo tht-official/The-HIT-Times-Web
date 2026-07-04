@@ -28,7 +28,11 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+_env.local
 
+# firebase credentials (use FIREBASE_* env vars in .env instead)
+firebaseConfig.ts
+src/lib/firebaseConfig.ts
 
 # vercel
 .vercel
@@ -36,6 +40,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
-src/lib/firebaseConfig.ts
