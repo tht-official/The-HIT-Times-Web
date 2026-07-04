@@ -1,302 +1,192 @@
 "use client";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, Download, Megaphone, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
-const tspFormUrl = "/api/v1/tsps/exportform";
-
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800", "900"],
-});
-
-interface noticeProps {
+interface NoticePayload {
   noticeTitle?: string;
   noticeLink?: string;
 }
 
-const tspNotice = {
+const tspNotice: NoticePayload = {
   noticeTitle: "Join TSP 24-25",
   noticeLink: "/tsp",
 };
 
-const recruitmentNotice = {
+const recruitmentNotice: NoticePayload = {
   noticeTitle: "Fill Recruitment Form 2K26",
   noticeLink: "/recruitment",
 };
 
-const EventsPage = () => {
-  async function publishForm(notice: noticeProps): Promise<any> {
-    const url = "/api/v1/notice";
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(notice),
-      });
+const recruitmentExports = [
+  { label: "Developers", href: "/api/v1/recruitment/dev/export" },
+  { label: "Cartoonists", href: "/api/v1/recruitment/cartoonist/export" },
+  { label: "Photographers", href: "/api/v1/recruitment/photographer/export" },
+  { label: "Content writers", href: "/api/v1/recruitment/cw/export" },
+  { label: "Public relations", href: "/api/v1/recruitment/pr/export" },
+  { label: "Video editors", href: "/api/v1/recruitment/video-editor/export" },
+  { label: "Graphic designers", href: "/api/v1/recruitment/gd/export" },
+];
 
-      if (response.status != 201) {
-        toast.error("Something went wrong");
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
-        toast.success("Published successfully");
-      }
+async function publishForm(notice: NoticePayload) {
+  try {
+    const response = await fetch("/api/v1/notice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notice),
+    });
 
-      const data: any = await response.json();
-    } catch (error) {
-      toast.error("Try submitting again");
+    if (response.status !== 201) {
+      toast.error("Something went wrong");
+      return;
     }
+    toast.success("Published successfully");
+  } catch {
+    toast.error("Try submitting again");
   }
+}
 
-  async function removeForm(): Promise<any> {
-    const url = "/api/v1/notice";
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-      });
+async function removeForm() {
+  try {
+    const response = await fetch("/api/v1/notice", { method: "DELETE" });
 
-      if (response.status != 201) {
-        toast.error("Something went wrong");
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
-        toast.success("Removed successfully");
-      }
-
-      const data: any = await response.json();
-    } catch (error) {
-      toast.error("Try removing again");
+    if (response.status !== 201) {
+      toast.error("Something went wrong");
+      return;
     }
+    toast.success("Removed successfully");
+  } catch {
+    toast.error("Try removing again");
   }
+}
 
+function ExportCard({ label, href }: { label: string; href: string }) {
   return (
-    <div className="flex flex-col">
-      <div className="my-5">
-        <h2
-          className={
-            ibmPlexSerif.className +
-            " text-zinc-800 text-5xl font-semibold py-8"
-          }
-        >
-          Control Recruitment Forms
-        </h2>
-        <div className="grid grid-flow-row grid-cols-2 gap-4">
-          <button
-            onClick={() => publishForm(recruitmentNotice)}
-            className={
-              nunitoSans.className +
-              " bg-white rounded-lg py-8 text-3xl font-bold text-center"
-            }
-          >
-            Publish Recruitment Form
-          </button>
+    <Link href={href} className="group block h-full">
+      <Card
+        className={cn(
+          "micro-lift h-full border-border/80 transition-[border-color,box-shadow] duration-200",
+          "hover:border-border hover:shadow-md"
+        )}
+      >
+        <CardContent className="flex items-center justify-between gap-3 p-4">
+          <span className="text-sm font-medium">{label}</span>
+          <Download className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
 
-          <button
-            onClick={removeForm}
-            className={
-              nunitoSans.className +
-              " bg-white rounded-lg py-8 text-3xl font-bold text-center"
-            }
-          >
-            Remove Recruitment Form
-          </button>
+export default function NoticesPage() {
+  return (
+    <div className="animate-in-subtle space-y-10">
+      <header className="space-y-4">
+        <Button variant="ghost" size="sm" className="-ml-2 gap-1.5" asChild>
+          <Link href="/admin-portal">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Dashboard
+          </Link>
+        </Button>
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">Notices</h1>
+          <p className="mt-2 text-muted-foreground">
+            Publish site notices and export recruitment and TSP form data.
+          </p>
         </div>
-      </div>
-      <div className="mt-6 flex-auto ">
-        <Link
-          href={"/api/v1/recruitment/dev/export"}
-          className="my-6 mr-6"
-        >
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                Developers Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link
-          href={"/api/v1/recruitment/cartoonist/export"}
-          className="my-6 mr-6"
-        >
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                Cartoonist Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link
-          href={"/api/v1/recruitment/photographer/export"}
-          className="my-6 mr-6"
-        >
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                Photographers Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link href={"/api/v1/recruitment/cw/export"} className="my-6 mr-6">
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                Content Writers Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link href={"/api/v1/recruitment/pr/export"} className="my-6 mr-6">
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                PR Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link
-          href={"/api/v1/recruitment/video-editor/export"}
-          className="my-6 mr-6"
-        >
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                video Editor Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-        <Link href={"/api/v1/recruitment/gd/export"} className="my-6 mr-6">
-          <button>
-            <span className="flex flex-row bg-slate-200 p-5 rounded-xl my-6">
-              <div
-                className={
-                  poppins.className +
-                  " text-xl font-bold text-emerald-500 text-center pr-2"
-                }
-              >
-                Graphics-Designer Recruitment Data
-              </div>
-              <div>
-                <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-              </div>
-            </span>
-          </button>
-        </Link>
-      </div>
-      <div className="my-5">
-        <h2
-          className={
-            ibmPlexSerif.className +
-            " text-zinc-800 text-5xl font-semibold py-8"
-          }
-        >
-          Control TSP form
-        </h2>
-        <div className="grid grid-flow-row grid-cols-2 gap-4">
-          <button
-            onClick={() => publishForm(tspNotice)}
-            className={
-              nunitoSans.className +
-              " bg-white rounded-lg py-8 text-3xl font-bold text-center"
-            }
-          >
-            Publish TSP-form
-          </button>
+      </header>
 
-          <button
-            onClick={removeForm}
-            className={
-              nunitoSans.className +
-              " bg-white rounded-lg py-8 text-3xl font-bold text-center"
-            }
-          >
-            Remove TSP-form
-          </button>
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            Recruitment notice
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Show or hide the recruitment banner site-wide.
+          </p>
         </div>
-      </div>
-      <Link href={tspFormUrl}>
-        <button>
-          <span className="flex flex-row bg-slate-200 p-5 rounded-xl mb-12">
-            <div
-              className={
-                poppins.className +
-                " text-xl font-bold text-emerald-500 text-center pr-2"
-              }
-            >
-              TSP Submitted data
-            </div>
-            <div>
-              <ArrowDownCircleIcon width={30} className="text-emerald-500" />
-            </div>
-          </span>
-        </button>
-      </Link>
+        <Card className="border-border/80">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-medium">Recruitment form</CardTitle>
+            <CardDescription>
+              Publishes: &ldquo;{recruitmentNotice.noticeTitle}&rdquo;
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button className="gap-1.5" onClick={() => publishForm(recruitmentNotice)}>
+              <Megaphone className="h-4 w-4" />
+              Publish notice
+            </Button>
+            <Button variant="outline" className="gap-1.5" onClick={removeForm}>
+              <Trash2 className="h-4 w-4" />
+              Remove notice
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            Recruitment exports
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Download submitted applications by role.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {recruitmentExports.map((item) => (
+            <ExportCard key={item.href} {...item} />
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            TSP notice
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Show or hide the TSP registration banner.
+          </p>
+        </div>
+        <Card className="border-border/80">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-medium">TSP form</CardTitle>
+            <CardDescription>
+              Publishes: &ldquo;{tspNotice.noticeTitle}&rdquo;
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button className="gap-1.5" onClick={() => publishForm(tspNotice)}>
+              <Megaphone className="h-4 w-4" />
+              Publish notice
+            </Button>
+            <Button variant="outline" className="gap-1.5" onClick={removeForm}>
+              <Trash2 className="h-4 w-4" />
+              Remove notice
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            TSP export
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Download all TSP form submissions.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ExportCard label="TSP submitted data" href="/api/v1/tsps/exportform" />
+        </div>
+      </section>
     </div>
   );
-};
-
-export default EventsPage;
+}

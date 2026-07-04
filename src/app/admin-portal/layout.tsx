@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
-const inter = Inter({ subsets: ["latin"] });
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "THT Admin Portal",
   description: "Admin portal for handling THT app and database",
 };
 
-export default function RootLayout({
+export default function AdminPortalLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div>
-      <ToastContainer theme="dark"/>
-        {children}
-      </div>;
+  return (
+    <div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={4000}
+        theme="colored"
+        toastClassName="!rounded-lg !text-sm"
+      />
+      {children}
+    </div>
+  );
 }

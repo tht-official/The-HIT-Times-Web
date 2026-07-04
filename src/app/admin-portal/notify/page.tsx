@@ -1,184 +1,219 @@
 "use client";
 
+import {
+  adminInputClass,
+  adminLabelClass,
+} from "@/components/forms/form-styles";
+import { MatchImage } from "@/components/matches/MatchImage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import uploadFile from "@/lib/uploadFile";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { ImgurClient } from "imgur";
-import { IBM_Plex_Serif } from "next/font/google";
 
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const clientId = "67d26cd8e568fc7"; // Imgur Client ID
-
-const CreatePostPage = () => {
+export default function NotifyPage() {
   const [file, setFile] = useState<File | null>(null);
   const [imageLink, setImageLink] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
+    if (event.target.files?.[0]) {
       setFile(event.target.files[0]);
-      console.log("Selected file:", event.target.files[0]);
     }
   };
 
-const onFileUpload = async () => {
-  if (!file) return;
-
-  console.log("Uploading file:", file.name);
-  
-  const formData = new FormData();
-  formData.append("image", file); 
-  formData.append("type", "file");
-
-  try {
-    const response = await fetch("https://api.imgur.com/3/image", {
-      method: "POST",
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-      },
-      body: formData,
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      setImageLink(result.data.link);
-      console.log("✅ Image uploaded successfully:", result.data.link);
-    } else {
-      console.error("❌ Image upload failed:", result);
+  const onFileUpload = async () => {
+    if (!file) return;
+    setUploading(true);
+    setMessage(null);
+    try {
+      const imageUrl = await uploadFile(file, "/notifications");
+      if (imageUrl) {
+        setImageLink(imageUrl);
+      } else {
+        setMessage({ type: "error", text: "Image upload failed." });
+      }
+    } catch {
+      setMessage({ type: "error", text: "Image upload failed." });
+    } finally {
+      setUploading(false);
     }
-  } catch (error) {
-    console.error("❌ Error uploading image:", error);
-  }
-};
+  };
+
+  const handleClear = () => {
+    setTitle("");
+    setBody("");
+    setImageLink("");
+    setFile(null);
+    setMessage(null);
+  };
 
   const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Submitting notification with title:", title, "and body:", body);
-
-    if (!title || !body) {
-      alert("Title and body are required!");
-      console.error("❌ Title or body is missing!");
+    if (!title.trim() || !body.trim()) {
+      setMessage({ type: "error", text: "Title and body are required." });
       return;
     }
 
+    setSending(true);
+    setMessage(null);
     try {
       const response = await fetch("/api/v1/sendnotification", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, body, imageURL: imageLink }),
       });
 
       const result = await response.json();
-      console.log("Server response:", result);
-
       if (result.success) {
-        console.log("✅ Notification sent successfully:", result.msg);
+        setMessage({ type: "success", text: "Notification sent successfully." });
+        handleClear();
       } else {
-        console.error("❌ Error sending notification:", result.msg);
+        setMessage({
+          type: "error",
+          text: result.msg || "Failed to send notification.",
+        });
       }
-    } catch (error) {
-      console.error("❌ Error sending notification:", error);
+    } catch {
+      setMessage({ type: "error", text: "Failed to send notification." });
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <div>
-      <h1 className={`${ibmPlexSerif.className} text-zinc-800 text-5xl font-semibold py-8`}>
-        Notify
-      </h1>
-
-      <form className="grid grid-flow-row gap-2 my-2" onSubmit={handleOnSubmit}>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-900">
-          Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          required
-          placeholder="Title"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            console.log("Title updated:", e.target.value);
-          }}
-          className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
-        />
-
-        <label htmlFor="image" className="block text-sm font-medium text-gray-900">
-          Image
-        </label>
-        <input
-          type="text"
-          id="image"
-          name="imgurl"
-          required
-          placeholder="Image URL"
-          value={imageLink}
-          onChange={(e) => {
-            setImageLink(e.target.value);
-            console.log("Image URL updated:", e.target.value);
-          }}
-          className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
-        />
-
+    <div className="animate-in-subtle mx-auto max-w-2xl space-y-8">
+      <header className="space-y-4">
+        <Button variant="ghost" size="sm" className="-ml-2 gap-1.5" asChild>
+          <Link href="/admin-portal">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Dashboard
+          </Link>
+        </Button>
         <div>
-          <input type="file" id="imageInput" accept="image/*" onChange={onFileChange} />
-          <button
-            type="button"
-            onClick={onFileUpload}
-            className="rounded-full bg-blue-500 px-3 py-1.5 text-sm font-semibold text-white shadow-sm"
-          >
-            Upload
-          </button>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">
+            Send notification
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Push a notification to app users with a title, image, and message.
+          </p>
         </div>
+      </header>
 
-        <label htmlFor="body" className="block text-sm font-medium text-gray-900">
-          Body
-        </label>
-        <textarea
-          id="body"
-          name="body"
-          required
-          placeholder="Message"
-          value={body}
-          onChange={(e) => {
-            setBody(e.target.value);
-            console.log("Body updated:", e.target.value);
-          }}
-          rows={5}
-          className="outline-none px-3 w-full rounded-md border ring-1 ring-gray-300 placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm py-1.5"
-        ></textarea>
+      <Card className="border-border/80">
+        <CardContent className="space-y-6 pt-6">
+          {message && (
+            <p
+              className={
+                message.type === "error"
+                  ? "rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                  : "rounded-md border border-border bg-muted px-4 py-3 text-sm text-foreground"
+              }
+            >
+              {message.text}
+            </p>
+          )}
 
-        <div className="flex justify-end gap-4">
-          <button
-            type="reset"
-            className="rounded-full py-1.5 px-2.5 text-sm font-semibold text-gray-900"
-            onClick={() => {
-              setTitle("");
-              setBody("");
-              setImageLink("");
-              console.log("Form cleared");
-            }}
-          >
-            Clear
-          </button>
-          <button
-            type="submit"
-            className="rounded-full bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline-indigo-600"
-          >
-            Notify
-          </button>
-        </div>
-      </form>
+          {imageLink && (
+            <div className="space-y-2">
+              <p className={adminLabelClass}>Image preview</p>
+              <MatchImage
+                src={imageLink}
+                alt="Notification image"
+                className="h-40 w-full max-w-sm rounded-lg border border-border object-cover"
+                size={400}
+                fallback={<span className="text-xs text-muted-foreground">No image</span>}
+              />
+            </div>
+          )}
+
+          <form className="grid gap-5" onSubmit={handleOnSubmit}>
+            <div className="space-y-2">
+              <label className={adminLabelClass} htmlFor="title">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Notification title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={adminInputClass}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className={adminLabelClass} htmlFor="image">
+                Image URL
+              </label>
+              <input
+                type="url"
+                id="image"
+                name="imgurl"
+                required
+                placeholder="https://..."
+                value={imageLink}
+                onChange={(e) => setImageLink(e.target.value)}
+                className={adminInputClass}
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                className="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:text-foreground"
+                onChange={onFileChange}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={!file || uploading}
+                onClick={onFileUpload}
+              >
+                {uploading ? "Uploading…" : "Upload image"}
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              <label className={adminLabelClass} htmlFor="body">
+                Message
+              </label>
+              <textarea
+                id="body"
+                name="body"
+                required
+                placeholder="Notification body"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                rows={5}
+                className={adminInputClass}
+              />
+            </div>
+
+            <div className="flex flex-wrap justify-end gap-3 border-t border-border pt-4">
+              <Button type="button" variant="outline" onClick={handleClear}>
+                Clear
+              </Button>
+              <Button type="submit" disabled={sending}>
+                {sending ? "Sending…" : "Send notification"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default CreatePostPage;
+}

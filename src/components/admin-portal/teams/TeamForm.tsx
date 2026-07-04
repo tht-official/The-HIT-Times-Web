@@ -2,7 +2,7 @@ import { Player, Teams } from "@/models/Team";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { resolveImageUrl } from "@/lib/imageUtils";
@@ -271,7 +271,13 @@ export default function TeamForm({ teamCode, deptName }: TeamProps) {
   };
 
   if (loading) {
-    return <BrandLoader variant="inline" />;
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-48 w-full rounded-lg" />
+        <Skeleton className="h-48 w-full rounded-lg" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+    );
   }
 
   return (

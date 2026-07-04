@@ -26,6 +26,7 @@ const links = [
   { title: "Alumni", href: "/admin-portal/alumni" },
   { title: "Teams", href: "/admin-portal/teams" },
   { title: "Notify", href: "/admin-portal/notify" },
+  { title: "Notices", href: "/admin-portal/notices" },
 ];
 
 export const AdminHeader = () => {
@@ -61,7 +62,8 @@ export const AdminHeader = () => {
             href={link.href}
             className={cn(
               "rounded-md px-3 py-1.5 text-sm font-medium transition-colors duration-200",
-              pathname === link.href
+              pathname === link.href ||
+                (link.href !== "/admin-portal" && pathname.startsWith(`${link.href}/`))
                 ? "bg-accent text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             )}

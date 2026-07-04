@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import TeamForm from "@/components/admin-portal/teams/TeamForm";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { getAllTeamsCode, getTeamName } from "@/lib/codeToTeamName";
 import { ArrowLeft } from "lucide-react";
@@ -46,7 +46,14 @@ function ManageTeamPage() {
 
 export default function ManageTeamRoute() {
   return (
-    <Suspense fallback={<BrandLoader variant="inline" />}>
+    <Suspense
+      fallback={
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-64 w-full rounded-lg" />
+        </div>
+      }
+    >
       <ManageTeamPage />
     </Suspense>
   );

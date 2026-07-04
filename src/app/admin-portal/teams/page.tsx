@@ -1,7 +1,6 @@
 "use client";
 
 import { MatchImage } from "@/components/matches/MatchImage";
-import { BrandLoader } from "@/components/common/loader/Loaders";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
