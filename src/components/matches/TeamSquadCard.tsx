@@ -22,7 +22,7 @@ export function TeamSquadCard({
 }) {
   if (!team) {
     return (
-      <Card className="border-border">
+      <Card className="min-w-0 border-border">
         <CardContent className="flex h-full min-h-[200px] items-center justify-center p-6">
           <p className="text-sm text-muted-foreground">Squad unavailable</p>
         </CardContent>
@@ -33,7 +33,7 @@ export function TeamSquadCard({
   const detail = team[sport];
   if (!detail) {
     return (
-      <Card className="border-border">
+      <Card className="min-w-0 border-border">
         <CardContent className="flex h-full min-h-[200px] items-center justify-center p-6">
           <p className="text-sm text-muted-foreground">No {sport} squad listed</p>
         </CardContent>
@@ -51,7 +51,7 @@ export function TeamSquadCard({
   );
 
   return (
-    <Card className="border-border">
+    <Card className="min-w-0 border-border">
       <CardHeader className="border-b border-border pb-4">
         <div className="flex items-center gap-3">
           {detail.team_logo && (

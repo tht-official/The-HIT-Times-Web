@@ -131,8 +131,13 @@
   }
 
   .prose-editorial {
-    @apply prose prose-neutral dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-normal prose-headings:tracking-tight prose-a:text-foreground prose-a:underline prose-img:max-w-full prose-img:rounded-sm prose-pre:overflow-x-auto;
+    @apply prose prose-neutral dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-normal prose-headings:tracking-tight prose-a:text-foreground prose-a:underline prose-img:max-w-full prose-img:h-auto prose-img:rounded-sm prose-pre:max-w-full prose-pre:overflow-x-auto prose-table:block prose-table:max-w-full prose-table:overflow-x-auto;
     overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .prose-editorial > * {
+    max-width: 100%;
   }
 
   .hero-gradient {
@@ -170,7 +175,7 @@
   }
 
   .pb-mobile-nav {
-    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-nav-safe) + 1.25rem);
+    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-nav-safe) + 2.5rem);
   }
 
   @media (min-width: 1024px) {

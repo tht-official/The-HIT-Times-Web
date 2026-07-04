@@ -50,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${playfair.variable} min-h-[100dvh] bg-background font-sans text-foreground antialiased`}
+        className={`${inter.variable} ${playfair.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
         <ThemeProvider
           attribute="class"

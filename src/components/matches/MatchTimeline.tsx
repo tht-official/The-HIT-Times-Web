@@ -8,10 +8,13 @@ export function MatchTimeline({ events }: { events: Timeline[] }) {
   );
 
   return (
-    <section className="space-y-6">
-      <ol className="relative space-y-0 border-l border-border">
-        {sorted.map((event, index) => (
-          <li key={event.firebase_timeline_id} className="relative pl-8 pb-8 last:pb-0">
+    <section className="w-full min-w-0 space-y-6">
+      <ol className="relative w-full min-w-0 space-y-0 border-l border-border">
+        {sorted.map((event) => (
+          <li
+            key={event.firebase_timeline_id}
+            className="relative min-w-0 pl-6 pb-8 last:pb-2 sm:pl-8"
+          >
             <span
               className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-foreground"
               aria-hidden
@@ -19,13 +22,12 @@ export function MatchTimeline({ events }: { events: Timeline[] }) {
             <time className="tag-editorial mb-2 block">
               {formatMatchDateTime(event.timeline_date)}
             </time>
-            <div
-              className="prose-editorial prose-sm break-words [&_img]:max-w-full"
-              dangerouslySetInnerHTML={{ __html: event.msgHtml }}
-            />
-            {index < sorted.length - 1 && (
-              <div className="mt-6 section-divider lg:hidden" />
-            )}
+            <div className="max-w-full overflow-x-auto">
+              <div
+                className="prose-editorial prose-sm min-w-0 break-words [&_*]:max-w-full [&_iframe]:max-w-full [&_img]:h-auto [&_img]:max-w-full [&_pre]:max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto"
+                dangerouslySetInnerHTML={{ __html: event.msgHtml }}
+              />
+            </div>
           </li>
         ))}
       </ol>
