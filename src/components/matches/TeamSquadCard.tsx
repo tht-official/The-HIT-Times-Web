@@ -1,6 +1,6 @@
 import { Teams } from "@/models/Team";
-import { toRenderableImage } from "@/lib/matchUtils";
 import { getPlayerRole } from "@/lib/playerUtils";
+import { MatchImage } from "@/components/matches/MatchImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -54,18 +54,16 @@ export function TeamSquadCard({
     <Card className="min-w-0 border-border">
       <CardHeader className="border-b border-border pb-4">
         <div className="flex items-center gap-3">
-          {detail.team_logo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={toRenderableImage(detail.team_logo)}
-              alt={detail.team_name}
-              className="h-11 w-11 shrink-0 rounded-full border border-border object-cover"
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          )}
+          <MatchImage
+            src={detail.team_logo}
+            alt={`${detail.team_name} logo`}
+            className="h-11 w-11 shrink-0 rounded-full border border-border object-cover"
+            fallback={
+              <span className="text-xs font-semibold">
+                {detail.team_name.slice(0, 2).toUpperCase()}
+              </span>
+            }
+          />
           <div className="min-w-0">
             <p className="tag-editorial">{sport}</p>
             <p className="editorial-heading truncate text-xl font-normal">
@@ -82,31 +80,22 @@ export function TeamSquadCard({
         {[captain, viceCaptain, ...rest].filter(Boolean).map((player, index) => {
           if (!player) return null;
           const role = getPlayerRole(player.player_description);
-          const imageSrc = toRenderableImage(player.player_image);
+          const initials = getPlayerInitials(player.player_name || "?");
 
           return (
             <div
               key={`${player.player_name}-${index}`}
               className="flex items-center gap-3 border-b border-border px-5 py-3 last:border-b-0"
             >
-              <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-border bg-muted">
-                {imageSrc ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={imageSrc}
-                    alt={player.player_name}
-                    className="h-full w-full object-cover"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-[10px] font-medium text-muted-foreground">
-                    {getPlayerInitials(player.player_name || "?")}
-                  </span>
-                )}
-              </div>
+              <MatchImage
+                src={player.player_image}
+                alt={player.player_name}
+                className="h-9 w-9 shrink-0 rounded-full border border-border object-cover"
+                size={200}
+                fallback={
+                  <span className="text-[10px] font-medium">{initials}</span>
+                }
+              />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="truncate text-sm font-medium">

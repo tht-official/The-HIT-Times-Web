@@ -27,13 +27,12 @@ const emptyPlayer: Player = {
   player_image: "",
 };
 
-function formatImageSrc(src: string): string {
-  // Check if the src is empty or not a string
-  if (!src || typeof src !== "string") {
-    return "/no-image.png"; // Return a default image or an empty string
-  }
+import { resolveImageUrl } from "@/lib/imageUtils";
 
-  // Check if the src starts with a leading slash or is an absolute URL
+function formatImageSrc(src: string): string {
+  if (!src || typeof src !== "string") {
+    return "/no-image.png";
+  }
   if (
     src.startsWith("/") ||
     src.startsWith("http://") ||
@@ -41,21 +40,11 @@ function formatImageSrc(src: string): string {
   ) {
     return src;
   }
-
-  // Prepend a leading slash to relative URLs
   return `/${src}`;
 }
 
 const extractImageUrl = (url: string): string => {
-  const googleDriveMatch = url.match(
-    /https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)([^\/&]+)/
-  );
-
-  const extractedUrl = googleDriveMatch
-    ? `https://drive.google.com/thumbnail?id=${googleDriveMatch[1]}&sz=w500`
-    : url;
-
-  return formatImageSrc(extractedUrl);
+  return resolveImageUrl(url, 500) ?? formatImageSrc(url);
 };
 
 const PlayerForm = ({
