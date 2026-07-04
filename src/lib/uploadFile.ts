@@ -1,33 +1,49 @@
-
-export default async function uploadFile(data: any) {
-  // const { data: session } = useSession();
-
+export default async function uploadFile(data: any, folder: string = "/recruitment") {
   try {
-    //Extract the uploaded image
-    const image = data[0];
-    //create an instance of formdata
+    if (!data) return "";
+    if (typeof data === "string") return data;
+
+    // Support FileList, File arrays, or single File objects
+    const file = data instanceof File ? data : (data[0] instanceof File ? data[0] : null);
+    if (!file) {
+      console.warn("No valid file object provided to uploadFile");
+      return "";
+    }
+
+    // 1. Fetch authentication parameters from backend
+    const authResponse = await fetch("/api/imagekit-auth");
+    if (!authResponse.ok) {
+      throw new Error(`Failed to fetch ImageKit authentication: ${authResponse.statusText}`);
+    }
+    const authData = await authResponse.json();
+    const { signature, expire, token } = authData;
+
+    // 2. Prepare FormData for ImageKit upload API
     const formData = new FormData();
-    //append the image to the formdata
-    formData.append("file", image);
-    //bind the upload preset recruitment(cloudinary) to the formdata
-    formData.append("upload_preset", "recruitment");
-    //Make an Api request to the_hit_times cloudinary upload endpoint
-    const uploadResponse = await fetch(
-      "https://api.cloudinary.com/v1_1/dvw5qhccb/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    formData.append("publicKey", process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "");
+    formData.append("signature", signature);
+    formData.append("token", token);
+    formData.append("expire", expire.toString());
+    formData.append("folder", folder);
+
+    // 3. Make POST request to ImageKit Upload API
+    const uploadResponse = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      throw new Error(`ImageKit upload failed: ${errorText}`);
+    }
+
     const uploadedImageData = await uploadResponse.json();
-
-    const imageUrl = uploadedImageData.secure_url;
-
-    //print the url on console
-    // console.log(imageUrl);
-    return imageUrl;
+    return uploadedImageData.url;
   } catch (e) {
-    console.log(e);
+    console.error("Error in uploadFile:", e);
+    return "";
   }
 }
 
