@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import dynamic from "next/dynamic";
+import {
+  adminInputClass,
+  adminLabelClass,
+  adminSelectClass,
+  formChoiceInputClass,
+} from "@/components/forms/form-styles";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { codeToTeamName, getAllTeamsCode } from "@/lib/codeToTeamName";
 import { MatchPosts } from "@/models/Match";
 import parse from "html-react-parser";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { Trash2 } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
-// import ReactQuill from "react-quill";
-
-// const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-// const quillRef= useRef<ReactQuill |null>(null);
 
 interface EditLivePostFormProps {
   match: MatchPosts;
@@ -66,7 +68,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     otherTeamCode: string
   ) => (
     <select
-      className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className={adminSelectClass}
       value={teamCode}
       onChange={handleTeamChange(setTeamCode, otherTeamCode)}
     >
@@ -87,13 +89,13 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     otherTeamCode: string
   ) => (
     <div className="mb-4">
-      <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+      <label className={`${adminLabelClass} mb-2 block`}>
         {"Team " + teamNo}
       </label>
       {renderTeamSelect(teamCode, setTeamCode, otherTeamCode)}
       <input
         ref={teamNo === 1 ? team1ScoreRef : team2ScoreRef}
-        className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mt-2"
+        className={`${adminInputClass} mt-2`}
         required
         placeholder="Score"
         value={teamScore || ""}
@@ -149,15 +151,15 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         onChange={() => setShowPenalty(!showPenalty)}
         className="mr-2"
       />
-      <label className="mb-2">Show Penalty</label>
+      <label className={`${adminLabelClass} mb-2`}>Show penalty</label>
       {showPenalty && (
         <div className="grid grid-flow-row grid-cols-2 gap-4">
           <div className="mb-2">
-            <label className="block text-sm font-medium leading-6 text-gray-900 mb-1">
+            <label className={`${adminLabelClass} mb-1 block`}>
               {codeToTeamName[matchData.team1.team_code]}
             </label>
             <input
-              className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className={adminSelectClass}
               required
               placeholder="Penalty"
               value={matchData.team1.team_penalty || ""}
@@ -170,11 +172,11 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900 mb-1">
+            <label className={`${adminLabelClass} mb-1 block`}>
               {codeToTeamName[matchData.team2.team_code]}
             </label>
             <input
-              className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className={adminSelectClass}
               required
               placeholder="Penalty"
               value={matchData.team2.team_penalty || ""}
@@ -200,13 +202,13 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
       <div>
         <label
           htmlFor="matchType"
-          className="block text-sm font-medium leading-6 text-gray-900 mb-2"
+          className={`${adminLabelClass} mb-2 block`}
         >
           Match Type
         </label>
         <select
           id="matchType"
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={adminSelectClass}
           value={matchData.match_type || "football"}
           onChange={(e) => setMatchType(e.target.value)}
         >
@@ -224,12 +226,12 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
 
     return (
       <div>
-        <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+        <label className={`${adminLabelClass} mb-2 block`}>
           Match Status
         </label>
         <input
           ref={matchStatusRef}
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={adminSelectClass}
           type="text"
           value={matchData.match_status || ""}
           onChange={(e) => setMatchStatus(e.target.value)}
@@ -253,11 +255,11 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
 
     return (
       <div className="mb-4">
-        <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+        <label className={`${adminLabelClass} mb-2 block`}>
           Match Date
         </label>
         <input
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={adminSelectClass}
           type="datetime-local"
           value={date}
           onChange={(e) => setMatchDate(e.target.value)}
@@ -316,11 +318,11 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
 
     return (
       <div className="mb-4">
-        <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">
+        <label className={`${adminLabelClass} mb-2 block`}>
           Is Live
         </label>
         <select
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={adminSelectClass}
           value={matchData.is_live ? "yes" : "no"}
           onChange={handleIsLiveChange}
         >
@@ -360,21 +362,19 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
       <MatchTypeInputField />
       <MatchStatusInputField />
       {MatchDateField(matchData.match_date)}
-      <div className="flex flex-row justify-between gap-4">
-        <label className="flex items-center gap-2">
+      <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <label className="flex items-center gap-2 text-sm text-foreground">
           <input
             type="checkbox"
+            className={formChoiceInputClass}
             checked={sendNotification}
             onChange={() => setSendNotification(!sendNotification)}
           />
-          <span>Send Notification</span>
+          <span>Send notification</span>
         </label>
-        <button
-          className="rounded-full bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          type="submit"
-        >
-          Update
-        </button>
+        <Button type="submit" className="w-full sm:w-auto">
+          Save changes
+        </Button>
       </div>
     </form>
   );
@@ -403,40 +403,50 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     };
 
     return (
-      <div>
-        <h2 className="text-lg font-semibold text-gray-800">Timeline History</h2>
-        <div className="grid grid-flow-row gap-4 my-2">
-          {matchData.timeline
-            .sort(
-              (a, b) =>
-                new Date(b.timeline_date).getTime() -
-                new Date(a.timeline_date).getTime()
-            )
-            .map((timeline) => (
-              <div
-                key={timeline.firebase_timeline_id}
-                className="bg-white p-2 rounded-md flex flex-col gap-2"
-              >
-                <div className="flex flex-row justify-between">
-                  <p className="text-xs font-light text-gray-800">
-                    {new Date(timeline.timeline_date).toLocaleString()}
-                  </p>
-                  <button
-                    onClick={() =>
-                      handleDeleteTimeline(timeline.firebase_timeline_id)
-                    }
-                    className="hover:bg-red-50 p-1 rounded-sm"
-                  >
-                    <TrashIcon className="h-5 w-5 text-red-500" />
-                  </button>
+      <Card className="border-border/80">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-medium">Timeline history</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {matchData.timeline.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No timeline posts yet.</p>
+          ) : (
+            matchData.timeline
+              .sort(
+                (a, b) =>
+                  new Date(b.timeline_date).getTime() -
+                  new Date(a.timeline_date).getTime()
+              )
+              .map((timeline) => (
+                <div
+                  key={timeline.firebase_timeline_id}
+                  className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-3"
+                >
+                  <div className="flex flex-row items-start justify-between gap-2">
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(timeline.timeline_date).toLocaleString()}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={() =>
+                        handleDeleteTimeline(timeline.firebase_timeline_id)
+                      }
+                      aria-label="Delete timeline entry"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="prose prose-sm max-w-none dark:prose-invert prose-a:text-primary prose-a:underline">
+                    {parse(timeline.msgHtml)}
+                  </div>
                 </div>
-                <div className="prose prose-a:text-blue-500 prose-a:underline">
-                  {parse(timeline.msgHtml)}
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
+              ))
+          )}
+        </CardContent>
+      </Card>
     );
   };
 
@@ -518,51 +528,50 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     }, []);
 
     return (
-      <form onSubmit={handleAddTimeline} className="grid grid-flow-row gap-4">
-        <h2 className="text-lg font-semibold text-gray-800">Add Timeline</h2>
-        <div className="grid grid-flow-row gap-2">
-          <input
-            name="timeline_date"
-            type="datetime-local"
-            className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          />
-          <div className="quill-container">
-            <ReactQuill
-              ref={quillRef}
-              theme="snow"
-              value={timelineContent}
-              onChange={handleQuillChange}
-              preserveWhitespace={true}
-              modules={{
-                toolbar: [
-                  [{ header: [1, 2, false] }],
-                  ["bold", "italic", "underline"],
-                  [{ list: "ordered" }, { list: "bullet" }],
-                  ["link"],
-                  ["clean"],
-                ],
-              }}
-              formats={[
-                "header",
-                "bold",
-                "italic",
-                "underline",
-                "list",
-                "bullet",
-                "link",
-              ]}
+      <Card className="border-border/80">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-medium">Add timeline</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleAddTimeline} className="grid gap-4">
+            <input
+              name="timeline_date"
+              type="datetime-local"
+              className={adminInputClass}
             />
-          </div>
-          <div className="flex flex-row justify-end gap-4">
-            <button
-              className="rounded-full bg-blue-600 px-3 mt-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              type="submit"
-            >
-              Add Timeline
-            </button>
-          </div>
-        </div>
-      </form>
+            <div className="quill-container overflow-hidden rounded-md border border-border">
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={timelineContent}
+                onChange={handleQuillChange}
+                preserveWhitespace={true}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link"],
+                    ["clean"],
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "list",
+                  "bullet",
+                  "link",
+                ]}
+              />
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit">Add timeline</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     );
   };
 
@@ -627,21 +636,28 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   );
 
   const MessageBox = () => (
-    <div
-      className={`${
-        statusMessage.error ? "bg-red-200" : "bg-green-200"
-      } p-2 rounded-md ${
-        statusMessage.error ? "text-red-600" : "text-green-600"
-      }`}
+    <p
+      className={
+        statusMessage.error
+          ? "rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          : "rounded-md border border-border bg-muted px-4 py-3 text-sm text-foreground"
+      }
     >
-      <p>{statusMessage.message}</p>
-    </div>
+      {statusMessage.message}
+    </p>
   );
 
   return (
-    <div className="grid grid-flow-row gap-4">
+    <div className="grid gap-6">
       {statusMessage.message && <MessageBox />}
-      <MatchDetailsForm />
+      <Card className="border-border/80">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-medium">Match details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <MatchDetailsForm />
+        </CardContent>
+      </Card>
       <AddTimeline />
       <TimelineHistory />
     </div>

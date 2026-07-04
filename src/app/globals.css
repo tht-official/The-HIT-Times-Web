@@ -267,4 +267,34 @@
       filter: brightness(1.15);
     }
   }
+
+  .dark .ql-toolbar.ql-snow,
+  .dark .ql-container.ql-snow {
+    border-color: hsl(var(--border));
+  }
+
+  .dark .ql-toolbar.ql-snow {
+    background: hsl(var(--muted));
+  }
+
+  .dark .ql-container.ql-snow {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  .dark .ql-editor.ql-blank::before {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .dark .ql-snow .ql-stroke {
+    stroke: hsl(var(--foreground));
+  }
+
+  .dark .ql-snow .ql-fill {
+    fill: hsl(var(--foreground));
+  }
+
+  .dark .ql-snow .ql-picker {
+    color: hsl(var(--foreground));
+  }
 }

@@ -1,23 +1,29 @@
 "use client";
 
 import CreateLivePostForm from "@/components/admin-portal/matches/CreateLivePost";
-import { IBM_Plex_Serif } from "next/font/google";
-
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function CreateLivePost() {
   return (
-    <div>
-      <h1
-        className={
-          ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold py-8"
-        }
-      >
-        Create a Live Match
-      </h1>
+    <div className="animate-in-subtle mx-auto max-w-2xl space-y-8">
+      <header className="space-y-4">
+        <Button variant="ghost" size="sm" className="-ml-2 gap-1.5" asChild>
+          <Link href="/admin-portal/matches">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All matches
+          </Link>
+        </Button>
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">
+            Create match
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Set up teams, scores, and kick off a live match feed.
+          </p>
+        </div>
+      </header>
       <CreateLivePostForm />
     </div>
   );

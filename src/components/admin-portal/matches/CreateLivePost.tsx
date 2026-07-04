@@ -1,8 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  adminInputClass,
+  adminLabelClass,
+  adminSelectClass,
+  formChoiceInputClass,
+} from "@/components/forms/form-styles";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { codeToTeamName, getAllTeamsCode } from "@/lib/codeToTeamName";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const CreateLivePostForm = () => {
   const router = useRouter();
@@ -19,17 +27,20 @@ const CreateLivePostForm = () => {
   });
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<any>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: e.target.type === "checkbox" ? e.target.checked : e.target.value
+      [field]:
+        e.target.type === "checkbox" ? e.target.checked : e.target.value,
     }));
   };
 
-  const handleTeamChange = (team: "team1Code" | "team2Code") => 
+  const handleTeamChange =
+    (team: "team1Code" | "team2Code") =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const otherTeam = team === "team1Code" ? formData.team2Code : formData.team1Code;
+      const otherTeam =
+        team === "team1Code" ? formData.team2Code : formData.team1Code;
       if (e.target.value !== otherTeam) {
-        setFormData(prev => ({ ...prev, [team]: e.target.value }));
+        setFormData((prev) => ({ ...prev, [team]: e.target.value }));
       }
     };
 
@@ -69,8 +80,8 @@ const CreateLivePostForm = () => {
         throw new Error(result.msg);
       }
 
-      const matchId = result.matchId || result.data?.firebase_match_id; // Adjust based on your API response structure
-      
+      const matchId = result.matchId || result.data?.firebase_match_id;
+
       if (!formData.sendNotification) {
         router.push(`/admin-portal/matches/edit/${matchId}`);
         return;
@@ -90,21 +101,23 @@ const CreateLivePostForm = () => {
       });
 
       const notifyResult = await notifyRes.json();
-      if (notifyResult.success || notifyResult.msg === "success") {
-        router.push(`/admin-portal/matches/edit/${matchId}`);
-      } else {
+      if (!notifyResult.success && notifyResult.msg !== "success") {
         alert(`Failed to send notification: ${notifyResult.msg}`);
-        router.push(`/admin-portal/matches/edit/${matchId}`);
       }
+      router.push(`/admin-portal/matches/edit/${matchId}`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       alert(`Error: ${errorMessage}`);
     }
   };
 
-  const renderTeamSelect = (teamCode: string, teamField: "team1Code" | "team2Code") => (
+  const renderTeamSelect = (
+    teamCode: string,
+    teamField: "team1Code" | "team2Code"
+  ) => (
     <select
-      className="w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+      className={adminSelectClass}
       value={teamCode}
       onChange={handleTeamChange(teamField)}
     >
@@ -112,7 +125,10 @@ const CreateLivePostForm = () => {
         <option
           key={code}
           value={code}
-          disabled={code === (teamField === "team1Code" ? formData.team2Code : formData.team1Code)}
+          disabled={
+            code ===
+            (teamField === "team1Code" ? formData.team2Code : formData.team1Code)
+          }
         >
           {codeToTeamName[code]}
         </option>
@@ -123,15 +139,13 @@ const CreateLivePostForm = () => {
   const renderTeamInput = (teamNum: 1 | 2) => {
     const teamCodeField = `team${teamNum}Code` as "team1Code" | "team2Code";
     const teamScoreField = `team${teamNum}Score` as "team1Score" | "team2Score";
-    
+
     return (
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          Team {teamNum}
-        </label>
+      <div className="space-y-2">
+        <label className={adminLabelClass}>Team {teamNum}</label>
         {renderTeamSelect(formData[teamCodeField], teamCodeField)}
         <input
-          className="mt-2 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+          className={adminInputClass}
           required
           placeholder="Score"
           value={formData[teamScoreField]}
@@ -142,86 +156,81 @@ const CreateLivePostForm = () => {
   };
 
   return (
-    <div className="my-4">
-      <form onSubmit={submitMatchData} className="grid gap-4">
-        <div className="grid grid-cols-2 gap-4">
-          {renderTeamInput(1)}
-          {renderTeamInput(2)}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Match Date and Time
-          </label>
-          <input
-            className="w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-            type="datetime-local"
-            value={formData.matchDateTime}
-            onChange={handleInputChange("matchDateTime")}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Is Match Live?
-          </label>
-          <select
-            className="w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-            value={formData.isLive}
-            onChange={handleInputChange("isLive")}
-          >
-            <option value="true">LIVE</option>
-            <option value="false">NOT LIVE</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Match Type
-          </label>
-          <select
-            className="w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-            value={formData.matchType}
-            onChange={handleInputChange("matchType")}
-          >
-            <option value="football">Football</option>
-            <option value="cricket">Cricket</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Match Status
-          </label>
-          <textarea
-            className="w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-            required
-            placeholder="Match Started"
-            value={formData.matchStatus}
-            onChange={handleInputChange("matchStatus")}
-            maxLength={35}
-          />
-        </div>
-
-        <div className="flex justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.sendNotification}
-              onChange={handleInputChange("sendNotification")}
-            />
-            <label className="text-sm text-gray-900">Notify Users</label>
+    <Card className="border-border/80">
+      <CardContent className="pt-6">
+        <form onSubmit={submitMatchData} className="grid gap-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {renderTeamInput(1)}
+            {renderTeamInput(2)}
           </div>
 
-          <button
-            className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="space-y-2">
+            <label className={adminLabelClass}>Match date and time</label>
+            <input
+              className={adminInputClass}
+              type="datetime-local"
+              required
+              value={formData.matchDateTime}
+              onChange={handleInputChange("matchDateTime")}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className={adminLabelClass}>Is match live?</label>
+              <select
+                className={adminSelectClass}
+                value={formData.isLive}
+                onChange={handleInputChange("isLive")}
+              >
+                <option value="true">Live</option>
+                <option value="false">Not live</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className={adminLabelClass}>Match type</label>
+              <select
+                className={adminSelectClass}
+                value={formData.matchType}
+                onChange={handleInputChange("matchType")}
+              >
+                <option value="football">Football</option>
+                <option value="cricket">Cricket</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className={adminLabelClass}>Match status</label>
+            <textarea
+              className={adminInputClass}
+              required
+              placeholder="Match started"
+              value={formData.matchStatus}
+              onChange={handleInputChange("matchStatus")}
+              maxLength={35}
+              rows={2}
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <label className="flex items-center gap-2 text-sm text-foreground">
+              <input
+                type="checkbox"
+                className={formChoiceInputClass}
+                checked={formData.sendNotification}
+                onChange={handleInputChange("sendNotification")}
+              />
+              Notify users
+            </label>
+            <Button type="submit" className="w-full sm:w-auto">
+              Create match
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

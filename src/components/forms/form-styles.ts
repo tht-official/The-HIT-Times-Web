@@ -9,3 +9,10 @@ export const formChoiceRowClass =
 
 export const formChoiceInputClass =
   "mt-0.5 h-4 w-4 shrink-0 border-border text-foreground focus:ring-ring";
+
+export const adminInputClass =
+  "block w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring";
+
+export const adminLabelClass = "text-sm font-medium text-foreground";
+
+export const adminSelectClass = adminInputClass;
