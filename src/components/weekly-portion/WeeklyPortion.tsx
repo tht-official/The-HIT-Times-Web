@@ -86,23 +86,10 @@ const WeeklyPortion: React.FC = () => {
     );
   }
 
-  const [first, ...rest] = sections;
-
   return (
     <div className="space-y-12 sm:space-y-16">
-      {first && first.articles.length > 0 && (
-        <div className="grid grid-cols-1 gap-8 border-b border-border pb-10 sm:gap-10 sm:pb-12 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-border">
-          <Article article={first.articles[0]} className="lg:pr-12" />
-          <div className="flex flex-col justify-center gap-10 pl-0 lg:pl-12">
-            {first.articles.slice(1, 3).map((article) => (
-              <Article key={article._id.toString()} article={article} variant="compact" />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {rest.map((section) => (
-        <div key={section.heading} className="border-t border-border pt-10 sm:pt-16">
+      {sections.map((section, index) => (
+        <div key={section.heading} className={index > 0 ? "border-t border-border pt-10 sm:pt-16" : ""}>
           <ArticleSection
             heading={section.heading}
             articles={section.articles}
