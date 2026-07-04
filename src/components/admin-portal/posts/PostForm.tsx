@@ -1,6 +1,7 @@
 "use client";
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
+import uploadFile from "@/lib/uploadFile";
 import 'react-quill/dist/quill.snow.css'; // Quill stylesheet
 
 // Dynamically import the editor to prevent SSR issues
@@ -132,23 +133,13 @@ const PostForm = ({ postId }: PostFormProps) => {
       return;
     }
     try {
-      const formData = new FormData();
-      formData.append("file", fileN);
-      formData.append("upload_preset", "postuploads");
-      
-      const uploadResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dvw5qhccb/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const uploadedImageData = await uploadResponse.json();
-  
-      const imageUrl = uploadedImageData.secure_url;
-  
-      setImageLink(imageUrl);
-      console.log("Uploaded Image URL: " + imageUrl);
+      const imageUrl = await uploadFile(fileN, "/posts");
+      if (imageUrl) {
+        setImageLink(imageUrl);
+        console.log("Uploaded Image URL: " + imageUrl);
+      } else {
+        console.error("Failed to upload file to ImageKit");
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
     }
