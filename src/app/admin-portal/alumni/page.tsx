@@ -1,146 +1,202 @@
 "use client";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { Types } from "mongoose";
-import Link from "next/link";
-import { IBM_Plex_Serif, Nunito_Sans } from "next/font/google";
-import { CircularLoader } from "@/components/common/loader/Loaders";
+
+import { MatchImage } from "@/components/matches/MatchImage";
 import { Alumni } from "@/models/Alumnus";
-import ArticleImage from "@/components/weekly-portion/ArticleImage";
-import { ALL } from "dns";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { ExternalLink, Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
+function AlumniCardSkeleton() {
+  return (
+    <Card className="overflow-hidden border-border/80">
+      <Skeleton className="aspect-[4/3] w-full rounded-none" />
+      <CardHeader className="space-y-2 pb-2">
+        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-3 w-1/2" />
+      </CardHeader>
+      <CardFooter className="gap-2 border-t border-border pt-4">
+        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-8 w-8" />
+      </CardFooter>
+    </Card>
+  );
+}
 
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "800"],
-});
+function AlumniCard({
+  alum,
+  onDelete,
+}: {
+  alum: Alumni;
+  onDelete: (id: string) => void;
+}) {
+  const id = alum._id.toString();
 
-export default function AlumniPage() {
-  const PAGE_LIMIT = 1000;
+  return (
+    <Card className="micro-lift flex h-full flex-col overflow-hidden border-border/80 transition-[border-color,box-shadow] duration-200 hover:border-border hover:shadow-md">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        <MatchImage
+          src={alum.profile_image}
+          alt={alum.name}
+          className="h-full w-full object-cover"
+          size={600}
+          fallback={
+            <span className="text-sm font-medium text-muted-foreground">
+              {alum.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </span>
+          }
+        />
+      </div>
+
+      <CardHeader className="flex-1 space-y-2 pb-2">
+        <CardTitle className="line-clamp-2 text-base font-medium leading-snug">
+          {alum.name}
+        </CardTitle>
+        {alum.position && (
+          <Badge variant="outline" className="w-fit text-[10px] uppercase tracking-wide">
+            {alum.position}
+          </Badge>
+        )}
+        <p className="text-xs text-muted-foreground">
+          Session {alum.session_start} – {alum.session_end}
+        </p>
+      </CardHeader>
+
+      <CardFooter className="mt-auto gap-2 border-t border-border pt-4">
+        <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
+          <Link href={`/admin-portal/alumni/edit/${id}`}>
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </Link>
+        </Button>
+        {alum.linkedin && (
+          <Button variant="ghost" size="icon" className="shrink-0" asChild>
+            <a href={alum.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </Button>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => {
+            if (window.confirm(`Delete ${alum.name}? This cannot be undone.`)) {
+              onDelete(id);
+            }
+          }}
+          aria-label={`Delete ${alum.name}`}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+export default function AdminAlumniPage() {
   const [alumni, setAlumni] = useState<Alumni[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadmore, setLoadmore] = useState(true);
-  const [page, setPage] = useState(1);
+  const [error, setError] = useState<string | null>(null);
 
-  const getData = async () => {
-    const response = await fetch(
-      `/api/v1/alumnus?limit=${PAGE_LIMIT}&page=${page}`
-    );
-    const data = await response.json();
-
-    if (data.data.length < PAGE_LIMIT) {
-      setLoadmore(false);
+  const fetchAlumni = useCallback(async () => {
+    try {
+      const response = await fetch("/api/v1/alumnus?limit=1000&page=1");
+      const data = await response.json();
+      if (response.ok && Array.isArray(data?.data)) {
+        setAlumni(data.data);
+        setError(null);
+      } else {
+        setError("Failed to load alumni.");
+      }
+    } catch {
+      setError("Failed to load alumni.");
+    } finally {
+      setLoading(false);
     }
-
-    const updatedAlumni = [...alumni, ...data.data];
-    setAlumni(updatedAlumni);
-    setLoading(false);
-  };
-
-  const handleScroll = () => {
-    setPage(page + 1);
-  };
+  }, []);
 
   useEffect(() => {
-    getData();
-    window.addEventListener("scroll", () => {
-      if (
-        loadmore &&
-        window.innerHeight + window.scrollY >= document.body.offsetHeight
-      ) {
-        handleScroll();
-      }
-    });
+    fetchAlumni();
+  }, [fetchAlumni]);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [page]);
-
-  const handleDeleteAlumni = async (_id: string) => {
-    const response = await fetch(`/api/v1/alumnus/${_id}`, {
-      method: "DELETE",
-    });
-
+  const handleDeleteAlumni = async (id: string) => {
+    const response = await fetch(`/api/v1/alumnus/${id}`, { method: "DELETE" });
     if (response.ok) {
-      const updatedAlumni = alumni.filter(
-        (alum) => alum._id.toString() !== _id.toString()
-      );
-      setAlumni(updatedAlumni);
+      setAlumni((prev) => prev.filter((alum) => alum._id.toString() !== id));
     }
   };
 
   return (
-    <div>
-      <div className="flex flex-row py-8 justify-between items-center">
-        <h1
-          className={
-            ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold"
-          }
+    <div className="animate-in-subtle space-y-8">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">Alumni</h1>
+          <p className="mt-2 text-muted-foreground">
+            Manage alumni profiles shown on the public alumni page.
+          </p>
+          {!loading && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {alumni.length} profile{alumni.length === 1 ? "" : "s"}
+            </p>
+          )}
+        </div>
+        <Button asChild className="w-full sm:w-auto">
+          <Link href="/admin-portal/alumni/create-alumni">
+            <Plus className="h-4 w-4" />
+            Add alumni
+          </Link>
+        </Button>
+      </header>
+
+      {error && (
+        <p className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+
+      {loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <AlumniCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : alumni.length === 0 ? (
+        <Card className="border-dashed border-border/80">
+          <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
+            <p className="text-sm text-muted-foreground">No alumni profiles yet.</p>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin-portal/alumni/create-alumni">
+                <Plus className="h-4 w-4" />
+                Add first alumni
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          )}
         >
-          Alumni Page
-        </h1>
-
-        <Link href="/admin-portal/alumni/create-alumni">
-          <button className="bg-blue-100 rounded-full text-blue-800 py-2 px-4 flex flex-row items-center gap-2">
-            <PlusIcon width={18} height={18} />
-            <span>Create Alumni</span>
-          </button>
-        </Link>
-      </div>
-
-      <div className="grid grid-flow-row d md:grid-cols-3 gap-2 my-4">
-        {alumni.map((alum) => (
-          <div
-            key={alum._id.toString()}
-            className="p-2 bg-white rounded-md gap-2 flex flex-col"
-          >
-            <div className="">
-              <ArticleImage
-                src={alum.profile_image}
-                alt={alum.name}
-                className="w-full aspect-video rounded-md object-cover"
-                width={500}
-                height={500}
-              />
-              <h3
-                className={ibmPlexSerif.className + " text-lg font-bold mt-4 "}
-              >
-                {alum.name}
-              </h3>
-              <p className={nunitoSans.className + " text-gray-700"}>
-                {alum.session_start} - {alum.session_end}
-              </p>
-            </div>
-
-            <hr />
-            <div className="flex flex-row justify-between p-2">
-              <button>
-                <Link
-                  href={`/admin-portal/alumni/edit/${alum._id}`}
-                  className="flex flex-row items-center gap-2 text-blue-800 hover:bg-slate-100 p-1 rounded-md"
-                >
-                  <PencilIcon className="h-5 w-5" />
-                  Edit
-                </Link>
-              </button>
-              <button
-                onClick={() => handleDeleteAlumni(alum._id.toString())}
-                className="hover:bg-red-50 p-1 rounded-sm"
-              >
-                <TrashIcon className="h-5 w-5 text-red-500 " />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {loading && <CircularLoader />}
+          {alumni.map((alum) => (
+            <AlumniCard
+              key={alum._id.toString()}
+              alum={alum}
+              onDelete={handleDeleteAlumni}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
