@@ -199,6 +199,21 @@
   .touch-target {
     @apply min-h-[44px] min-w-[44px];
   }
+
+  .content-reveal {
+    animation: content-reveal 0.4s ease forwards;
+  }
+
+  @keyframes content-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer utilities {

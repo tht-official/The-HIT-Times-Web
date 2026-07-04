@@ -130,22 +130,6 @@ export function TopCategoryNav() {
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 pb-1 focus:outline-none">
-              More
-              <ChevronDown className="h-3 w-3" strokeWidth={1.5} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="start"
-              className="rounded-none border-border bg-background"
-            >
-              {moreLinks.map((item) => (
-                <DropdownMenuItem key={item.href} asChild className="rounded-none">
-                  <Link href={item.href}>{item.label}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 pb-1 focus:outline-none">
               Sections
               <ChevronDown className="h-3 w-3" strokeWidth={1.5} />
             </DropdownMenuTrigger>
@@ -154,6 +138,22 @@ export function TopCategoryNav() {
               className="max-h-80 overflow-y-auto rounded-none border-border bg-background"
             >
               {sectionLinks.map((item) => (
+                <DropdownMenuItem key={item.href} asChild className="rounded-none">
+                  <Link href={item.href}>{item.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="nav-editorial flex items-center gap-1 pb-1 focus:outline-none">
+              More
+              <ChevronDown className="h-3 w-3" strokeWidth={1.5} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              className="rounded-none border-border bg-background"
+            >
+              {moreLinks.map((item) => (
                 <DropdownMenuItem key={item.href} asChild className="rounded-none">
                   <Link href={item.href}>{item.label}</Link>
                 </DropdownMenuItem>

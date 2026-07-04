@@ -2,7 +2,16 @@ import { Player, Teams } from "@/models/Team";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { CircularLoader } from "@/components/common/loader/Loaders";
+import { BrandLoader } from "@/components/common/loader/Loaders";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { resolveImageUrl } from "@/lib/imageUtils";
+import { cn } from "@/lib/utils";
+
+const inputClass = cn(
+  "block w-full min-w-0 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground",
+  "placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+);
 
 type TeamProps = {
   teamCode: string;
@@ -26,8 +35,6 @@ const emptyPlayer: Player = {
   player_description: "",
   player_image: "",
 };
-
-import { resolveImageUrl } from "@/lib/imageUtils";
 
 function formatImageSrc(src: string): string {
   if (!src || typeof src !== "string") {
@@ -65,26 +72,31 @@ const PlayerForm = ({
     <input
       type="text"
       placeholder="Player Name"
-      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className={inputClass}
       value={player.player_name}
       onChange={(e) => handleChange("player_name", e.target.value)}
     />
     <input
       type="text"
-      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      className={inputClass}
       placeholder="Player Position"
       value={player.player_description}
       onChange={(e) => handleChange("player_description", e.target.value)}
     />
     <input
       type="url"
-      className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-      placeholder="Player Image"
+      className={inputClass}
+      placeholder="Player Image URL"
       value={player.player_image}
       onChange={(e) => handleChange("player_image", e.target.value)}
     />
-    <button type="button" onClick={handleDelete} className="justify-self-end">
-      <TrashIcon width={24} className="text-red-700" />
+    <button
+      type="button"
+      onClick={handleDelete}
+      className="justify-self-end text-destructive hover:opacity-80"
+      aria-label="Remove player"
+    >
+      <TrashIcon width={20} />
     </button>
   </div>
 );
@@ -140,21 +152,22 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
   };
 
   return (
-    <div>
-      <h2 className={"text-2xl font-bold my-2"}>
-        {teamType.charAt(0).toUpperCase() + teamType.slice(1)}
-      </h2>
-      <div className="my-2 grid grid-cols-1 gap-2 sm:grid-cols-[auto_1fr_1fr] sm:items-center">
+    <Card className="border-border/80">
+      <CardHeader>
+        <CardTitle className="capitalize">{teamType}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[auto_1fr_1fr] sm:items-center">
         <Image
           src={extractImageUrl(teamData.team_logo ?? "")}
           alt={teamData.team_name}
           width={50}
           height={50}
-          className="aspect-square rounded-full object-cover"
+          className="aspect-square rounded-full border border-border object-cover"
         />
         <input
           type="text"
-          className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={inputClass}
           placeholder="Team Name"
           value={teamData.team_name}
           required
@@ -162,14 +175,16 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
         />
         <input
           type="url"
-          placeholder="Team Logo"
+          placeholder="Team Logo URL"
           required
-          className="block w-full min-w-0 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className={inputClass}
           value={teamData.team_logo}
           onChange={(e) => setTeamData("team_logo", e.target.value)}
         />
       </div>
-      <h3 className="font-semibold my-4">Players</h3>
+      <h3 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+        Players
+      </h3>
       {teamData.players.map((player, index) => (
         <div key={index}>
           <PlayerForm
@@ -181,7 +196,8 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
           />
         </div>
       ))}
-      <div>
+      <div className="space-y-3 border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">Add new player</p>
         <PlayerForm
           player={newPlayer}
           handleChange={(field, value) =>
@@ -189,15 +205,12 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
           }
           handleDelete={() => setNewPlayer({ ...emptyPlayer })}
         />
-        <button
-          className="rounded-full bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          type="button"
-          onClick={handleAddPlayer}
-        >
-          Add Player
-        </button>
+        <Button type="button" variant="outline" size="sm" onClick={handleAddPlayer}>
+          Add player
+        </Button>
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -258,21 +271,20 @@ export default function TeamForm({ teamCode, deptName }: TeamProps) {
   };
 
   if (loading) {
-    return <CircularLoader />;
+    return <BrandLoader variant="inline" />;
   }
 
   return (
-    <div className="max-w-full overflow-x-hidden">
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-      <form onSubmit={handleSave} className="grid grid-flow-row gap-4">
+    <div className="max-w-full overflow-x-hidden space-y-6">
+      {error && (
+        <p className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+      <form onSubmit={handleSave} className="grid gap-6">
         <TeamFormSection team={team} setTeam={setTeam} teamType="football" />
         <TeamFormSection team={team} setTeam={setTeam} teamType="cricket" />
-        <button
-          className="rounded-full bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          type="submit"
-        >
-          Save
-        </button>
+        <Button type="submit">Save changes</Button>
       </form>
     </div>
   );

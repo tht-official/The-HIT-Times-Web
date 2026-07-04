@@ -3,7 +3,7 @@
 import { Posts } from "@/models/Post";
 import React, { useEffect, useState } from "react";
 import ArticleSection, { ArticleSectionProps } from "./ArticleSection";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { WeeklyPortionSkeleton } from "./HomeSkeletons";
 
 export const dropdownsToSections: { [key: string]: string } = {
   "00": "Monday Hues",
@@ -88,7 +88,7 @@ const WeeklyPortion: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <BrandLoader variant="inline" />;
+    return <WeeklyPortionSkeleton sections={3} />;
   }
 
   if (sections.length === 0) {
@@ -100,7 +100,7 @@ const WeeklyPortion: React.FC = () => {
   }
 
   return (
-    <div className="space-y-12 sm:space-y-16">
+    <div className="content-reveal space-y-12 sm:space-y-16">
       {sections.map((section) => (
         <ArticleSection
           key={section.heading}

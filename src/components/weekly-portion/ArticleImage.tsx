@@ -24,26 +24,24 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className="relative w-full aspect-video rounded-md overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="w-full h-full bg-gray-200 rounded-md animate-pulse "></div>
+        <div className="absolute inset-0 z-10">
+          <div className="h-full w-full animate-pulse bg-muted" />
         </div>
       )}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="w-full h-full flex bg-red-100 rounded-md items-center">
-            <div className="mx-auto flex flex-col items-center">
-              <ExclamationCircleIcon className="h-6 w-6 text-red-800" />
-              <p className="text-red-800">Failed to load image</p>
-            </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-muted">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <ExclamationCircleIcon className="h-6 w-6" />
+            <p className="text-sm">Failed to load image</p>
           </div>
         </div>
       )}
       <Image
         src={src}
         alt={alt}
-        className={`transition-opacity duration-200 ${className} ${
+        className={`transition-opacity duration-300 ${className} ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
         width={width}

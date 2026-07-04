@@ -1,7 +1,7 @@
 "use client";
 
 import RealtedPostIcons from "@/components/post-components/realtedPostIcons";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { HeroSkeleton } from "@/components/weekly-portion/HomeSkeletons";
 import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
 import { codeToTeamName } from "@/lib/codeToTeamName";
 import { MatchPosts } from "@/models/Match";
@@ -56,11 +56,7 @@ const HeroSection = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex aspect-[21/9] min-h-[280px] items-center justify-center sm:min-h-[360px]">
-        <BrandLoader variant="compact" />
-      </div>
-    );
+    return <HeroSkeleton />;
   }
 
   if (!post && !liveMatch) {
@@ -73,7 +69,7 @@ const HeroSection = () => {
 
   if (liveMatch) {
     return (
-      <section className="space-y-8 py-4">
+      <section className="content-reveal space-y-8 py-4">
         <div className="mb-6 flex items-center gap-3">
           <span className="tag-editorial flex items-center gap-1.5 text-foreground">
             <Radio className="h-3 w-3" />
@@ -125,7 +121,7 @@ const HeroSection = () => {
   );
 
   return (
-    <section className="space-y-5 sm:space-y-6">
+    <section className="content-reveal space-y-5 sm:space-y-6">
       <div className="mobile-bleed overflow-hidden sm:relative sm:left-auto sm:w-full sm:max-w-none sm:translate-x-0 sm:rounded-sm">
         <div className="relative aspect-[4/5] min-h-[300px] w-full sm:aspect-[21/9] sm:min-h-[360px]">
           <Link href={`/posts/${post._id}`} className="group block h-full">
