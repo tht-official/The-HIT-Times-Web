@@ -100,14 +100,15 @@ const WeeklyPortion: React.FC = () => {
   }
 
   return (
-    <div className="content-reveal space-y-12 sm:space-y-16">
-      {sections.map((section) => (
-        <ArticleSection
-          key={section.heading}
-          heading={section.heading}
-          articles={section.articles}
-          showAllLink={section.showAllLink}
-        />
+    <div className="space-y-12 sm:space-y-16">
+      {sections.map((section, index) => (
+        <div key={section.heading} className={index > 0 ? "border-t border-border pt-10 sm:pt-16" : ""}>
+          <ArticleSection
+            heading={section.heading}
+            articles={section.articles}
+            showAllLink={section.showAllLink}
+          />
+        </div>
       ))}
     </div>
   );
