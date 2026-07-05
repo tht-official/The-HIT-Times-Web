@@ -1,5 +1,8 @@
+import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import ImageKit from "imagekit";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -21,8 +24,13 @@ export async function GET() {
       urlEndpoint,
     });
 
-    const authenticationParameters = imagekit.getAuthenticationParameters();
-    return NextResponse.json(authenticationParameters, { status: 200 });
+    const authenticationParameters = imagekit.getAuthenticationParameters(
+      randomUUID(),
+    );
+    return NextResponse.json(authenticationParameters, {
+      status: 200,
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch (error: any) {
     console.error("Error generating ImageKit authentication parameters:", error);
     return NextResponse.json(

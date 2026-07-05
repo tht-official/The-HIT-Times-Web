@@ -11,7 +11,7 @@ export default async function uploadFile(data: any, folder: string = "/recruitme
     }
 
     // 1. Fetch authentication parameters from backend
-    const authResponse = await fetch("/api/imagekit-auth");
+    const authResponse = await fetch("/api/imagekit-auth", { cache: "no-store" });
     if (!authResponse.ok) {
       throw new Error(`Failed to fetch ImageKit authentication: ${authResponse.statusText}`);
     }
