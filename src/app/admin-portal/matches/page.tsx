@@ -1,146 +1,217 @@
 "use client";
-import { useEffect, useState } from "react";
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatMatchDateTime, getTeamLabel } from "@/lib/matchUtils";
 import { MatchPosts } from "@/models/Match";
-import { IBM_Plex_Serif, Nunito_Sans, Poppins } from "next/font/google";
-import { codeToTeamName } from "@/lib/codeToTeamName";
-import { CircularLoader } from "@/components/common/loader/Loaders";
+import { cn } from "@/lib/utils";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
+function MatchCardSkeleton() {
+  return (
+    <Card className="border-border/80">
+      <CardHeader className="space-y-3 pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-5 w-16 rounded-full" />
+        </div>
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-3 w-2/3" />
+      </CardHeader>
+      <CardFooter className="gap-2 border-t border-border pt-4">
+        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-8 w-8" />
+      </CardFooter>
+    </Card>
+  );
+}
 
-export default function MangeMatchPostPage() {
-  const PAGE_LIMIT = 100;
+function MatchCard({
+  post,
+  onDelete,
+}: {
+  post: MatchPosts;
+  onDelete: (id: string) => void;
+}) {
+  const team1 = getTeamLabel(post.team1.team_code, post.team1.team_name);
+  const team2 = getTeamLabel(post.team2.team_code, post.team2.team_name);
+
+  return (
+    <Card className="micro-lift flex h-full flex-col border-border/80 transition-[border-color,box-shadow] duration-200 hover:border-border hover:shadow-md">
+      <CardHeader className="flex-1 space-y-3 pb-2">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div className="flex flex-wrap gap-1.5">
+            <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
+              {post.match_type}
+            </Badge>
+            {post.is_live && (
+              <Badge variant="destructive" className="text-[10px] uppercase tracking-wide">
+                Live
+              </Badge>
+            )}
+          </div>
+          <span className="text-xs text-muted-foreground">
+            {formatMatchDateTime(post.match_date)}
+          </span>
+        </div>
+
+        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-center">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {team1}
+          </p>
+          <p className="mt-1 font-serif text-2xl font-normal tabular-nums text-foreground">
+            {post.team1.team_score}
+            <span className="mx-2 text-muted-foreground">–</span>
+            {post.team2.team_score}
+          </p>
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {team2}
+          </p>
+        </div>
+
+        <CardTitle className="line-clamp-2 text-sm font-normal leading-snug text-muted-foreground">
+          {post.match_status}
+        </CardTitle>
+      </CardHeader>
+
+      <CardFooter className="mt-auto gap-2 border-t border-border pt-4">
+        <Button variant="outline" size="sm" className="flex-1 gap-1.5" asChild>
+          <Link href={`/admin-portal/matches/edit/${post.firebase_match_id}`}>
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => {
+            if (
+              window.confirm(
+                `Delete ${team1} vs ${team2}? This cannot be undone.`
+              )
+            ) {
+              onDelete(post.firebase_match_id);
+            }
+          }}
+          aria-label={`Delete ${team1} vs ${team2}`}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+export default function ManageMatchPostPage() {
   const [posts, setPosts] = useState<MatchPosts[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadmore, setLoadmore] = useState(true);
-  const [page, setPage] = useState(1);
+  const [error, setError] = useState<string | null>(null);
 
-  const getData = async () => {
-    const response = await fetch(
-      `/api/v1/live/match?limit=${PAGE_LIMIT}&page=${page}`
-    );
-    const data = await response.json();
-    if (data.length < PAGE_LIMIT) {
-      setLoadmore(false);
+  const fetchMatches = useCallback(async () => {
+    try {
+      const response = await fetch("/api/v1/live/match?limit=500&page=1");
+      const data = await response.json();
+      if (response.ok && Array.isArray(data?.data)) {
+        setPosts(data.data);
+        setError(null);
+      } else {
+        setError("Failed to load matches.");
+      }
+    } catch {
+      setError("Failed to load matches.");
+    } finally {
+      setLoading(false);
     }
-    const updatedPosts = [...posts, ...data.data];
-    setPosts(updatedPosts);
-    setLoading(false);
-  };
-
-  const handleScroll = () => {
-    setPage(page + 1);
-  };
+  }, []);
 
   useEffect(() => {
-    getData();
-    window.addEventListener("scroll", () => {
-      if (
-        loadmore &&
-        window.innerHeight + window.scrollY >= document.body.offsetHeight
-      ) {
-        handleScroll();
-      }
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [page]);
+    fetchMatches();
+  }, [fetchMatches]);
 
   const handleDeletePost = async (firebaseId: string) => {
     const response = await fetch(`/api/v1/live/match/${firebaseId}`, {
       method: "DELETE",
     });
-
     if (response.ok) {
-      const updatedPosts = posts.filter(
-        (post) => post.firebase_match_id !== firebaseId
+      setPosts((prev) =>
+        prev.filter((post) => post.firebase_match_id !== firebaseId)
       );
-      setPosts(updatedPosts);
     }
   };
 
+  const liveCount = posts.filter((p) => p.is_live).length;
+
   return (
-    <div>
-      <div className="flex flex-row py-8 justify-between items-center">
-        <h1
-          className={
-            ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold"
-          }
+    <div className="animate-in-subtle space-y-8">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">Matches</h1>
+          <p className="mt-2 text-muted-foreground">
+            Create and manage live match scoreboards and timelines.
+          </p>
+          {!loading && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {posts.length} match{posts.length === 1 ? "" : "es"}
+              {liveCount > 0 && ` · ${liveCount} live`}
+            </p>
+          )}
+        </div>
+        <Button asChild className="w-full sm:w-auto">
+          <Link href="/admin-portal/matches/create-match">
+            <Plus className="h-4 w-4" />
+            Create match
+          </Link>
+        </Button>
+      </header>
+
+      {error && (
+        <p className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+
+      {loading ? (
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          )}
         >
-          Manage Matches
-        </h1>
-
-        <Link href="/admin-portal/matches/create-match">
-          <button className="bg-blue-100 rounded-full text-blue-800 py-2 px-4 flex flex-row items-center gap-2">
-            <PlusIcon width={18} height={18} />
-            <span>Create Match</span>
-          </button>
-        </Link>
-      </div>
-
-      <div className="grid grid-flow-row md:grid-cols-3 gap-2 my-4">
-        {posts.map((post) => (
-          <div
-            key={post._id.toString()}
-            className="p-4 bg-white rounded-md grid grid-flow-row gap-2"
-          >
-            <div className="">
-              <div className="flex flex-row justify-between">
-                <h2 className="font-bold text-lg">
-                  {codeToTeamName[post.team1.team_code]} vs{" "}
-                  {codeToTeamName[post.team2.team_code]}
-                </h2>
-                <div className="flex flex-row gap-2">
-                  <div className="bg-blue-50 rounded-3xl px-4 py-1 text-blue-900">
-                    {post.match_type}
-                  </div>
-                  {post.is_live && (
-                    <div className="bg-red-600 rounded-3xl px-4 py-1 text-white">
-                      LIVE
-                    </div>
-                  )}
-                </div>
-              </div>
-              <p className="text-sm text-gray-800">
-                {post.team1.team_score} vs {post.team2.team_score}
-              </p>
-            </div>
-            <div>
-              <span className="text-xs text-gray-500">
-                {new Date(post.match_date).toLocaleDateString()}
-              </span>
-            </div>
-            <div>
-              <hr />
-              <div className="flex flex-row justify-between pt-2">
-                <button>
-                  <Link
-                    href={`/admin-portal/matches/edit/${post.firebase_match_id}`}
-                    className="flex flex-row items-center gap-2 text-blue-800 hover:bg-slate-100 p-1 rounded-md"
-                  >
-                    <PencilIcon className="h-5 w-5" />
-                    Edit
-                  </Link>
-                </button>
-                <button
-                  onClick={() => handleDeletePost(post.firebase_match_id)}
-                  className="hover:bg-red-50 p-1 rounded-sm"
-                >
-                  <TrashIcon className="h-5 w-5 text-red-500 " />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {loading && <CircularLoader />}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <MatchCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : posts.length === 0 ? (
+        <Card className="border-dashed border-border/80">
+          <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
+            <p className="text-sm text-muted-foreground">No matches yet.</p>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin-portal/matches/create-match">
+                <Plus className="h-4 w-4" />
+                Create first match
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          )}
+        >
+          {posts.map((post) => (
+            <MatchCard
+              key={post._id.toString()}
+              post={post}
+              onDelete={handleDeletePost}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

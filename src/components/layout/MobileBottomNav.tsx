@@ -28,7 +28,6 @@ const moreLinks = [
   { label: "Alumni", href: "/alumni", icon: User },
   { label: "Tabloids", href: "/tabloids", icon: BookOpen },
   { label: "TSP", href: "/tsp", icon: BookOpen },
-  { label: "Esports", href: "/esports", icon: Radio },
   { label: "Recruitment", href: "/recruitment", icon: User },
   { label: "About", href: "/about-us", icon: User },
   { label: "Subscribe", href: "/tht-links", icon: BookOpen },
@@ -57,8 +56,8 @@ function NavTab({
   children: React.ReactNode;
 }) {
   const className = cn(
-    "relative flex flex-1 flex-col items-center justify-center gap-1 py-2",
-    "min-h-[52px] transition-colors active:opacity-70",
+    "relative flex h-full flex-1 flex-col items-center justify-center gap-0.5",
+    "transition-colors active:opacity-70",
     active ? "text-foreground" : "text-muted-foreground"
   );
 
@@ -104,7 +103,7 @@ export function MobileBottomNav() {
         aria-label="Primary"
       >
         <div className="border-t border-border bg-background/98 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.45)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/90">
-          <div className="mx-auto flex min-h-[var(--mobile-nav-height)] max-w-md items-stretch px-1">
+          <div className="mx-auto flex h-[var(--mobile-nav-height)] max-w-md items-stretch px-1">
             <NavTab active={active === "home"} label="Home" href="/">
               <Home className="h-[22px] w-[22px]" strokeWidth={active === "home" ? 2 : 1.5} />
             </NavTab>
@@ -211,4 +210,9 @@ export function MobileBottomNav() {
       </MobileSheet>
     </>
   );
+}
+
+/** In-flow spacer — reserves room for the fixed mobile bottom nav. */
+export function MobileBottomNavSpacer() {
+  return <div className="mobile-bottom-nav-spacer shrink-0 lg:hidden" aria-hidden="true" />;
 }

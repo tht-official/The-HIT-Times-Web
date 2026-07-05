@@ -3,6 +3,20 @@ import createMDX from "@next/mdx";
 
 const nextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+  async redirects() {
+    return [
+      {
+        source: "/esports",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/esports/:path*",
+        destination: "/",
+        permanent: false,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

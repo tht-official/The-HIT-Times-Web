@@ -1,26 +1,30 @@
 "use client";
 
 import PostForm from "@/components/admin-portal/posts/PostForm";
-import { IBM_Plex_Serif } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-});
-
-const EditPost = (
-  { params }: { params: { postId: string } }
-) => {
+const EditPost = ({ params }: { params: { postId: string } }) => {
   return (
-    <div>
-      <h1
-        className={
-          ibmPlexSerif.className + " text-zinc-800 text-5xl font-semibold py-8"
-        }
-      >
-        Edit Post
-      </h1>
-      <PostForm postId={params.postId}/>
+    <div className="animate-in-subtle mx-auto max-w-3xl space-y-8">
+      <header className="space-y-4">
+        <Button variant="ghost" size="sm" className="-ml-2 gap-1.5" asChild>
+          <Link href="/admin-portal/posts">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All posts
+          </Link>
+        </Button>
+        <div>
+          <h1 className="editorial-heading text-3xl font-normal sm:text-4xl">
+            Edit post
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Update title, image, category, or article body.
+          </p>
+        </div>
+      </header>
+      <PostForm postId={params.postId} />
     </div>
   );
 };

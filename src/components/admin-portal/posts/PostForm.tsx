@@ -1,17 +1,45 @@
 "use client";
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from "react";
+
+import {
+  adminInputClass,
+  adminLabelClass,
+  adminSelectClass,
+} from "@/components/forms/form-styles";
+import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
+import ArticleImage from "@/components/weekly-portion/ArticleImage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import uploadFile from "@/lib/uploadFile";
-import 'react-quill/dist/quill.snow.css'; // Quill stylesheet
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import "react-quill/dist/quill.snow.css";
 
-// Dynamically import the editor to prevent SSR issues
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
-const clientId = "67d26cd8e568fc7";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface PostFormProps {
   postId?: string;
 }
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image"],
+    ["clean"],
+  ],
+};
+
+const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "list",
+  "bullet",
+  "link",
+  "image",
+];
 
 const PostForm = ({ postId }: PostFormProps) => {
   const [message, setMessage] = useState({
@@ -24,17 +52,18 @@ const PostForm = ({ postId }: PostFormProps) => {
     title: "",
     description: "",
     link: "",
-    dropdown: "",
+    dropdown: "00",
     htmlBody: "",
   });
 
   const [value, setValue] = useState("");
   const [fileN, setFile] = useState<File | null>(null);
   const [imageLink, setImageLink] = useState("");
+  const [uploading, setUploading] = useState(false);
 
-  const loadPost = async (postId: string) => {
+  const loadPost = async (id: string) => {
     try {
-      const response = await fetch(`/api/v1/post/${postId}`);
+      const response = await fetch(`/api/v1/post/${id}`);
       if (response.ok) {
         const data = await response.json();
         const postData = data.data;
@@ -43,11 +72,9 @@ const PostForm = ({ postId }: PostFormProps) => {
           description: postData.description,
           link: postData.link,
           dropdown: postData.dropdown,
-          htmlBody: postData.htmlBody
+          htmlBody: postData.htmlBody,
         });
         setValue(postData.htmlBody);
-      } else {
-        console.error("Error loading post:", response.statusText);
       }
     } catch (error) {
       console.error("Error loading post:", error);
@@ -60,14 +87,18 @@ const PostForm = ({ postId }: PostFormProps) => {
     }
   }, [postId]);
 
-  const handleOnSubmit = async (event: any) => {
+  const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const title = event.target.title.value;
-      const description = event.target.description.value;
-      const link = event.target.imgurl.value;
-      const dropdown = event.target.dropdown.value;
-      const body = value; // Quill's HTML output
+      const form = event.currentTarget;
+      const title = (form.elements.namedItem("title") as HTMLInputElement).value;
+      const description = (
+        form.elements.namedItem("description") as HTMLTextAreaElement
+      ).value;
+      const link = (form.elements.namedItem("imgurl") as HTMLInputElement).value;
+      const dropdown = (form.elements.namedItem("dropdown") as HTMLSelectElement)
+        .value;
+      const body = value;
       const htmlBody = value;
 
       const data = { title, description, body, link, dropdown, htmlBody };
@@ -76,592 +107,217 @@ const PostForm = ({ postId }: PostFormProps) => {
         postId ? `/api/v1/post/${postId}` : "/api/v1/posts",
         {
           method: postId ? "PUT" : "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }
       );
 
       if (response.ok) {
-        const responseData = await response.json();
         setMessage({
           error: false,
           success: true,
           message: postId
-            ? "Post updated successfully"
-            : "Post created successfully",
+            ? "Post updated successfully."
+            : "Post created successfully.",
         });
-        // If needed, handle additional post-submit actions here
+        if (!postId) {
+          setPostDetails({
+            title: "",
+            description: "",
+            link: "",
+            dropdown: "00",
+            htmlBody: "",
+          });
+          setValue("");
+          setImageLink("");
+        }
       } else {
         setMessage({
           error: true,
           success: false,
-          message: `Error ${postId ? "updating" : "creating"} post: ${
-            response.statusText
-          }`,
+          message: `Failed to ${postId ? "update" : "create"} post.`,
         });
-        console.error(
-          `Error ${postId ? "updating" : "creating"} post:`,
-          response.statusText
-        );
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage({
         error: true,
         success: false,
-        message: `Error ${postId ? "updating" : "creating"} post: ${
-          error.message
-        }`,
+        message:
+          error instanceof Error
+            ? error.message
+            : `Failed to ${postId ? "update" : "create"} post.`,
       });
-      console.error(`Error ${postId ? "updating" : "creating"} post:`, error);
     }
   };
 
-  const handleOnReset = () => {
-    setImageLink("");
-  };
-
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
+    if (event.target.files?.[0]) {
       setFile(event.target.files[0]);
     }
   };
 
   const onFileUpload = async () => {
-    if (!fileN) {
-      return;
-    }
+    if (!fileN) return;
+    setUploading(true);
     try {
       const imageUrl = await uploadFile(fileN, "/posts");
       if (imageUrl) {
         setImageLink(imageUrl);
-        console.log("Uploaded Image URL: " + imageUrl);
-      } else {
-        console.error("Failed to upload file to ImageKit");
+        setPostDetails((prev) => ({ ...prev, link: imageUrl }));
       }
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
-  // const onFileUpload = async () => {
-  //   if (!fileN) {
-  //     return;
-  //   }
-  //   const client = new ImgurClient({ clientId });
-  //   const reader = new FileReader();
-
-  //   reader.onloadend = async () => {
-  //     if (typeof reader.result !== "string") {
-  //       console.error("Invalid file type");
-  //       return;
-  //     }
-  //     const imageData = reader.result.split(",")[1]; // base64 part
-  //     try {
-  //       const response = await client.upload({
-  //         image: imageData,
-  //         type: "base64",
-  //       });
-  //       if (response.success) {
-  //         setImageLink(response.data.link);
-  //       } else {
-  //         console.error("Image upload failed:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error uploading image:", error);
-  //     }
-  //   };
-  //   reader.onerror = (error) => {
-  //     console.error("Error reading file:", error);
-  //   };
-  //   reader.readAsDataURL(fileN);
-  // };
-
-
-  // Quill modules and formats
-  // Add comments ONLY inside this editor area as requested
-  const modules = {
-    toolbar: [
-      // Quill toolbar configuration:
-      // Header dropdown: choose heading levels 1, 2, or no heading
-      [{ header: [1, 2, false] }],
-      // Bold, italic, underline text styling buttons
-      ["bold", "italic", "underline"],
-      // Ordered list and bullet list
-      [{ list: "ordered" }, { list: "bullet" }],
-      // Link and image insertion
-      ["link", "image"],
-      // Clean formatting button
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    // Supported text formats:
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "list",
-    "bullet",
-    "link",
-    "image",
-  ];
+  const previewLink = imageLink || postDetails.link;
 
   return (
-    <div>
-      {message.error && (
-        <div className="bg-red-100 text-red-700 px-4 py-3 rounded-lg relative">
-          {message.message}
-        </div>
-      )}
+    <Card className="border-border/80">
+      <CardContent className="space-y-6 pt-6">
+        {message.error && (
+          <p className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {message.message}
+          </p>
+        )}
+        {message.success && (
+          <p className="rounded-md border border-border bg-muted px-4 py-3 text-sm text-foreground">
+            {message.message}
+          </p>
+        )}
 
-      {message.success && (
-        <div className="bg-green-100 text-green-700 px-4 py-3 rounded-lg relative">
-          {message.message}
-        </div>
-      )}
+        {previewLink && (
+          <div className="space-y-2">
+            <p className={adminLabelClass}>Cover image preview</p>
+            <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-lg border border-border bg-muted">
+              <ArticleImage
+                src={previewLink.startsWith("http") ? previewLink : "https://placehold.co/600x400.png"}
+                alt="Cover preview"
+                className="h-full w-full object-cover"
+                width={600}
+                height={400}
+              />
+            </div>
+          </div>
+        )}
 
-      <form
-        className="grid grid-flow-row gap-2 my-2"
-        onSubmit={handleOnSubmit}
-        onReset={handleOnReset}
-      >
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor="title"
-        >
-          Title
-        </label>
-        <input
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          type="text"
-          id="title"
-          name="title"
-          placeholder="Title"
-          value={postDetails.title}
-          onChange={(e) =>
-            setPostDetails({ ...postDetails, title: e.target.value })
-          }
-        />
+        <form className="grid gap-5" onSubmit={handleOnSubmit}>
+          <div className="space-y-2">
+            <label className={adminLabelClass} htmlFor="title">
+              Title
+            </label>
+            <input
+              className={adminInputClass}
+              type="text"
+              id="title"
+              name="title"
+              required
+              placeholder="Article title"
+              value={postDetails.title}
+              onChange={(e) =>
+                setPostDetails({ ...postDetails, title: e.target.value })
+              }
+            />
+          </div>
 
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor="description"
-        >
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          placeholder="Description"
-          value={postDetails.description}
-          onChange={(e) =>
-            setPostDetails({ ...postDetails, description: e.target.value })
-          }
-        ></textarea>
+          <div className="space-y-2">
+            <label className={adminLabelClass} htmlFor="description">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              className={adminInputClass}
+              rows={3}
+              required
+              placeholder="Short description for cards and previews"
+              value={postDetails.description}
+              onChange={(e) =>
+                setPostDetails({ ...postDetails, description: e.target.value })
+              }
+            />
+          </div>
 
-        <label htmlFor="link">Image Link</label>
-        <input
-          required
-          placeholder="Link"
-          type="text"
-          id="link"
-          name="imgurl"
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          value={imageLink || postDetails.link}
-          onChange={(e) => setImageLink(e.target.value)}
-        />
+          <div className="space-y-2">
+            <label className={adminLabelClass} htmlFor="link">
+              Image URL
+            </label>
+            <input
+              required
+              placeholder="https://..."
+              type="url"
+              id="link"
+              name="imgurl"
+              className={adminInputClass}
+              value={imageLink || postDetails.link}
+              onChange={(e) => setImageLink(e.target.value)}
+            />
+          </div>
 
-        <div>
-          <input
-            type="file"
-            id="imageInput"
-            accept="image/*"
-            onChange={onFileChange}
-          />
-          <button
-            type="button"
-            className="rounded-full bg-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm"
-            onClick={onFileUpload}
-          >
-            Upload
-          </button>
-        </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              className="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:text-foreground"
+              onChange={onFileChange}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!fileN || uploading}
+              onClick={onFileUpload}
+            >
+              {uploading ? "Uploading…" : "Upload image"}
+            </Button>
+          </div>
 
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor="category"
-        >
-          Category
-        </label>
-        <select
-          className="outline outline-transparent px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          id="dropdown"
-          name="dropdown"
-          value={postDetails.dropdown}
-          onChange={(e) =>
-            setPostDetails({ ...postDetails, dropdown: e.target.value })
-          }
-        >
-          <option value="00">Monday Hues</option>
-          <option value="01">Campus Raid</option>
-          <option value="02">Thursday Article</option>
-          <option value="03">Funny Friday</option>
-          <option value="04">Viral Corner</option>
-          <option value="05">Word Worth Millions</option>
-          <option value="06">College Heracles</option>
-          <option value="07">Nanotips</option>
-          <option value="08">Vernacular</option>
-          <option value="09">Gazette</option>
-          <option value="10">Reportopolis</option>
-        </select>
+          <div className="space-y-2">
+            <label className={adminLabelClass} htmlFor="dropdown">
+              Section
+            </label>
+            <select
+              className={adminSelectClass}
+              id="dropdown"
+              name="dropdown"
+              value={postDetails.dropdown}
+              onChange={(e) =>
+                setPostDetails({ ...postDetails, dropdown: e.target.value })
+              }
+            >
+              {Object.entries(dropdownsToSections).map(([code, label]) => (
+                <option key={code} value={code}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Text Editor: Using Quill */}
-        <ReactQuill
-          // Dynamically imported Quill editor.
-          // The toolbar, formats, and other props can be configured below.
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          modules={modules}
-          formats={formats}
-        />
+          <div className="space-y-2">
+            <label className={adminLabelClass}>Body</label>
+            <div className="overflow-hidden rounded-md border border-border">
+              <ReactQuill
+                theme="snow"
+                value={value}
+                onChange={setValue}
+                modules={quillModules}
+                formats={quillFormats}
+              />
+            </div>
+          </div>
 
-        <div className="flex flex-row justify-end gap-4">
-          <button
-            className="rounded-full bg-blue-600 mt-10 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            type="submit"
-          >
-            {postId ? "Update" : "Create"}
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="flex justify-end border-t border-border pt-4">
+            <Button type="submit">
+              {postId ? "Save changes" : "Create post"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
 export default PostForm;
-// "use client";
-// import { useEffect, useRef, useState } from "react";
-// import { ImgurClient } from "imgur";
-// import { Editor } from "@tinymce/tinymce-react";
-// import { Editor as TinyMCEEditor } from "tinymce";
-// import { sendPostNotification } from "@/lib/sendPostNotification";
-
-// const clientId = "67d26cd8e568fc7";
-
-// interface PostFormProps {
-//   postId?: string;
-// }
-
-// const PostForm = ({ postId }: PostFormProps) => {
-//   const editorRef = useRef<TinyMCEEditor | null>(null);
-//   const [message, setMessage] = useState({
-//     error: false,
-//     success: false,
-//     message: "",
-//   });
-
-//   const [postDetails, setPostDetails] = useState({
-//     title: "",
-//     description: "",
-//     link: "",
-//     dropdown: "",
-//     htmlBody: "",
-//   });
-
-//   const loadPost = async (postId: string) => {
-//     try {
-//       const response = await fetch(`/api/v1/post/${postId}`);
-//       if (response.ok) {
-//         const data = await response.json();
-//         const postData = data.data;
-//         setPostDetails({
-//           title: postData.title,
-//           description: postData.description,
-//           link: postData.link,
-//           dropdown: postData.dropdown,
-//           htmlBody: postData.htmlBody
-//         });
-//       } else {
-//         console.error("Error loading post:", response.statusText);
-//       }
-//     } catch (error) {
-//       console.error("Error loading post:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (postId) {
-//       loadPost(postId);
-//     }
-//   }, [postId]);
-
-//   const handleOnSubmit = async (event: any) => {
-//     event.preventDefault();
-//     try {
-//       const title = event.target.title.value;
-//       const description = event.target.description.value;
-//       const link = event.target.imgurl.value;
-//       const dropdown = event.target.dropdown.value;
-//       const body = editorRef?.current?.getContent({ format: "text" });
-//       const htmlBody = editorRef?.current?.getContent();
-
-//       const data = { title, description, body, link, dropdown, htmlBody };
-
-//       const response = await fetch(
-//         postId ? `/api/v1/post/${postId}` : "/api/v1/posts",
-//         {
-//           method: postId ? "PUT" : "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(data),
-//         }
-//       );
-
-//       if (response.ok) {
-//         const responseData = await response.json();
-//         setMessage({
-//           error: false,
-//           success: true,
-//           message: postId
-//             ? "Post updated successfully"
-//             : "Post created successfully",
-//         });
-//         if (!postId) {
-//           sendPostNotification(title, description, link, responseData.postId);
-//         }
-//       } else {
-//         setMessage({
-//           error: true,
-//           success: false,
-//           message: `Error ${postId ? "updating" : "creating"} post: ${
-//             response.statusText
-//           }`,
-//         });
-//         console.error(
-//           `Error ${postId ? "updating" : "creating"} post:`,
-//           response.statusText
-//         );
-//       }
-//     } catch (error: any) {
-//       setMessage({
-//         error: true,
-//         success: false,
-//         message: `Error ${postId ? "updating" : "creating"} post: ${
-//           error.message
-//         }`,
-//       });
-//       console.error(`Error ${postId ? "updating" : "creating"} post:`, error);
-//     }
-//   };
-
-//   const handleOnReset = () => {
-//     setImageLink("");
-//   };
-
-//   const [fileN, setFile] = useState<File | null>(null);
-//   const [imageLink, setImageLink] = useState("");
-
-//   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     if (event.target.files) {
-//       setFile(event.target.files[0]);
-//     }
-//   };
-
-//   const onFileUpload = async () => {
-//     if (!fileN) {
-//       return;
-//     }
-//     const client = new ImgurClient({ clientId });
-//     const reader = new FileReader();
-
-//     reader.onloadend = async () => {
-//       if (typeof reader.result !== "string") {
-//         console.error("Invalid file type");
-//         return;
-//       }
-//       const imageData = reader.result.split(",")[1]; // Get base64 part of the Data URL
-//       try {
-//         const response = await client.upload({
-//           image: imageData,
-//           type: "base64",
-//         });
-//         if (response.success) {
-//           setImageLink(response.data.link);
-//         } else {
-//           console.error("Image upload failed:", response.data);
-//         }
-//       } catch (error) {
-//         console.error("Error uploading image:", error);
-//       }
-//     };
-//     reader.onerror = (error) => {
-//       console.error("Error reading file:", error);
-//     };
-//     reader.readAsDataURL(fileN);
-//   };
-
-//   return (
-//     <div>
-//       {message.error && (
-//         <div className="bg-red-100 text-red-700 px-4 py-3 rounded-lg relative">
-//           {message.message}
-//         </div>
-//       )}
-
-//       {message.success && (
-//         <div className="bg-green-100 text-green-700 px-4 py-3 rounded-lg relative">
-//           {message.message}
-//         </div>
-//       )}
-
-//       <form
-//         className="grid grid-flow-row gap-2 my-2"
-//         onSubmit={handleOnSubmit}
-//         onReset={handleOnReset}
-//       >
-//         <label
-//           className="block text-sm font-medium leading-6 text-gray-900"
-//           htmlFor="title"
-//         >
-//           Title
-//         </label>
-//         <input
-//           className="
-//         outline outline-transparent
-//         px-3
-//         block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-//           type="text"
-//           id="title"
-//           name="title"
-//           placeholder="Title"
-//           value={postDetails.title}
-//           onChange={(e) =>
-//             setPostDetails({ ...postDetails, title: e.target.value })
-//           }
-//         />
-
-//         <label
-//           className="block text-sm font-medium leading-6 text-gray-900"
-//           htmlFor="description"
-//         >
-//           Description
-//         </label>
-//         <textarea
-//           id="description"
-//           name="description"
-//           className="
-//           outline outline-transparent
-//           px-3
-//           block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-//           placeholder="Description"
-//           value={postDetails.description}
-//           onChange={(e) =>
-//             setPostDetails({ ...postDetails, description: e.target.value })
-//           }
-//         ></textarea>
-
-//         <label htmlFor="link">Image Link</label>
-//         <input
-//           required
-//           placeholder="Link"
-//           type="text"
-//           id="link"
-//           name="imgurl"
-//           className="
-//           outline outline-transparent
-//           px-3
-//           block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-//           value={imageLink || postDetails.link}
-//           onChange={(e) => setImageLink(e.target.value)}
-//         />
-
-//         <div>
-//           <input
-//             type="file"
-//             id="imageInput"
-//             accept="image/*"
-//             onChange={onFileChange}
-//           />
-//           <button
-//             type="button"
-//             className="rounded-full bg-blue-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm"
-//             onClick={onFileUpload}
-//           >
-//             Upload
-//           </button>
-//         </div>
-
-//         <label
-//           className="block text-sm font-medium leading-6 text-gray-900"
-//           htmlFor="category"
-//         >
-//           Category
-//         </label>
-//         <select
-//           className="
-//         outline outline-transparent
-//         px-3
-//         block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-//           id="dropdown"
-//           name="dropdown"
-//           aria-label="Default select example"
-//           value={postDetails.dropdown}
-//           onChange={(e) =>
-//             setPostDetails({ ...postDetails, dropdown: e.target.value })
-//           }
-//         >
-//           <option value="00">Monday Hues</option>
-//           <option value="01">Campus Raid</option>
-//           <option value="02">Thursday Article</option>
-//           <option value="03">Funny Friday</option>
-//           <option value="04">Viral Corner</option>
-//           <option value="05">Word Worth Millions</option>
-//           <option value="06">College Heracles</option>
-//           <option value="07">Nanotips</option>
-//           <option value="08">Vernacular</option>
-//           <option value="09">Gazette</option>
-//           <option value="10">Reportopolis</option>
-//         </select>
-
-//         <label
-//           className="block text-sm font-medium leading-6 text-gray-900"
-//           htmlFor="body"
-//         >
-//           Body
-//         </label>
-//         <Editor
-//           onInit={(evt, editor) => (editorRef.current = editor)}
-//           apiKey="w6q7m6bspz8sqsc3xf8ogte5se9rmnjz0x84aruqxnvb5jek"
-//           init={{
-//             plugins: "link",
-//             default_link_target: "_blank",
-//           }}
-//           initialValue={postDetails.htmlBody}
-//         />
-
-//         <div className="flex flex-row justify-end gap-4">
-//           <button
-//             type="reset"
-//             className="rounded-full py-1.5 px-2.5 text-sm font-semibold leading-6 text-gray-900"
-//           >
-//             Clear
-//           </button>
-//           <button
-//             className="rounded-full bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-//             type="submit"
-//           >
-//             {postId ? "Update" : "Create"}
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default PostForm;

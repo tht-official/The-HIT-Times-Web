@@ -1,7 +1,7 @@
 "use client";
 
 import RealtedPostIcons from "@/components/post-components/realtedPostIcons";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { HeroSkeleton } from "@/components/weekly-portion/HomeSkeletons";
 import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
 import { codeToTeamName } from "@/lib/codeToTeamName";
 import { MatchPosts } from "@/models/Match";
@@ -56,11 +56,7 @@ const HeroSection = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex aspect-[21/9] min-h-[280px] items-center justify-center sm:min-h-[360px]">
-        <BrandLoader variant="compact" />
-      </div>
-    );
+    return <HeroSkeleton />;
   }
 
   if (!post && !liveMatch) {
@@ -73,7 +69,7 @@ const HeroSection = () => {
 
   if (liveMatch) {
     return (
-      <section className="space-y-8 py-4">
+      <section className="content-reveal space-y-8 py-4">
         <div className="mb-6 flex items-center gap-3">
           <span className="tag-editorial flex items-center gap-1.5 text-foreground">
             <Radio className="h-3 w-3" />
@@ -160,12 +156,15 @@ const HeroSection = () => {
                 </span>
               </div>
             </div>
+          </Link>
+          <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6 lg:right-10 lg:top-10">
+            <RealtedPostIcons post={post} />
           </div>
-        </Link>
+        </div>
       </div>
 
       {!isNoticeEmpty && (
-        <div className="flex flex-col gap-3 rounded-sm border border-border bg-white/[0.03] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-muted/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 dark:bg-white/[0.03]">
           <div className="flex items-start gap-3 sm:items-center">
             <span className="tag-editorial shrink-0">Notice</span>
             <p className="text-sm leading-snug">{notice.noticeTitle}</p>

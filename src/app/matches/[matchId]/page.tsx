@@ -6,6 +6,7 @@ import { TeamSquadCard } from "@/components/matches/TeamSquadCard";
 import { BrandLoader } from "@/components/common/loader/Loaders";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { formatMatchDateTime, getTeamLabel } from "@/lib/matchUtils";
 import { MatchPosts } from "@/models/Match";
 import { Teams } from "@/models/Team";
@@ -13,12 +14,15 @@ import { ArrowLeft, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+type MatchTab = "feed" | "squads";
+
 const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
   const [match, setMatch] = useState<MatchPosts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [teams, setTeams] = useState<Record<string, Teams>>({});
+  const [activeTab, setActiveTab] = useState<MatchTab>("feed");
 
   const fetchTeams = async (teamCodes: string[]) => {
     const uniqueCodes = Array.from(new Set(teamCodes.filter(Boolean)));
@@ -111,12 +115,13 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
   const sport = match.match_type === "cricket" ? "cricket" : "football";
   const team1Label = getTeamLabel(match.team1.team_code, match.team1.team_name);
   const team2Label = getTeamLabel(match.team2.team_code, match.team2.team_name);
+  const hasFeed = Boolean(match.timeline && match.timeline.length > 0);
 
   return (
-    <div className="animate-in-subtle mx-auto max-w-4xl space-y-12">
-      <header className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Button variant="ghost" size="sm" className="-ml-2" asChild>
+    <div className="animate-in-subtle mx-auto w-full min-w-0 max-w-4xl space-y-6 overflow-x-clip pb-4 sm:space-y-8">
+      <header className="space-y-4 sm:space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Button variant="ghost" size="sm" className="-ml-2 shrink-0" asChild>
             <Link href="/matches">
               <ArrowLeft className="h-3.5 w-3.5" />
               All matches
@@ -145,9 +150,9 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
             )}
           </div>
 
-          <h1 className="editorial-heading text-balance text-3xl font-normal leading-tight sm:text-4xl lg:text-5xl">
+          <h1 className="editorial-heading break-words text-balance text-2xl font-normal leading-tight sm:text-4xl lg:text-5xl">
             {team1Label}
-            <span className="mx-2 text-muted-foreground">vs</span>
+            <span className="mx-1.5 text-muted-foreground sm:mx-2">vs</span>
             {team2Label}
           </h1>
 
@@ -157,24 +162,66 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
         </div>
       </header>
 
-      <MatchScoreboard match={match} />
+      <MatchScoreboard match={match} teams={teams} />
 
-      <section className="space-y-6">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="editorial-heading text-2xl font-normal sm:text-3xl">
+      <div className="w-full min-w-0 space-y-4 sm:space-y-6">
+        <div
+          className="flex w-full min-w-0 border-b border-border"
+          role="tablist"
+          aria-label="Match sections"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "feed"}
+            onClick={() => setActiveTab("feed")}
+            className={cn(
+              "min-w-0 flex-1 border-b-2 px-2 py-3 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+              activeTab === "feed"
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Match feed
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "squads"}
+            onClick={() => setActiveTab("squads")}
+            className={cn(
+              "min-w-0 flex-1 border-b-2 px-2 py-3 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+              activeTab === "squads"
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
             Squads
-          </h2>
+          </button>
         </div>
-        <div className="section-divider" />
-        <div className="grid gap-6 md:grid-cols-2">
-          <TeamSquadCard team={teams[match.team1.team_code]} sport={sport} />
-          <TeamSquadCard team={teams[match.team2.team_code]} sport={sport} />
-        </div>
-      </section>
 
-      {match.timeline && match.timeline.length > 0 && (
-        <MatchTimeline events={match.timeline} />
-      )}
+        {activeTab === "feed" && (
+          <div role="tabpanel" className="min-w-0">
+            {hasFeed ? (
+              <MatchTimeline events={match.timeline!} />
+            ) : (
+              <p className="py-10 text-center text-sm text-muted-foreground">
+                No match updates yet.
+              </p>
+            )}
+          </div>
+        )}
+
+        {activeTab === "squads" && (
+          <div role="tabpanel" className="grid min-w-0 gap-4 sm:gap-6 md:grid-cols-2">
+            <TeamSquadCard team={teams[match.team1.team_code]} sport={sport} />
+            <TeamSquadCard team={teams[match.team2.team_code]} sport={sport} />
+          </div>
+        )}
+      </div>
+
+      {/* Ensures last content clears the fixed mobile nav on small screens */}
+      <div className="h-2 shrink-0 lg:hidden" aria-hidden />
     </div>
   );
 };

@@ -3,8 +3,7 @@
 import { Posts } from "@/models/Post";
 import React, { useEffect, useState } from "react";
 import ArticleSection, { ArticleSectionProps } from "./ArticleSection";
-import Article from "./Article";
-import { BrandLoader } from "@/components/common/loader/Loaders";
+import { WeeklyPortionSkeleton } from "./HomeSkeletons";
 
 export const dropdownsToSections: { [key: string]: string } = {
   "00": "Monday Hues",
@@ -20,10 +19,24 @@ export const dropdownsToSections: { [key: string]: string } = {
   "10": "Reportopolis",
 };
 
+/** Home page section order: Monday Hues → Gazette → Reportopolis → rest */
+const HOME_SECTION_ORDER = [
+  "00",
+  "09",
+  "10",
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+];
+
 const fetchArticles = async (): Promise<ArticleSectionProps[]> => {
-  const dropdowns = Object.keys(dropdownsToSections);
   const sections = await Promise.all(
-    dropdowns.map(async (dropdown) => {
+    HOME_SECTION_ORDER.map(async (dropdown) => {
       try {
         const response = await fetch(
           `/api/v1/posts?dropdown=${dropdown}&limit=3`
@@ -75,7 +88,7 @@ const WeeklyPortion: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <BrandLoader variant="inline" />;
+    return <WeeklyPortionSkeleton sections={3} />;
   }
 
   if (sections.length === 0) {

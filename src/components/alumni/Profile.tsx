@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+import { resolveImageUrl } from "@/lib/imageUtils";
+
 function formatImageSrc(src: string): string {
   if (!src || typeof src !== "string") return "/no-image.png";
   if (src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://")) {
@@ -13,13 +15,7 @@ function formatImageSrc(src: string): string {
 }
 
 const extractImageUrl = (url: string): string => {
-  const googleDriveMatch = url.match(
-    /https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)([^\/&]+)/
-  );
-  const extractedUrl = googleDriveMatch
-    ? `https://drive.google.com/thumbnail?id=${googleDriveMatch[1]}&sz=w500`
-    : url;
-  return formatImageSrc(extractedUrl);
+  return resolveImageUrl(url, 500) ?? formatImageSrc(url);
 };
 
 const AlumniCard: React.FC<Alumni> = ({ name, profile_image, position, linkedin }) => {

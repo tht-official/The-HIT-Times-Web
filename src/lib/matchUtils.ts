@@ -1,12 +1,16 @@
 import { codeToTeamName } from "@/lib/codeToTeamName";
+import { resolveImageUrl } from "@/lib/imageUtils";
 
-export const toRenderableImage = (url?: string) => {
-  if (!url) return undefined;
-  const driveIdMatch = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
-  if (driveIdMatch?.[1]) {
-    return `https://drive.google.com/uc?export=view&id=${driveIdMatch[1]}`;
-  }
-  return url;
+/** @deprecated Use resolveImageUrl from @/lib/imageUtils */
+export const toRenderableImage = (url?: string) => resolveImageUrl(url, 500);
+
+export const getMatchPhaseLabel = (match: {
+  is_live?: boolean;
+  match_type?: string;
+}) => {
+  if (match.is_live) return "In progress";
+  if (match.match_type === "cricket") return "Match ended";
+  return "Full time";
 };
 
 export const formatMatchDateTime = (d: Date | string) => {

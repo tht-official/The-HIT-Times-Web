@@ -21,7 +21,9 @@ const RelatedPostIcons = ({ post, direction }: RelatedPostIconsProps) => {
     setIsBookmarked(bookmarkedPosts.includes(post._id.toString()));
   }, [post._id]);
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const url = `https://thehittimes.com/posts/${post._id.toString()}`;
     if (navigator.share) {
       try {
@@ -34,7 +36,9 @@ const RelatedPostIcons = ({ post, direction }: RelatedPostIconsProps) => {
     }
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const bookmarkedPosts = JSON.parse(
       localStorage.getItem("bookmarkedPosts") || "[]"
     );
@@ -55,7 +59,13 @@ const RelatedPostIcons = ({ post, direction }: RelatedPostIconsProps) => {
   };
 
   return (
-    <div className={cn("flex gap-1", direction ?? "flex-row")}>
+    <div
+      className={cn(
+        "flex gap-1 rounded-full border border-border/60 bg-background/80 p-0.5 backdrop-blur-sm",
+        direction ?? "flex-row"
+      )}
+      onClick={(e) => e.stopPropagation()}
+    >
       <Button
         variant="ghost"
         size="icon"
