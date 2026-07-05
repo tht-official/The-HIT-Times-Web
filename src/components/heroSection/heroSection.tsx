@@ -126,9 +126,9 @@ const HeroSection = () => {
 
   return (
     <section className="space-y-5 sm:space-y-6">
-      <div className="mobile-bleed overflow-hidden sm:relative sm:left-auto sm:w-full sm:max-w-none sm:translate-x-0 sm:rounded-sm">
+      <div className="relative w-full overflow-hidden rounded-sm">
         <Link href={`/posts/${post._id}`} className="group block">
-          <div className="relative aspect-[4/5] min-h-[300px] w-full sm:aspect-[21/9] sm:min-h-[360px]">
+          <div className="relative aspect-[4/3] min-h-[260px] w-full sm:aspect-[21/9] sm:min-h-[360px]">
             <ArticleImage
               height={900}
               width={1600}
@@ -138,22 +138,24 @@ const HeroSection = () => {
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             />
             <div className="hero-gradient absolute inset-0" />
-            <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 lg:p-10">
-              <div className="mb-4 flex items-center justify-between gap-4">
-                <span className="tag-editorial">{sectionName}</span>
-                <RealtedPostIcons post={post} />
+            <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-6 lg:p-10">
+              <div className="mb-2 sm:mb-4 flex items-center justify-between gap-4">
+                <span className="tag-editorial !text-white/80 text-[9px] sm:text-[10px]">{sectionName}</span>
+                <div className="text-white/70 [&_button]:!text-white/70 [&_button:hover]:!text-white [&_button:hover]:!bg-white/20 [&_button]:transition-all [&_button]:h-7 [&_button]:w-7 sm:[&_button]:h-8 sm:[&_button]:w-8">
+                  <RealtedPostIcons post={post} />
+                </div>
               </div>
-              <h1 className="editorial-heading max-w-4xl text-balance text-2xl font-normal leading-[1.1] sm:text-4xl lg:text-5xl xl:text-6xl">
+              <h1 className="editorial-heading max-w-4xl text-balance text-xl sm:text-4xl lg:text-5xl xl:text-6xl !text-white font-normal leading-[1.1]">
                 {post.title}
               </h1>
-              <p className="mt-4 max-w-2xl line-clamp-2 text-sm leading-relaxed text-foreground/70">
+              <p className="mt-1.5 sm:mt-4 max-w-2xl line-clamp-2 text-[11px] sm:text-sm leading-relaxed text-white/70">
                 {post.description}
               </p>
-              <div className="btn-row mt-6">
-                <span className="btn-pill">
+              <div className="mt-3 sm:mt-6 flex flex-row items-center gap-3 sm:gap-4">
+                <span className="btn-pill !min-h-[2rem] sm:!min-h-[2.75rem] text-[9px] sm:text-xs !border-white/70 !text-white hover:!bg-white hover:!text-black">
                   Read more <ArrowRight />
                 </span>
-                <span className="flex min-h-10 items-center justify-center text-[10px] uppercase tracking-[0.15em] text-muted-foreground sm:min-h-11 sm:w-auto sm:justify-start">
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-white/60">
                   {readMins} min read
                 </span>
               </div>
