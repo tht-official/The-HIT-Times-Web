@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
     await dbConnect(); // Ensure the database is connected
     const data = await request.json();
     const match_date = new Date(data.match_date);
-
     const matchDocument = await matchPostFirebaseRef.add({
       ...data,
       match_date: match_date,

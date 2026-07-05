@@ -15,6 +15,7 @@ import { Trash2 } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
+import { Teams } from "@/models/Team"; 
 
 interface EditLivePostFormProps {
   match: MatchPosts;
@@ -22,7 +23,14 @@ interface EditLivePostFormProps {
 
 const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   const [matchData, setMatchData] = useState<MatchPosts>(match);
+
+  // Synchronize state with props when the match prop updates
+  useEffect(() => {
+    setMatchData(match);
+  }, [match]);
+
   const [showPenalty, setShowPenalty] = useState<boolean>(false);
+  const [allTeams, setAllTeams] = useState<Teams[]>([]);
   const [sendNotification, setSendNotification] = useState<boolean>(true);
   const [statusMessage, setStatusMessage] = useState({
     error: false,
@@ -49,6 +57,22 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
   // Initialize Quill content
   useEffect(() => {
     setTimelineContent("");
+  }, []);
+
+    // Fetch all configured teams in MongoDB on mount
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const res = await fetch("/api/v1/team");
+        const json = await res.json();
+        if (res.ok && Array.isArray(json.data)) {
+          setAllTeams(json.data);
+        }
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+    fetchTeams();
   }, []);
 
   const handleTeamChange = useCallback(
@@ -80,29 +104,93 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     </select>
   );
 
-  const renderTeamInput = (
+    const renderTeamInput = (
     teamNo: number,
     teamCode: string,
     setTeamCode: (code: string) => void,
+    teamName: string,
+    setTeamName: (name: string) => void,
     teamScore: string,
     setTeamScore: (score: string) => void,
     otherTeamCode: string
-  ) => (
-    <div className="mb-4">
-      <label className={`${adminLabelClass} mb-2 block`}>
-        {"Team " + teamNo}
-      </label>
-      {renderTeamSelect(teamCode, setTeamCode, otherTeamCode)}
-      <input
-        ref={teamNo === 1 ? team1ScoreRef : team2ScoreRef}
-        className={`${adminInputClass} mt-2`}
-        required
-        placeholder="Score"
-        value={teamScore || ""}
-        onChange={(e) => setTeamScore(e.target.value)}
-      />
-    </div>
-  );
+  ) => {
+    const isBadminton = matchData.match_type === "badminton";
+    const isVolleyballOrBasketball = matchData.match_type === "volleyball" || matchData.match_type === "basketball";
+
+    return (
+      <div className="mb-4">
+        <label className={`${adminLabelClass} mb-2 block`}>
+          {"Team " + teamNo}
+        </label>
+        
+        {isBadminton ? (
+          <input
+            className={adminInputClass}
+            required
+            placeholder="Team Name (e.g. John / Jane)"
+            value={teamName || ""}
+            onChange={(e) => {
+              const val = e.target.value;
+              setTeamName(val);
+              setTeamCode(val.toLowerCase().trim().replace(/\s+/g, "-"));
+            }}
+          />
+        ) : isVolleyballOrBasketball ? (
+          <select
+            className={adminSelectClass}
+            value={teamCode || ""}
+            onChange={(e) => {
+              const val = e.target.value;
+              setTeamCode(val);
+              const matched = allTeams.find((t) => t.team_code === val);
+              const sport = matchData.match_type as "volleyball" | "basketball";
+              setTeamName(matched?.[sport]?.team_name || matched?.dept_name || val);
+            }}
+            required
+          >
+            <option value="">Select Team</option>
+            {allTeams
+              .filter((t) => {
+                const sportSquad = t[matchData.match_type as "volleyball" | "basketball"];
+                return sportSquad && sportSquad.team_name;
+              })
+              .map((t) => (
+                <option key={t.team_code} value={t.team_code} disabled={t.team_code === otherTeamCode}>
+                  {t[matchData.match_type as "volleyball" | "basketball"]?.team_name || t.dept_name}
+                </option>
+              ))}
+          </select>
+        ) : (
+          <select
+            className={adminSelectClass}
+            value={teamCode || ""}
+            onChange={(e) => {
+              const val = e.target.value;
+              setTeamCode(val);
+              setTeamName(codeToTeamName[val] || val);
+            }}
+            required
+          >
+            <option value="">Select Department</option>
+            {getAllTeamsCode().map((code: string) => (
+              <option key={code} value={code} disabled={code === otherTeamCode}>
+                {codeToTeamName[code]}
+              </option>
+            ))}
+          </select>
+        )}
+
+        <input
+          ref={teamNo === 1 ? team1ScoreRef : team2ScoreRef}
+          className={`${adminInputClass} mt-2`}
+          required
+          placeholder="Score"
+          value={teamScore || ""}
+          onChange={(e) => setTeamScore(e.target.value)}
+        />
+      </div>
+    );
+  };
 
   const setTeam1Code = useCallback((teamCode: string) => {
     setMatchData(prev => ({
@@ -115,6 +203,20 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     setMatchData(prev => ({
       ...prev,
       team2: { ...prev.team2, team_code: teamCode },
+    }));
+  }, []);
+
+    const setTeam1Name = useCallback((teamName: string) => {
+    setMatchData(prev => ({
+      ...prev,
+      team1: { ...prev.team1, team_name: teamName },
+    }));
+  }, []);
+
+  const setTeam2Name = useCallback((teamName: string) => {
+    setMatchData(prev => ({
+      ...prev,
+      team2: { ...prev.team2, team_name: teamName },
     }));
   }, []);
 
@@ -156,7 +258,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         <div className="grid grid-flow-row grid-cols-2 gap-4">
           <div className="mb-2">
             <label className={`${adminLabelClass} mb-1 block`}>
-              {codeToTeamName[matchData.team1.team_code]}
+              {matchData.team1.team_name || codeToTeamName[matchData.team1.team_code] || matchData.team1.team_code}
             </label>
             <input
               className={adminSelectClass}
@@ -172,8 +274,8 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
             />
           </div>
           <div>
-            <label className={`${adminLabelClass} mb-1 block`}>
-              {codeToTeamName[matchData.team2.team_code]}
+              <label className={`${adminLabelClass} mb-1 block`}>
+              {matchData.team2.team_name || codeToTeamName[matchData.team2.team_code] || matchData.team2.team_code}
             </label>
             <input
               className={adminSelectClass}
@@ -206,7 +308,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         >
           Match Type
         </label>
-        <select
+                <select
           id="matchType"
           className={adminSelectClass}
           value={matchData.match_type || "football"}
@@ -214,6 +316,9 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
         >
           <option value="football">Football</option>
           <option value="cricket">Cricket</option>
+          <option value="volleyball">Volleyball</option>
+          <option value="basketball">Basketball</option>
+          <option value="badminton">Badminton</option>
         </select>
       </div>
     );
@@ -333,7 +438,7 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
     );
   };
 
-  const MatchDetailsForm = () => (
+    const MatchDetailsForm = () => (
     <form className="grid grid-flow-row gap-2 my-2" onSubmit={handleOnSubmit}>
       <div className="grid grid-flow-row grid-cols-2 gap-4">
         <div>
@@ -341,6 +446,8 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
             1,
             matchData.team1.team_code,
             setTeam1Code,
+            matchData.team1.team_name,
+            setTeam1Name,
             matchData.team1.team_score,
             setTeam1Score,
             matchData.team2.team_code
@@ -351,6 +458,8 @@ const EditLivePostForm: React.FC<EditLivePostFormProps> = ({ match }) => {
             2,
             matchData.team2.team_code,
             setTeam2Code,
+            matchData.team2.team_name,
+            setTeam2Name,
             matchData.team2.team_score,
             setTeam2Score,
             matchData.team1.team_code

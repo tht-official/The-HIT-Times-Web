@@ -18,7 +18,7 @@ export function TeamSquadCard({
   sport,
 }: {
   team?: Teams;
-  sport: "football" | "cricket";
+  sport: "football" | "cricket" | "volleyball" | "basketball";
 }) {
   if (!team) {
     return (

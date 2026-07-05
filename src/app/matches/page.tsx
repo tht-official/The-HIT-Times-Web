@@ -85,7 +85,7 @@ const MatchesPage = () => {
   const [matches, setMatches] = useState<MatchPosts[]>([]);
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<"all" | "football" | "cricket">("all");
+  const [typeFilter, setTypeFilter] = useState<"all" | "football" | "cricket" | "volleyball" | "basketball" | "badminton">("all");
 
   useEffect(() => {
     const load = async () => {
@@ -164,13 +164,16 @@ const MatchesPage = () => {
               <select
                 value={typeFilter}
                 onChange={(e) =>
-                  setTypeFilter(e.target.value as "all" | "football" | "cricket")
+                  setTypeFilter(e.target.value as any)
                 }
                 className={selectClass}
               >
                 <option value="all">All sports</option>
                 <option value="football">Football</option>
                 <option value="cricket">Cricket</option>
+                <option value="volleyball">Volleyball</option>
+                <option value="basketball">Basketball</option>
+                <option value="badminton">Badminton</option>
               </select>
             </div>
 
@@ -210,7 +213,7 @@ const MatchesPage = () => {
               </select>
             </div>
 
-            {["football", "cricket"].map((type) => {
+            {["football", "cricket", "volleyball", "basketball", "badminton"].map((type) => {
               const list = matchesByType.past.filter((m) => m.match_type === type);
               if (list.length === 0) return null;
               return (

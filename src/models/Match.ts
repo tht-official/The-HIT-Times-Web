@@ -91,7 +91,7 @@ const MatchPostSchema = new mongoose.Schema<MatchPosts>(
     match_type: {
       type: String,
       required: true,
-      enum: ["football", "cricket"], // Restrict to valid match types
+      enum: ["football", "cricket", "volleyball", "basketball", "badminton"], // Restrict to valid match types
     },
     match_date: {
       type: Date,

@@ -9,22 +9,42 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { codeToTeamName, getAllTeamsCode } from "@/lib/codeToTeamName";
+import { Teams } from "@/models/Team";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CreateLivePostForm = () => {
   const router = useRouter();
+
+  const [allTeams, setAllTeams] = useState<Teams[]>([]);
   const [formData, setFormData] = useState({
-    team1Code: "100",
+    team1Code: "",
+    team1Name: "",
     team1Score: "",
-    team2Code: "101",
+    team2Code: "",
+    team2Name: "",
     team2Score: "",
     matchDateTime: "",
     isLive: "true",
-    matchType: "football",
+    matchType: "", 
     matchStatus: "",
     sendNotification: true,
   });
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const res = await fetch("/api/v1/team");
+        const json = await res.json();
+        if (res.ok && Array.isArray(json.data)) {
+          setAllTeams(json.data);
+        }
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+    fetchTeams();
+  }, []);
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<any>) => {
     setFormData((prev) => ({
@@ -44,19 +64,49 @@ const CreateLivePostForm = () => {
       }
     };
 
-  const submitMatchData = async (e: React.FormEvent) => {
+    const submitMatchData = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let team1Name = "";
+    let team1Code = "";
+    let team2Name = "";
+    let team2Code = "";
+
+    if (formData.matchType === "badminton") {
+      team1Name = formData.team1Name.trim();
+      team1Code = formData.team1Name.toLowerCase().trim().replace(/\s+/g, "-");
+      team2Name = formData.team2Name.trim();
+      team2Code = formData.team2Name.toLowerCase().trim().replace(/\s+/g, "-");
+    } else if (formData.matchType === "volleyball" || formData.matchType === "basketball") {
+      const t1 = allTeams.find((t) => t.team_code === formData.team1Code);
+      const t2 = allTeams.find((t) => t.team_code === formData.team2Code);
+      const sport = formData.matchType as "volleyball" | "basketball";
+      team1Name = t1?.[sport]?.team_name || t1?.dept_name || formData.team1Code;
+      team1Code = formData.team1Code;
+      team2Name = t2?.[sport]?.team_name || t2?.dept_name || formData.team2Code;
+      team2Code = formData.team2Code;
+    } else {
+      team1Name = codeToTeamName[formData.team1Code];
+      team1Code = formData.team1Code;
+      team2Name = codeToTeamName[formData.team2Code];
+      team2Code = formData.team2Code;
+    }
+
+    if (!team1Code || !team2Code || !team1Name || !team2Name) {
+      alert("Please select or enter both teams.");
+      return;
+    }
 
     const matchData = {
       team1: {
         team_score: formData.team1Score,
-        team_code: formData.team1Code,
-        team_name: codeToTeamName[formData.team1Code],
+        team_code: team1Code,
+        team_name: team1Name,
       },
       team2: {
         team_score: formData.team2Score,
-        team_code: formData.team2Code,
-        team_name: codeToTeamName[formData.team2Code],
+        team_code: team2Code,
+        team_name: team2Name,
       },
       match_date: new Date(formData.matchDateTime),
       is_live: formData.isLive === "true",
@@ -112,41 +162,83 @@ const CreateLivePostForm = () => {
     }
   };
 
-  const renderTeamSelect = (
-    teamCode: string,
-    teamField: "team1Code" | "team2Code"
-  ) => (
-    <select
-      className={adminSelectClass}
-      value={teamCode}
-      onChange={handleTeamChange(teamField)}
-    >
-      {getAllTeamsCode().map((code: string) => (
-        <option
-          key={code}
-          value={code}
-          disabled={
-            code ===
-            (teamField === "team1Code" ? formData.team2Code : formData.team1Code)
-          }
-        >
-          {codeToTeamName[code]}
-        </option>
-      ))}
-    </select>
-  );
-
-  const renderTeamInput = (teamNum: 1 | 2) => {
+    const renderTeamInput = (teamNum: 1 | 2) => {
+    const isTeamDisabled = !formData.matchType;
     const teamCodeField = `team${teamNum}Code` as "team1Code" | "team2Code";
+    const teamNameField = `team${teamNum}Name` as "team1Name" | "team2Name";
     const teamScoreField = `team${teamNum}Score` as "team1Score" | "team2Score";
 
     return (
       <div className="space-y-2">
         <label className={adminLabelClass}>Team {teamNum}</label>
-        {renderTeamSelect(formData[teamCodeField], teamCodeField)}
+        
+        {formData.matchType === "badminton" ? (
+          // Badminton: Manual name entry
+          <input
+            className={adminInputClass}
+            required
+            disabled={isTeamDisabled}
+            placeholder="Team Name (e.g. John / Jane)"
+            value={formData[teamNameField]}
+            onChange={handleInputChange(teamNameField)}
+          />
+        ) : formData.matchType === "volleyball" || formData.matchType === "basketball" ? (
+          // Volleyball / Basketball: Dropdown filtering teams with squads
+          <select
+            className={adminSelectClass}
+            disabled={isTeamDisabled}
+            value={formData[teamCodeField]}
+            onChange={handleTeamChange(teamCodeField)}
+            required
+          >
+            <option value="">Select Team</option>
+            {allTeams
+              .filter((t) => {
+                const sportSquad = t[formData.matchType as "volleyball" | "basketball"];
+                return sportSquad && sportSquad.team_name;
+              })
+              .map((t) => (
+                <option
+                  key={t.team_code}
+                  value={t.team_code}
+                  disabled={
+                    t.team_code ===
+                    (teamNum === 1 ? formData.team2Code : formData.team1Code)
+                  }
+                >
+                  {t[formData.matchType as "volleyball" | "basketball"]?.team_name || t.dept_name}
+                </option>
+              ))}
+          </select>
+        ) : (
+          // Football / Cricket / default disabled state: Department dropdown
+          <select
+            className={adminSelectClass}
+            disabled={isTeamDisabled}
+            value={formData[teamCodeField]}
+            onChange={handleTeamChange(teamCodeField)}
+            required
+          >
+            <option value="">Select Department</option>
+            {getAllTeamsCode().map((code: string) => (
+              <option
+                key={code}
+                value={code}
+                disabled={
+                  code ===
+                  (teamNum === 1 ? formData.team2Code : formData.team1Code)
+                }
+              >
+                {codeToTeamName[code]}
+              </option>
+            ))}
+          </select>
+        )}
+
         <input
           className={adminInputClass}
           required
+          disabled={isTeamDisabled}
           placeholder="Score"
           value={formData[teamScoreField]}
           onChange={handleInputChange(teamScoreField)}
@@ -194,9 +286,14 @@ const CreateLivePostForm = () => {
                 className={adminSelectClass}
                 value={formData.matchType}
                 onChange={handleInputChange("matchType")}
+                required
               >
+                <option value="">Select Sport</option>
                 <option value="football">Football</option>
                 <option value="cricket">Cricket</option>
+                <option value="volleyball">Volleyball</option>
+                <option value="basketball">Basketball</option>
+                <option value="badminton">Badminton</option>
               </select>
             </div>
           </div>
