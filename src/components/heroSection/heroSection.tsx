@@ -156,10 +156,10 @@ const HeroSection = () => {
                 </span>
               </div>
             </div>
-          </Link>
-          <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6 lg:right-10 lg:top-10">
-            <RealtedPostIcons post={post} />
           </div>
+        </Link>
+        <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6 lg:right-10 lg:top-10">
+          <RealtedPostIcons post={post} />
         </div>
       </div>
 

@@ -49,7 +49,7 @@ function MatchCard({
               {post.match_type}
             </Badge>
             {post.is_live && (
-              <Badge variant="destructive" className="text-[10px] uppercase tracking-wide">
+              <Badge variant="live" className="text-[10px] uppercase tracking-wide">
                 Live
               </Badge>
             )}
