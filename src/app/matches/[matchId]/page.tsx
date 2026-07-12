@@ -112,7 +112,9 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
     );
   }
 
-  const sport = match.match_type === "cricket" ? "cricket" : "football";
+  const sport = (match.match_type === "cricket" || match.match_type === "volleyball" || match.match_type === "basketball" || match.match_type === "football")
+    ? match.match_type
+    : "football";
   const team1Label = getTeamLabel(match.team1.team_code, match.team1.team_name);
   const team2Label = getTeamLabel(match.team2.team_code, match.team2.team_name);
   const hasFeed = Boolean(match.timeline && match.timeline.length > 0);
@@ -184,20 +186,22 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
           >
             Match feed
           </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "squads"}
-            onClick={() => setActiveTab("squads")}
-            className={cn(
-              "min-w-0 flex-1 border-b-2 px-2 py-3 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
-              activeTab === "squads"
-                ? "border-foreground text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Squads
-          </button>
+          {match.match_type !== "badminton" && (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "squads"}
+              onClick={() => setActiveTab("squads")}
+              className={cn(
+                "min-w-0 flex-1 border-b-2 px-2 py-3 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+                activeTab === "squads"
+                  ? "border-foreground text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Squads
+            </button>
+          )}
         </div>
 
         {activeTab === "feed" && (
@@ -212,7 +216,7 @@ const MatchDetailPage = ({ params }: { params: { matchId: string } }) => {
           </div>
         )}
 
-        {activeTab === "squads" && (
+        {activeTab === "squads" && match.match_type !== "badminton" && (
           <div role="tabpanel" className="grid min-w-0 gap-4 sm:gap-6 md:grid-cols-2">
             <TeamSquadCard team={teams[match.team1.team_code]} sport={sport} />
             <TeamSquadCard team={teams[match.team2.team_code]} sport={sport} />

@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import TeamForm from "@/components/admin-portal/teams/TeamForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { getAllTeamsCode, getTeamName } from "@/lib/codeToTeamName";
+import { getTeamName } from "@/lib/codeToTeamName";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, notFound } from "next/navigation";
@@ -12,13 +12,45 @@ import { useSearchParams, notFound } from "next/navigation";
 function ManageTeamPage() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
-  const teamsCode = getAllTeamsCode();
+  const [teamName, setTeamName] = useState<string>("Team");
+  const [loading, setLoading] = useState(true);
 
-  if (code === null || !teamsCode.includes(code)) {
+    useEffect(() => {
+    if (!code) return;
+    const activeCode = code; 
+
+    async function loadTeam() {
+      try {
+        const res = await fetch(`/api/v1/team/${activeCode}`);
+        const data = await res.json();
+        if (res.ok && data?.data) {
+          setTeamName(data.data.dept_name || getTeamName(activeCode) || "Team");
+        } else {
+          setTeamName(getTeamName(activeCode) || "Team");
+        }
+      } catch {
+        setTeamName(getTeamName(activeCode) || "Team");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTeam();
+  }, [code]);
+
+  if (code === null) {
     notFound();
   }
 
-  const teamName = getTeamName(code) ?? "Team";
+  const teamCode = code as string;
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64 w-full rounded-lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-full space-y-8 overflow-x-hidden">
@@ -34,16 +66,15 @@ function ManageTeamPage() {
             Manage {teamName}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Update football and cricket squads for department code {code}.
+            Update squads and rosters for team code {teamCode}.
           </p>
         </div>
       </header>
 
-      <TeamForm teamCode={code} deptName={teamName} />
+      <TeamForm teamCode={teamCode} deptName={teamName} />
     </div>
   );
 }
-
 export default function ManageTeamRoute() {
   return (
     <Suspense

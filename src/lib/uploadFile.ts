@@ -16,13 +16,13 @@ export default async function uploadFile(data: any, folder: string = "/recruitme
       throw new Error(`Failed to fetch ImageKit authentication: ${authResponse.statusText}`);
     }
     const authData = await authResponse.json();
-    const { signature, expire, token } = authData;
+    const { signature, expire, token, publicKey } = authData;
 
     // 2. Prepare FormData for ImageKit upload API
     const formData = new FormData();
     formData.append("file", file);
     formData.append("fileName", file.name);
-    formData.append("publicKey", process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "");
+    formData.append("publicKey", publicKey || "");
     formData.append("signature", signature);
     formData.append("token", token);
     formData.append("expire", expire.toString());

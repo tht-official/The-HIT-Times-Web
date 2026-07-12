@@ -21,3 +21,15 @@ export function getTeamName(code: string): string | null {
 export function getAllTeamsCode(): string[] {
   return Object.keys(codeToTeamName);
 }
+// changing from here
+export const teamsBySport: Record<string, { [code: string]: string }> = {
+  football: { ...codeToTeamName },
+  cricket: { ...codeToTeamName },
+  volleyball: {},  
+  basketball: {},  
+  badminton: {},   
+};
+export function getTeamsBySport(sport: string): { [code: string]: string } {
+  return teamsBySport[sport] || {};
+}
+

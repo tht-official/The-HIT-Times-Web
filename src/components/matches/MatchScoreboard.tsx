@@ -12,7 +12,9 @@ export function MatchScoreboard({
   match: MatchPosts;
   teams?: Record<string, Teams>;
 }) {
-  const sport = match.match_type === "cricket" ? "cricket" : "football";
+  const sport = (match.match_type === "cricket" || match.match_type === "volleyball" || match.match_type === "basketball" || match.match_type === "football")
+    ? match.match_type
+    : "football";
   const status = match.match_status || (match.is_live ? "Live" : "Final");
   const phaseLabel = getMatchPhaseLabel(match);
 

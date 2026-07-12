@@ -21,7 +21,7 @@ type TeamProps = {
 type TeamFormProps = {
   team: Teams;
   setTeam: (team: Teams) => void;
-  teamType: "football" | "cricket";
+  teamType: "football" | "cricket" | "volleyball" | "basketball";
 };
 
 type PlayerFormProps = {
@@ -103,7 +103,9 @@ const PlayerForm = ({
 
 const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
   const [newPlayer, setNewPlayer] = useState<Player>({ ...emptyPlayer });
-  const teamData = team[teamType];
+  
+  // Use fallback template to prevent crashing on uninitialized sport squads
+  const teamData = team[teamType] || { team_name: "", team_logo: "", players: [] };
 
   const setTeamData = (field: keyof typeof teamData, value: string) => {
     setTeam({
@@ -154,13 +156,13 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
   return (
     <Card className="border-border/80">
       <CardHeader>
-        <CardTitle className="capitalize">{teamType}</CardTitle>
+        <CardTitle className="capitalize">{teamType} Squad</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-[auto_1fr_1fr] sm:items-center">
         <Image
           src={extractImageUrl(teamData.team_logo ?? "")}
-          alt={teamData.team_name}
+          alt={teamData.team_name || "Team Logo"}
           width={50}
           height={50}
           className="aspect-square rounded-full border border-border object-cover"
@@ -169,7 +171,7 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
           type="text"
           className={inputClass}
           placeholder="Team Name"
-          value={teamData.team_name}
+          value={teamData.team_name || ""}
           required
           onChange={(e) => setTeamData("team_name", e.target.value)}
         />
@@ -178,14 +180,14 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
           placeholder="Team Logo URL"
           required
           className={inputClass}
-          value={teamData.team_logo}
+          value={teamData.team_logo || ""}
           onChange={(e) => setTeamData("team_logo", e.target.value)}
         />
       </div>
       <h3 className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
         Players
       </h3>
-      {teamData.players.map((player, index) => (
+      {teamData.players && teamData.players.map((player, index) => (
         <div key={index}>
           <PlayerForm
             player={player}
@@ -217,6 +219,8 @@ const TeamFormSection = ({ team, setTeam, teamType }: TeamFormProps) => {
 export default function TeamForm({ teamCode, deptName }: TeamProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // Error state
+  const [selectedSport, setSelectedSport] = useState<"football" | "cricket" | "volleyball" | "basketball">("football");
+
   const emptyTeamData: Teams = {
     team_code: teamCode,
     dept_name: deptName,
@@ -226,6 +230,16 @@ export default function TeamForm({ teamCode, deptName }: TeamProps) {
       players: [] as Player[],
     },
     cricket: {
+      team_name: "",
+      team_logo: "",
+      players: [] as Player[],
+    },
+    volleyball: {
+      team_name: "",
+      team_logo: "",
+      players: [] as Player[],
+    },
+    basketball: {
       team_name: "",
       team_logo: "",
       players: [] as Player[],
@@ -287,9 +301,30 @@ export default function TeamForm({ teamCode, deptName }: TeamProps) {
           {error}
         </p>
       )}
+
+      {/* Sport Selector Dropdown */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between bg-muted/40 p-4 rounded-md border border-border">
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1">
+            Configure Sport Squad
+          </label>
+          <p className="text-xs text-muted-foreground">Select which sport squad to manage for this team.</p>
+        </div>
+        <select
+          value={selectedSport}
+          onChange={(e) => setSelectedSport(e.target.value as any)}
+          className={inputClass}
+          style={{ maxWidth: "250px" }}
+        >
+          <option value="football">Football Squad</option>
+          <option value="cricket">Cricket Squad</option>
+          <option value="volleyball">Volleyball Squad</option>
+          <option value="basketball">Basketball Squad</option>
+        </select>
+      </div>
+
       <form onSubmit={handleSave} className="grid gap-6">
-        <TeamFormSection team={team} setTeam={setTeam} teamType="football" />
-        <TeamFormSection team={team} setTeam={setTeam} teamType="cricket" />
+        <TeamFormSection team={team} setTeam={setTeam} teamType={selectedSport} />
         <Button type="submit">Save changes</Button>
       </form>
     </div>

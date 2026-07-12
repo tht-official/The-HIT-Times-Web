@@ -1,9 +1,21 @@
 import admin from "firebase-admin";
 
 if (!admin.apps.length) {
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  let projectId = process.env.FIREBASE_PROJECT_ID;
+  let clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+  // Fallback to local firebaseConfig file if env vars are missing
+  if (!projectId || !clientEmail || !privateKey) {
+    try {
+      const firebaseConfig = require("./firebaseConfig").default;
+      projectId = projectId || firebaseConfig.project_id;
+      clientEmail = clientEmail || firebaseConfig.client_email;
+      privateKey = privateKey || firebaseConfig.private_key;
+    } catch (e) {
+      // The firebaseConfig file is gitignored and might not exist, which is fine
+    }
+  }
 
   if (projectId && clientEmail && privateKey) {
     try {
