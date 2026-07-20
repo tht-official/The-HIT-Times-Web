@@ -492,7 +492,7 @@ export default function PhotographyForm() {
             </div>
           ) : (
             <div className="flex flex-row justify-between pb-6">
-              <button className=" relative bg-purple-500 py-1 px-5 rounded-md text-white overflow-hidden font-medium border-purple-500 hover:border-green-600 shadow-inner group">
+              <button type="submit" className=" relative bg-purple-500 py-1 px-5 rounded-md text-white overflow-hidden font-medium border-purple-500 hover:border-green-600 shadow-inner group">
                 <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-green-400 group-hover:w-full"></span>
                 <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-green-400 group-hover:w-full"></span>
                 <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full"></span>
@@ -502,7 +502,7 @@ export default function PhotographyForm() {
                   Submit
                 </span>
               </button>
-              <button
+              <button type="button"
                 onClick={refreshPage}
                 className={
                   poppins.className +

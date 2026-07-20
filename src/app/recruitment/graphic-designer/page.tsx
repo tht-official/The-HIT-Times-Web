@@ -477,7 +477,7 @@ export default function GdForm() {
             </div>
           ) : (
             <div className="flex flex-row justify-between pb-6">
-              <button
+              <button type="submit"
                 className=" relative bg-purple-500 py-1 px-5 rounded-md text-white overflow-hidden font-medium border-purple-500 hover:border-green-600 shadow-inner group"
                 disabled={isSubmitted}
               >
@@ -490,7 +490,7 @@ export default function GdForm() {
                   Submit
                 </span>
               </button>
-              <button
+              <button type="button"
                 onClick={refreshPage}
                 className={
                   poppins.className +
