@@ -13,7 +13,7 @@ interface NoticePayload {
 }
 
 const tspNotice: NoticePayload = {
-  noticeTitle: "Join TSP 24-25",
+  noticeTitle: "Join TSP 25-26",
   noticeLink: "/tsp",
 };
 
