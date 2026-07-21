@@ -3,31 +3,31 @@ import nodemailer from "nodemailer";
 
 export const dynamic = "force-dynamic"; // defaults to force-static
 
-const EMAIL_USER = process.env.EMAIL_USER;
-const EMAIL_APP_PASS = process.env.EMAIL_APP_PASS;
+let transporter: nodemailer.Transporter | null = null;
 
-if (!EMAIL_USER) {
-  throw new Error(
-    "Please define the EMAIL_USER environment variable inside .env.local"
-  );
+function getTransporter() {
+  if (transporter) return transporter;
+  const EMAIL_USER = process.env.EMAIL_USER;
+  const EMAIL_APP_PASS = process.env.EMAIL_APP_PASS;
+
+  if (!EMAIL_USER || !EMAIL_APP_PASS) {
+    throw new Error(
+      "Please define EMAIL_USER and EMAIL_APP_PASS environment variables inside .env.local"
+    );
+  }
+
+  transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: EMAIL_USER,
+      pass: EMAIL_APP_PASS,
+    },
+  });
+  return transporter;
 }
-
-if (!EMAIL_APP_PASS) {
-  throw new Error(
-    "Please define the EMAIL_APP_PASS environment variable inside .env.local"
-  );
-}
-
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_APP_PASS,
-  },
-});
 
 export async function POST(request: NextRequest) {
   // get applicationEmail & name from the request
@@ -44,8 +44,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const info = await transporter.sendMail({
-      from: EMAIL_USER,
+    const activeTransporter = getTransporter();
+    const info = await activeTransporter.sendMail({
+      from: process.env.EMAIL_USER,
       to: applicantEmail,
       subject: "Response recorded for THT Recruitment Drive 2k26",
       html: `
