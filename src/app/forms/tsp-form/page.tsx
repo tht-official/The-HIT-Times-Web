@@ -448,7 +448,7 @@ export default function TSPForm() {
             <div className="flex flex-col space-y-1.5 w-full pt-2">
               <label className="text-emerald-700 dark:text-[#a3e635] text-sm font-semibold flex flex-col gap-0.5 transition-colors">
                 We would love to hear from you
-                <span className="text-xs text-slate-500 dark:text-gray-500 font-normal transition-colors">Share ideas on scheduling, events, or anything you'd like from the program.</span>
+                <span className="text-xs text-slate-500 dark:text-gray-500 font-normal transition-colors">Share ideas on scheduling, events, or anything you&apos;d like from the program.</span>
               </label>
               <textarea
                 rows={4}

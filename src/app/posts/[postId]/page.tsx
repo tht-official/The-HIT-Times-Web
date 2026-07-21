@@ -9,21 +9,27 @@ import { dropdownsToSections } from "@/components/weekly-portion/WeeklyPortion";
 import { Posts } from "@/models/Post";
 import parse from "html-react-parser";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const PostInfoPage = ({ params }: { params: { postId: string } }) => {
   const [postinfo, setPostinfo] = useState<Posts>();
   const [relatedPosts, setRelatedPosts] = useState<Posts[]>();
   const [loading, setLoading] = useState(true);
 
-  const loadPost = async () => {
+  const loadRelatedPosts = useCallback(async (post: Posts) => {
+    const res = await fetch(`/api/v1/posts?dropdown=${post.dropdown}&limit=6`);
+    const data = await res.json();
+    setRelatedPosts(data.filter((x: Posts) => x._id !== post._id));
+  }, []);
+
+  const loadPost = useCallback(async () => {
     const res = await fetch(`/api/v1/posts?_id=${params.postId}`);
     const data = await res.json();
     setPostinfo(data[0]);
     setLoading(false);
     if (data.length !== 1) return;
     loadRelatedPosts(data[0]);
-  };
+  }, [params.postId, loadRelatedPosts]);
 
   const getRelativeTime = (date: Date): string => {
     const now = new Date();
@@ -43,15 +49,9 @@ const PostInfoPage = ({ params }: { params: { postId: string } }) => {
     return `${Math.max(1, Math.ceil(words / 200))} min read`;
   };
 
-  const loadRelatedPosts = async (post: Posts) => {
-    const res = await fetch(`/api/v1/posts?dropdown=${post.dropdown}&limit=6`);
-    const data = await res.json();
-    setRelatedPosts(data.filter((x: Posts) => x._id !== post._id));
-  };
-
   useEffect(() => {
     loadPost();
-  }, []);
+  }, [loadPost]);
 
   if (loading) {
     return <BrandLoader variant="page" />;

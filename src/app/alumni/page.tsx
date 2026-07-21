@@ -2,7 +2,7 @@
 
 import AlumniCard from "@/components/alumni/Profile";
 import { Alumni } from "@/models/Alumnus";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { BrandLoader } from "@/components/common/loader/Loaders";
 import { Separator } from "@/components/ui/separator";
@@ -22,7 +22,7 @@ const AlumniPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  const fetchAlumniData = async () => {
+  const fetchAlumniData = useCallback(async () => {
     setLoading(true);
     const response = await fetch(
       `/api/v1/alumnus?startSession=${filter.startSession}&endSession=${filter.endSession}`
@@ -43,11 +43,11 @@ const AlumniPage: React.FC = () => {
         .sort((a, b) => parseInt(b.year) - parseInt(a.year))
     );
     setLoading(false);
-  };
+  }, [filter.startSession, filter.endSession]);
 
   useEffect(() => {
     fetchAlumniData();
-  }, [filter]);
+  }, [fetchAlumniData]);
 
   const currentYear = new Date().getFullYear();
 
