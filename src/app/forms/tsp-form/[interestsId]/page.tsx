@@ -15,32 +15,32 @@ import Link from "next/link";
 const allInvLinks = [
   {
     title: "Content Writing",
-    url: "https://chat.whatsapp.com/HTaPtnggSRhA7IdkA57eWw",
+    url: "https://chat.whatsapp.com/Hwca6qAxXbWHhecNmW6BDL",
     calendar: cwCalendar,
   },
   {
     title: "Digital Art",
-    url: "https://chat.whatsapp.com/EDiA8khK1VIJjvRgdkH4FR",
+    url: "https://chat.whatsapp.com/FSyigKoBe25FwJ1kHcxfpi",
     calendar: digitalArtCalendar,
   },
   {
     title: "Graphics Designing",
-    url: "https://chat.whatsapp.com/CDksaUvAEgK0dp4Dtrl3Yy",
+    url: "https://chat.whatsapp.com/Dah992r1SYg8v1aH1GY4uI",
     calendar: gdCalendar,
   },
   {
     title: "Video Editing",
-    url: "https://chat.whatsapp.com/BaY7smgaFq2IM32zno9a1w",
+    url: "https://chat.whatsapp.com/FYr3t5JKc1AK8GmXGaqKlV",
     calendar: videoEditingCalendar,
   },
   {
     title: "Web Development",
-    url: "https://chat.whatsapp.com/EbMONu9UyElH6qvseXAdH0",
+    url: "https://chat.whatsapp.com/FPJabNIcPtR3DtMASCoArr",
     calendar: DevCalendar,
   },
   {
     title: "Photography",
-    url: "https://chat.whatsapp.com/Bz8GAjkdqlIA6wI2GBN6Uh",
+    url: "https://chat.whatsapp.com/Eu4XLmConwW2hcaKF1xsyt",
     calendar: photographyCalendar,
   },
 ];
@@ -54,11 +54,11 @@ function TSPsuccessPage({ params }: { params: { interestsId: string } }) {
     <div className="animate-in-subtle mx-auto max-w-3xl space-y-10 pb-12">
       <div className="flex justify-center">
         <Image
-          src="/tsp-logo.png"
+          src="/tsp-26/tsp_logo.png"
           alt="Trainee Scholars Program"
-          width={280}
-          height={280}
-          className="h-48 w-auto object-contain sm:h-56"
+          width={200}
+          height={200}
+          className="h-32 w-auto object-contain sm:h-40"
         />
       </div>
 
