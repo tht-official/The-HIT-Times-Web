@@ -163,19 +163,42 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {!isNoticeEmpty && (
-        <div className="flex flex-col gap-3 rounded-sm border border-border bg-muted/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 dark:bg-white/[0.03]">
-          <div className="flex items-start gap-3 sm:items-center">
-            <span className="tag-editorial shrink-0">Notice</span>
-            <p className="text-sm leading-snug">{notice.noticeTitle}</p>
+      {!isNoticeEmpty && (() => {
+        const isTspNotice = notice.noticeLink === "/tsp";
+        return (
+          <div
+            className={`relative flex flex-row items-center justify-between gap-3 rounded-sm border border-border px-4 py-4 sm:px-5 ${
+              isTspNotice
+                ? "bg-cover bg-center text-white"
+                : "bg-muted/40 dark:bg-white/[0.03]"
+            }`}
+            style={
+              isTspNotice
+                ? { backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('/TSP26Banner.jpg')" }
+                : undefined
+            }
+          >
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className={`tag-editorial shrink-0 !text-[9px] sm:!text-[10px] ${isTspNotice ? "!text-white/90" : ""}`}>Notice</span>
+              <p className={`leading-snug ${isTspNotice ? "text-xs sm:text-base font-bold text-white" : "text-sm"}`}>
+                {notice.noticeTitle}
+              </p>
+            </div>
+            {notice.noticeLink && (
+              <Link
+                href={notice.noticeLink}
+                className={`btn-pill-ghost w-fit sm:w-auto !min-h-0 sm:!min-h-[2.5rem] !py-1 sm:!py-2 !px-2.5 sm:!px-4 !text-[9px] sm:!text-[11px] transition-all duration-300 ${
+                  isTspNotice
+                    ? "!bg-emerald-600 !text-white !border-none hover:!bg-emerald-500 hover:scale-105 active:scale-95"
+                    : ""
+                }`}
+              >
+                Learn more
+              </Link>
+            )}
           </div>
-          {notice.noticeLink && (
-            <Link href={notice.noticeLink} className="btn-pill-ghost w-full sm:w-auto">
-              Learn more
-            </Link>
-          )}
-        </div>
-      )}
+        );
+      })()}
     </section>
   );
 };
